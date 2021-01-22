@@ -9,8 +9,28 @@
 
 ##### 0.1.2 What types of readings can your multimeter measure? 
 
-- 
+- DC Voltage
+	- 200mV to 600V
+	- 0.5% Accuracy
+- DC Current
+	- 2mA to 10A
+	- 1-3% Accuracy
+- AC Voltage
+	- 200V to 600V
+	- 1.2% Accuracy
+- Resistance
+	- 200Ohms to 2MegaOhms
+	- 0.8% Accuracy
 
-A dial selector is often used to choose what the DMM will measure. Often there will be many scales for the same type of read. 
+##### 0.1.3 Find a battery and measure the voltage across the battery. 
 
-Not all DMMs are the same, so it is important to know what yours can do, and how to connect it to correctly measure what you want. (If you need to, you may want to google “How to use a multimeter for beginners” on youtube).
+**Is this what you would expect?**
+
+**Does it match the voltage stated on the battery? If not, why?**
+
+##### 0.1.4 Connectivity test 
+
+2 things that are connected:
+
+- Jumper cable 
+- Same end of the battery
