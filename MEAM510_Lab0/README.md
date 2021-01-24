@@ -35,7 +35,6 @@
 - Jumper cable 
 - Same end of the battery
 
-
 ## 2. Power Supply
 
 No questions for submission.
@@ -67,8 +66,7 @@ No questions for submission.
 
 ### 0.4.4 Voltage Divider
 
-- In this case, there are three legs, the source signal (e.g., the scope probe tip), the line to the scope
-(e.g., the wire that goes to the scope or OscilloSorta) and ground. 
+- In this case, there are three legs, the source signal (e.g., the scope probe tip), the line to the scope (e.g., the wire that goes to the scope or OscilloSorta) and ground. 
 - Find two resistors from the kit that can be used in this fashion to reliably measure signals that may be around 5V (may be a little higher or a little lower). 
 - Be sure that 5V is not going directly into the ESP32 pin as this may damage it. 
 - Take a picture of the breadboard setup with the resistors, and OscilloSorta wires going to Channel 1. 
