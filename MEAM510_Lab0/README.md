@@ -60,6 +60,8 @@ No questions for submission.
 
 ### 0.4.1
 
+![Square 1KHz Wave](oscope_6.png)
+
 ### 0.4.2
 
 ### 0.4.3
