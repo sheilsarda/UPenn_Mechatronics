@@ -60,11 +60,15 @@ No questions for submission.
 
 ### 0.4.1
 
-![Square 1KHz Wave](oscope_6.png)
+![Square 1KHz Wave](../imgs/oscope_6.png)
 
 ### 0.4.2
 
+![](../imgs/oscope_7.png)
+
 ### 0.4.3
+
+![](../imgs/oscope_8.png)
 
 ### 0.4.4 Voltage Divider
 

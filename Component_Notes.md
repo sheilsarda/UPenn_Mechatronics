@@ -63,3 +63,10 @@ From Recitation Notes 01.22.21
 - Practice using resistors in a voltage divider
 - Can do it any way we want within the safe power restrictions
 - Same function as a normal OScope used to do a times 10 probe
+
+## Resistors
+
+[Online Register Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-resistor-color-code)
+
+![Resistor Color Chart](imgs/resistor_chart.jpg)
+
