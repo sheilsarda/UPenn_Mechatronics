@@ -1,5 +1,7 @@
 # Lab 0 - COVID Edition
 
+Sheil Sarda <sheils@seas.upenn.edu>
+
 ## 1. Multimeters
 
 ### 0.1.1 What happens if you use the wrong two plugs to measure something? ​
