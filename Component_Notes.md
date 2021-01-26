@@ -70,3 +70,25 @@ From Recitation Notes 01.22.21
 
 ![Resistor Color Chart](imgs/resistor_chart.jpg)
 
+## Datasheets
+
+Always use maximum Voltage and Current numbers when designing a system. Plan for the worst case.
+
+## C Syntax
+
+Logic Macros
+
+````c
+#define OFF 0
+#dfine ON 1
+#define ever (; ;)
+#define runXtimes(x) for (int i = 0; i < (x); ++i)
+````
+
+Bit Shifting macros
+
+````c
+#define set(reg, bit) reg |= (1 << (bit))
+#define clear(reg, bit) reg &= ~(1 << (bit))
+#define toggle(reg, bit) reg ^= (1 << (bit))
+````
