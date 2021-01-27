@@ -87,16 +87,12 @@ Resistivity decreased when touching the probes because our body's resistance (es
 ### 0.4.4 Voltage Divider
 
 - In this case, there are three legs, the source signal (e.g., the scope probe tip), the line to the scope (e.g., the wire that goes to the scope or OscilloSorta) and ground. 
-
 - Find two resistors from the kit that can be used in this fashion to reliably measure signals that may be around 5V (may be a little higher or a little lower). 
-
 - Be sure that 5V is not going directly into the ESP32 pin as this may damage it. 
-
 - Take a picture of the breadboard setup with the resistors, and OscilloSorta wires going to Channel 1. 
-
 - Submit this picture and clearly indicate which wires go to the source signal, to Channel 1 of the ESP32 and to ground. 
 
-
+<img src="voltage_divider_breadboard.jpg" width=500>
 
 - Submit a screen shot or photo of OscilloSorta scope face showing the output when the source signal is 5V from the BESTON power battery (and sharing the same ground) and the output.
 
