@@ -96,7 +96,11 @@ Resistivity decreased when touching the probes because our body's resistance (es
 
 - Submit this picture and clearly indicate which wires go to the source signal, to Channel 1 of the ESP32 and to ground. 
 
+
+
 - Submit a screen shot or photo of OscilloSorta scope face showing the output when the source signal is 5V from the BESTON power battery (and sharing the same ground) and the output.
+
+![](../imgs/voltage_divider.png)
 
 ### 5. Function Generator
 
