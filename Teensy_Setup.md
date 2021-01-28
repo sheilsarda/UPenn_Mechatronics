@@ -29,3 +29,7 @@
 
 - Download the Teensy executable program
 - Install [WinAVR](https://sourceforge.net/projects/winavr/files/)
+
+## Making `Blinky`
+
+1. Navigate to the directory with the makefile(
