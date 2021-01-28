@@ -54,7 +54,7 @@
 ![Function Generator](imgs/trigger_line_lock.PNG)
 
 **Fig. 4 Sine Wave**
-![Function Generator](imgs/sine_wave.PNG)
+<img src="imgs/sine_wave.PNG" width=300>
 
 ## Voltage Divider
 
