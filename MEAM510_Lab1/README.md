@@ -59,6 +59,19 @@ Voltage between the 2 LEDs: **1.95V**
 
 This is expected based on the datasheets, because due to similar internal resistances, both LEDs draw the same amount of current, causing the voltage drop in the middle of the two to be approximately half of the voltage at A.
 
+### 1.1.5 Optimal LED for a Table Lamp
+
+[American Bright Optoelectronics Corporation AB-EZP10A-B3-K13](https://www.digikey.com/en/products/detail/american-bright-optoelectronics-corporation/AB-EZP10A-B3-K13/9677930)
+
+Features:
+
+- Luminous intensity remains constant for 10.4V < Vin < 24V
+- Can actively modulate the power usage by decreasing the input current to avoid overheating.
+- The input current, light output, and color temperature can stay consistent despite the exterior voltage changes or fluctuations.
+- Uses conventional 12 V / 24 VDC voltage sources
+
+
+
 ## 2. Introduction to Teensy 
 
 ## 3. Timers
