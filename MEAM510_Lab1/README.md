@@ -17,11 +17,11 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 | 	| 		|
 | :------------- | :----------: |
-| Continuous Forward Current (If)	| 30 mA 				|
+| Continuous Forward Current (If)	| 20 mA 				|
 | Battery Voltage (V)				| 5 V   				|
 | Forward Voltage (Vf)				| 2-2.6 V  				|
 | Max Voltage across resistor		| 5 - 2 = 3V 			|
-| **Resistance (R)**		| 3V / 30mA = **100 Ohms** 	|
+| **Resistance (R)**		| 3V / 20mA = **150 Ohms** 	|
 | 	| 		|
 
 ### 1.1.2 Optimal Resistance for Dim Light
@@ -43,11 +43,11 @@ LEDs chosen
 
 | LED Type	| Forward Voltage	| Current |
 | :------------- | :----------: | :----------: |
-|[160-1128-ND ​LTL-4224 ​5mm red LED](https://media.digikey.com/pdf/Data%20Sheets/Lite-On%20PDFs/LTL-4238.pdf) 		| 	2V	| 30 mA |
+|[160-1128-ND ​LTL-4224 ​5mm red LED](https://media.digikey.com/pdf/Data%20Sheets/Lite-On%20PDFs/LTL-4238.pdf) 		| 	2V	| 20 mA |
 |[160-1132-ND ​LTL-4238 ​ 5mm green LED](https://www.digikey.com/htmldatasheets/production/33348/0/0/1/ltl-4238.html) 	|  2.1V	| 20 mA |
 | 	| 		|
 
-Based on the specifications, I would expect the Red LED to be brighter since it draws more current compared to the green LED.
+Based on the specifications, I would expect the Red LED to be slightly brighter than the green LED because of the lower forward voltage drop.
 
 Measured voltage at A: **1.90 V**. The Red LED is slightly brighter.
 
@@ -57,11 +57,15 @@ Measured voltage at A: **3.81V**.
 
 Voltage between the 2 LEDs: **1.95V**
 
-This is expected based on the datasheets, because due to similar internal resistances, both LEDs draw the same amount of current, causing the voltage drop in the middle of the two to be approximately half of the voltage at A.
+This is expected based on the datasheets, because due to current being the same for both LEDs in series, causing the voltage drop in the middle of the two to be approximately half of the voltage at A.
 
 ### 1.1.5 Optimal LED for a Table Lamp
 
 [American Bright Optoelectronics Corporation AB-EZP10A-B3-K13](https://www.digikey.com/en/products/detail/american-bright-optoelectronics-corporation/AB-EZP10A-B3-K13/9677930)
+
+Cost: $1.91
+
+Size / Dimension: 0.118"" L x 0.118"" W (3.00mm x 3.00mm)
 
 Features:
 
@@ -69,7 +73,6 @@ Features:
 - Can actively modulate the power usage by decreasing the input current to avoid overheating.
 - The input current, light output, and color temperature can stay consistent despite the exterior voltage changes or fluctuations.
 - Uses conventional 12 V / 24 VDC voltage sources
-
 
 
 ## 2. Introduction to Teensy 

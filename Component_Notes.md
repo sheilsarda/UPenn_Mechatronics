@@ -92,3 +92,13 @@ Bit Shifting macros
 #define clear(reg, bit) reg &= ~(1 << (bit))
 #define toggle(reg, bit) reg ^= (1 << (bit))
 ````
+
+## Teensy 
+
+### Pinout
+
+More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.edu/index.php/Guides/Teensy-pins).
+
+![](imgs/teensy_pinout.png)
+
+### [Teensy Loader Application](https://www.pjrc.com/teensy/loader.html)
