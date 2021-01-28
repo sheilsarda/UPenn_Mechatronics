@@ -45,16 +45,20 @@
 	- If blinking light breaks, the wifi packets are paused so readings are not accurate
 
 **Fig. 1 Function Generator 1**
-![Function Generator](imgs/func_generator.PNG)
+
+<img src="imgs/func_generator.PNG" width=500>
 
 **Fig. 2 Function Generator 2**
-![Function Generator](imgs/func_generator_noise.PNG)
+
+<img src="imgs/func_generator_noise.PNG" width=500>
 
 **Fig. 3 Trigger Line**
-![Function Generator](imgs/trigger_line_lock.PNG)
+
+<img src="imgs/trigger_line_lock.PNG" width=500>
 
 **Fig. 4 Sine Wave**
-<img src="imgs/sine_wave.PNG" width=300>
+
+<img src="imgs/sine_wave.PNG" width=500>
 
 ## Voltage Divider
 
