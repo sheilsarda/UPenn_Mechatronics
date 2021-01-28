@@ -30,6 +30,8 @@
 - Download the Teensy executable program
 - Install [WinAVR](https://sourceforge.net/projects/winavr/files/)
 
-## Making `Blinky`
+## Running `Blinky`
 
-1. Navigate to the directory with the makefile(
+1. Navigate to the [directory with the makefile](MEAM510_Lab1/Blinky/)
+1. `make all`
+1. Load the `.hex` program to the Teensy via the loader
