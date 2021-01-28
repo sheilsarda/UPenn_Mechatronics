@@ -14,17 +14,15 @@
 	sudo apt-get install libcanberra-gtk-module
 	````
 1. Create `teensy.rules` as `sudo`
+	````sh
+	cd /etc/udev/rules.d/
+	````
 
+	Contents of `teensy.rules`
 
-````sh
-cd /etc/udev/rules.d/
-````
-
-Contents of `teensy.rules`
-
-````rules
-UBSYSTEM="usb_device",
-SYSFS{idVendor}=="16c0",
-SYSFS{idProduct}=="0478",
-MODE="0666"
-````	
+	````rules
+	UBSYSTEM="usb_device",
+	SYSFS{idVendor}=="16c0",
+	SYSFS{idProduct}=="0478",
+	MODE="0666"
+	````	
