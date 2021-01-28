@@ -99,4 +99,6 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 
 ![](imgs/teensy_pinout.png)
 
+![](imgs/schematic.gif)
+
 ### [Teensy Setup](Teensy_Setup.md)
