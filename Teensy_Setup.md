@@ -1,8 +1,10 @@
-# How To Install Teensy Installer on Linux (Ubuntu 18)
+# How To Install Teensy Installer
 
 ## [Teensy First Use](https://www.pjrc.com/teensy/first_use.html)
 
 ## [Teensy Loader](https://www.pjrc.com/teensy/loader_linux.html)
+
+### For Linux (Ubuntu 18)
 
 1. Download the Teensy Program (64 bit) to Downloads
 1. Unzip the archive
