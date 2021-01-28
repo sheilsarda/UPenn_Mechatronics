@@ -2,7 +2,7 @@
 
 ## [Teensy First Use](https://www.pjrc.com/teensy/first_use.html)
 
-## [Teensy Loader](https://www.pjrc.com/teensy/loader_linux.html)
+## [Teensy Loader and Toolchain](https://www.pjrc.com/teensy/loader_linux.html)
 
 ### For Linux (Ubuntu 18)
 
@@ -13,6 +13,9 @@
 	````
 1. Install dependencies
 	````sh
+	sudo apt-get install gcc-avr binutils-avr avr-libc
+	sudo apt-get install gdb-avr
+	sudo apt-get install avrdude
 	sudo apt-get install libcanberra-gtk-module
 	````
 1. Create `teensy.rules` as `sudo`
@@ -20,14 +23,9 @@
 	cd /etc/udev/rules.d/
 	````
 
-	Contents of `teensy.rules`
+	Copy the contents of [`49-teensy.rules`](refs/49-teensy.rules)
 
-	````rules
-	UBSYSTEM="usb_device",
-	SYSFS{idVendor}=="16c0",
-	SYSFS{idProduct}=="0478",
-	MODE="0666"
-	````	
 ### For Windows 10
 
-Install [WinAVR](https://sourceforge.net/projects/winavr/files/)
+- Download the Teensy executable program
+- Install [WinAVR](https://sourceforge.net/projects/winavr/files/)
