@@ -77,6 +77,37 @@ Features:
 
 ## 2. Introduction to Teensy 
 
+### 1.2.1 Modified Registers
+
+- Data Direction Register
+- GPIO Pinout
+
+### 1.2.2 Circuit Diagram
+
+
+### 1.2.3 Variable Frequency
+
+Frequency appears to be continually on at around 24Hz
+
+#### C Code
+
+````c
+
+````
+
+### 1.2.4 Variable Duty Cycle
+
+````c
+
+````
+
+### 1.2.5 Maximum LEDs from a GPIO Pin
+
+#### Circuit Diagram
+
+
+#### Limitations
+
 ## 3. Timers
 
 ## 4. Practice with Loops
