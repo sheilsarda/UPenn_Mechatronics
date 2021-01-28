@@ -70,7 +70,7 @@
 
 [Online Register Calculator](https://www.digikey.com/en/resources/conversion-calculators/conversion-calculator-resistor-color-code)
 
-![Resistor Color Chart](imgs/resistor_chart.jpg)
+<img src="imgs/resistor_chart.jpg" width=500>
 
 ## Datasheets
 
@@ -101,8 +101,8 @@ Bit Shifting macros
 
 More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.edu/index.php/Guides/Teensy-pins).
 
-![](imgs/teensy_pinout.png)
+<img src="imgs/teensy_pinout.png" width=500>
 
-![](imgs/schematic.gif)
+<img src="imgs/schematic.gif" width=500>
 
 ### [Teensy Setup](Teensy_Setup.md)
