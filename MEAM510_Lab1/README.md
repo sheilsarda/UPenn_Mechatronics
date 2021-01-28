@@ -37,6 +37,28 @@ Resistance for Dim Light = 10 KOhms
 | **Current (If)**					| 3V / 10 KOhms = **0.3 mA**|
 | 	| 		|
 
+### 1.1.3 Two LEDs in Parallel
+
+LEDs chosen
+
+| LED Type	| Forward Voltage	| Current |
+| :------------- | :----------: | :----------: |
+|[160-1128-ND ​LTL-4224 ​5mm red LED](https://media.digikey.com/pdf/Data%20Sheets/Lite-On%20PDFs/LTL-4238.pdf) 		| 	2V	| 30 mA |
+|[160-1132-ND ​LTL-4238 ​ 5mm green LED](https://www.digikey.com/htmldatasheets/production/33348/0/0/1/ltl-4238.html) 	|  2.1V	| 20 mA |
+| 	| 		|
+
+Based on the specifications, I would expect the Red LED to be brighter since it draws more current compared to the green LED.
+
+Measured voltage at A: **1.90 V**. The Red LED is slightly brighter.
+
+### 1.1.4 Two LEDs in Series
+
+Measured voltage at A: **3.81V**. 
+
+Voltage between the 2 LEDs: **1.95V**
+
+This is expected based on the datasheets, because due to similar internal resistances, both LEDs draw the same amount of current, causing the voltage drop in the middle of the two to be approximately half of the voltage at A.
+
 ## 2. Introduction to Teensy 
 
 ## 3. Timers
