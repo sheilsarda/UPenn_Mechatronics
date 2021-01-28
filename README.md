@@ -99,4 +99,4 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 
 ![](imgs/teensy_pinout.png)
 
-### [Teensy Loader Application](https://www.pjrc.com/teensy/loader.html)
+### [Teensy Setup](Teensy_Setup.md)
