@@ -28,3 +28,6 @@
 	SYSFS{idProduct}=="0478",
 	MODE="0666"
 	````	
+### For Windows 10
+
+Install [WinAVR](https://sourceforge.net/projects/winavr/files/)
