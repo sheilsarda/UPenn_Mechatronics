@@ -1,7 +1,5 @@
 # Equipment Overview and Best Practices
 
-From Recitation Notes 01.22.21
-
 ## Soldering Iron
 
 - Medium temperature (somewhere in the middle)
@@ -47,16 +45,16 @@ From Recitation Notes 01.22.21
 	- If blinking light breaks, the wifi packets are paused so readings are not accurate
 
 **Fig. 1 Function Generator 1**
-![Function Generator](imgs/func_generator.png)
+![Function Generator](imgs/func_generator.PNG)
 
 **Fig. 2 Function Generator 2**
-![Function Generator](imgs/func_generator_noise.png)
+![Function Generator](imgs/func_generator_noise.PNG)
 
 **Fig. 3 Trigger Line**
-![Function Generator](imgs/trigger_line_lock.png)
+![Function Generator](imgs/trigger_line_lock.PNG)
 
 **Fig. 4 Sine Wave**
-![Function Generator](imgs/sine_wave.png)
+![Function Generator](imgs/sine_wave.PNG)
 
 ## Voltage Divider
 
