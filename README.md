@@ -95,7 +95,7 @@ Bit Shifting macros
 #define toggle(reg, bit) reg ^= (1 << (bit))
 ````
 
-## Teensy 
+## [Teensy](http://medesign.seas.upenn.edu/index.php/Guides/Teensy)
 
 ### Pinout
 

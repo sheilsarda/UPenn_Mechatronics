@@ -84,6 +84,15 @@ Features:
 
 ### 1.2.2 Circuit Diagram
 
+#### Circuit Diagram
+
+<img src="lab1_1.2.2.jpg" width=500>
+
+#### Choice of Hardware
+
+- Used 1kOhm current limiting resistor
+- Used ground pin from the Teensy (which comes from laptop)
+- Used Red LED since it was easiest to detect whether its on / off
 
 ### 1.2.3 Variable Frequency
 
@@ -141,6 +150,8 @@ int main(void)
 ### 1.2.5 Maximum LEDs from a GPIO Pin
 
 #### Circuit Diagram
+
+<img src="lab1_1.2.5.jpg" width=500>
 
 
 #### Limitations
