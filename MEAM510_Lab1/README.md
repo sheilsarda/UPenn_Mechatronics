@@ -103,7 +103,6 @@ int main(void)
 
     /* insert your hardware initialization here */
     for(;;){
-        /* insert your main loop code here */
         toggle(PORTC, 7);
         teensy_led(TOGGLE);     // switch the led state
         teensy_wait(1000/FREQ_HZ);              // wait
@@ -115,7 +114,28 @@ int main(void)
 ### 1.2.4 Variable Duty Cycle
 
 ````c
+#include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
+#define FREQ_HZ 10 // variable for frequency
+#define DUTY_CYCLE 50 // variable for duty cycle percentage
+
+int main(void)
+{
+    teensy_clockdivide(0); //set the clock speed
+    set(DDRC, 7);
+
+    /* insert your hardware initialization here */
+    for(;;){
+        /* ON Part of the Duty Cycle */
+        toggle(PORTC, 7);
+        teensy_wait(10 * DUTY_CYCLE / FREQ_HZ);         // wait
+
+        /* OFF Part of the Duty Cycle */
+        clear(PORTC, 7);
+        teensy_wait(10 * (100 - DUTY_CYCLE) / FREQ_HZ);         // wait
+    }
+    return 0;   /* never reached */
+}
 ````
 
 ### 1.2.5 Maximum LEDs from a GPIO Pin
