@@ -107,10 +107,11 @@ Frequency appears to be continually on at around 60Hz
 
 int main(void)
 {
+    /* insert your hardware initialization here */
+
     teensy_clockdivide(0); //set the clock speed
     set(DDRC, 7);
 
-    /* insert your hardware initialization here */
     for(;;){
         toggle(PORTC, 7);
         teensy_led(TOGGLE);     // switch the led state
@@ -130,10 +131,11 @@ int main(void)
 
 int main(void)
 {
+    /* insert your hardware initialization here */
+
     teensy_clockdivide(0); //set the clock speed
     set(DDRC, 7);
 
-    /* insert your hardware initialization here */
     for(;;){
         /* ON Part of the Duty Cycle */
         toggle(PORTC, 7);
