@@ -156,7 +156,9 @@ int main(void)
 
 #### Limitations
 
-Since each red LED uses 2V, and each GPIO pin of the Teensy outputs 5V and 20 mA we can connect up to 2LEDs at max brightness (since 2V + 2V < 5V).
+Since each red LED uses 2V, and each GPIO pin of the Teensy outputs 5V and 20 mA we can connect up to 2 LEDs at visible brightness (since 2V + 2V < 5V).
+
+The GPIO output voltage of the Teensy is the limiting factor.
 
 ## 3. Timers
 
