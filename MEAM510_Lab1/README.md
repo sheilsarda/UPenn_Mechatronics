@@ -164,6 +164,74 @@ The GPIO output voltage of the Teensy is the limiting factor.
 
 ## 3. Timers
 
+### 1.3.1 Use the timer to get 200Hz
+
+#### Oscilloscope Output
+
+#### C Code
+
+````c
+#include "teensy_general.h"  // includes the resources included in the teensy_general.h file
+
+#define FREQ_HZ 200 // variable for frequency
+#define PRESCALAR 64
+int main(void)
+{
+    /* insert your hardware initialization here */
+
+    teensy_clockdivide(0); //set the clock speed
+    set(DDRC, 7);
+
+    // set(TCCR1B, CS12); // set 256 prescalar
+
+    // 64 prescalar
+    set(TCCR1B, CS10);
+    set(TCCR1B, CS11);
+
+    uint64_t cutoff = 16e6 / (FREQ_HZ * PRESCALAR);
+    for(;;){
+
+        if(TCNT1 > cutoff){
+            toggle(PORTC, 7);
+            // teensy_led(TOGGLE);
+            TCNT1 = 0;
+        }
+    }
+    return 0;   /* never reached */
+}
+
+````
+
+### 1.3.2 Adjust the Pre-scaler
+
+Adjusted the pre-scalar in the code snippet for 1.3.1.
+
+The default system clock frequency is 16MHz.
+
+### 1.3.2 PWM functions of timer
+
+Do the same thing you did in 1.2.4
+
+#### Timer options used
+
+#### Duty Cycles 
+
+##### 0% cycle
+
+<img src="" width=500>
+
+##### 100% cycle
+
+<img src="" width=500>
+
+#### C Code
+
+````c
+
+```` 
+
+#### [Short Video]()
+
 ## 4. Practice with Loops
 
 ## 5. Retrospective 
