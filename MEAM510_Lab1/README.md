@@ -280,6 +280,37 @@ int main(void)
 
 ## 4. Practice with Loops
 
+### 1.4.1 Make the External LED Pulse
+
+#### Part A
+
+The pulse should start at 0 intensity, take 1 second to increase in intensity until it is full brightness, then 1 second to decrease in brightness and repeat.
+
+````c
+
+
+````
+
+#### Part B
+
+Make the time to increase and the time to decrease a variable. 
+
+##### [Video of Asymetric Pulses]()
+
+0.3 second to full intensity and 0.7 seconds to 0 intensity
+
+##### C Code
+
+````c
+
+```` 
+
+##### Circuit Diagram
+
+<img src="" width=500>
+
+### 1.4.2
+
 ## 5. Retrospective 
 
 Spent approximately 10 hours on this lab.
