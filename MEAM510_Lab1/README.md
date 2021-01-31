@@ -173,8 +173,9 @@ The GPIO output voltage of the Teensy is the limiting factor.
 ````c
 #include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
-#define FREQ_HZ 200 // variable for frequency
-#define PRESCALAR 64
+#define FREQ_HZ 20 // variable for frequency
+#define PRESCALAR 256 // prescalar used
+#define SYS_CLOCK 16e6 // clock speed (16 Mhz)
 int main(void)
 {
     /* insert your hardware initialization here */
@@ -182,23 +183,24 @@ int main(void)
     teensy_clockdivide(0); //set the clock speed
     set(DDRC, 7);
 
-    // set(TCCR1B, CS12); // set 256 prescalar
+    set(TCCR1B, CS12); // set 256 prescalar
 
-    // 64 prescalar
-    set(TCCR1B, CS10);
-    set(TCCR1B, CS11);
+    // set(TCCR1B, CS11); // 8 prescalar
 
-    uint64_t cutoff = 16e6 / (FREQ_HZ * PRESCALAR);
+    TCNT1 = 0x00;
+    long cutoff = SYS_CLOCK/(2*FREQ_HZ*PRESCALAR);
+
     for(;;){
 
         if(TCNT1 > cutoff){
             toggle(PORTC, 7);
-            // teensy_led(TOGGLE);
-            TCNT1 = 0;
+            teensy_led(TOGGLE);
+            TCNT1 = 0x00;
         }
     }
     return 0;   /* never reached */
 }
+
 
 ````
 
@@ -208,11 +210,13 @@ Adjusted the pre-scalar in the code snippet for 1.3.1.
 
 The default system clock frequency is 16MHz.
 
-### 1.3.2 PWM functions of timer
+### 1.3.3 PWM functions of timer
 
 Do the same thing you did in 1.2.4
 
 #### Timer options used
+
+<img src="../imgs/fast_pwm.png" width=500>
 
 #### Duty Cycles 
 

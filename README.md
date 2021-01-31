@@ -97,6 +97,8 @@ Bit Shifting macros
 
 ## [Teensy](http://medesign.seas.upenn.edu/index.php/Guides/Teensy)
 
+Datasheet [here](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf)
+
 ### Pinout
 
 More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.edu/index.php/Guides/Teensy-pins).
@@ -106,3 +108,7 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 <img src="imgs/schematic.gif" width=500>
 
 ### [Teensy Setup](Teensy_Setup.md)
+
+### Teensy PWM
+
+<img src="imgs/fast_pwm.png" width=500>

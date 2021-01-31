@@ -7,20 +7,20 @@
 #define FREQ_HZ 20 // variable for frequency
 #define PRESCALAR 256 // prescalar used
 #define SYS_CLOCK 16e6 // clock speed (16 Mhz)
+#define DUTY_CYCLE 100 // duty cycle %
+
 int main(void)
 {
     /* insert your hardware initialization here */
 
     teensy_clockdivide(0); //set the clock speed
     set(DDRC, 7);
-  
     set(TCCR1B, CS12); // set 256 prescalar
     
-    // set(TCCR1B, CS11); // 8 prescalar
-
     TCNT1 = 0x00;
-    long cutoff = SYS_CLOCK/(2*FREQ_HZ*PRESCALAR); 
 
+    // set compare match register
+    OC1A = SYS_CLOCK/(2*FREQ_HZ*PRESCALAR); 
     for(;;){
 	
 	if(TCNT1 > cutoff){
