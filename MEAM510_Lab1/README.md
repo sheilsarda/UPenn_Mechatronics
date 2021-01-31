@@ -404,7 +404,7 @@ int main(void)
 
 ##### Circuit Diagram
 
-<img src="lab1_timer_circuit.jpg" width=500>
+<img src="lab1_timer_circuit.jpg" width=800>
 
 ### 1.4.2
 
