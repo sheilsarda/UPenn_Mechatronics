@@ -4,7 +4,7 @@
 
 #include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
-#define FREQ_HZ    10    // variable for frequency
+#define FREQ_HZ    50    // variable for frequency
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 #define DUTY_CYCLE .5    // duty cycle 
