@@ -414,6 +414,12 @@ int main(void)
 
 LED percentage intensity `i` should follow the pattern below at time `t` seconds but smoothly interpolated intensities between each value:
 
+|             	|     	|     	|     	|     	|     	|     	|     	|     	|     	|     	|
+|-------------	|-----	|-----	|-----	|-----	|-----	|-----	|-----	|-----	|-----	|-----	|
+| Time t      	| 0.0 	| 0.1 	| 0.5 	| 0.6 	| 1.0 	| 3.0 	| 3.1 	| 3.5 	| 3.6 	| 4.0 	|
+| Intensity i 	| 0   	| 100 	| 0   	| 50  	| 0   	| 0   	| 100 	| 0   	| 50  	| 0   	|
+|             	|     	|     	|     	|     	|     	|     	|     	|     	|     	|     	|
+
 | Time `t`	| Intensity `i`		|
 | :------------- | :----------: |
 | 0.0	| 0 |
