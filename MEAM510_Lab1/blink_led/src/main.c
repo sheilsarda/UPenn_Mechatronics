@@ -7,7 +7,6 @@
 #define FREQ_HZ    50    // variable for frequency
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
-#define DUTY_CYCLE .5    // duty cycle 
 
 int main(void)
 {
@@ -30,17 +29,22 @@ int main(void)
     // set compare match register
     ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
     
-    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1, 1, 0.5, 0.2, 0.05};
+    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1};
     int len = (sizeof(arr) / sizeof(double));
+    int delay_time = 1000/len; // how much time to spend at each duty cycle
+    
     while(1){
-    for(int i = 0; i < len; ++i){
-        OCR1A = ICR1*arr[i];
-	_delay_ms(2);
-    }}
+        // rising
+        for(int i = 0; i < len; ++i){
+            OCR1A = ICR1*arr[i];
+	    _delay_ms(delay_time);
+        }
+        // falling
+        for(int i = len-1; i >= 0; --i){
+            OCR1A = ICR1*arr[i];
+	    _delay_ms(delay_time);
+        }
+    }
 
-    // set duty cycle PWM
-    // OCR1A = ICR1*DUTY_CYCLE;  
-   
-    while(1);
     return 0;   /* never reached */
 }
