@@ -410,9 +410,14 @@ int main(void)
 
 #### Refactor code to use Subroutines and make Max Intensity variable
 
-````c
+Uses the following defined variables:
+- `RISE_TIME`
+- `MAX_INTENSITY`
+- `FREQ_HZ`
+- `PRESCALAR`
+- `SYS_CLOCK`
 
-````
+Assumes LED is plugged into Port `B5`, and that Timer 1 is not being used.
 
 #### Make the LED blink as if it were a heartbeat
 
