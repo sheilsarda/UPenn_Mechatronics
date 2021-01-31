@@ -9,9 +9,9 @@
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 
 #define RISE_TIME 4000 // time in ms to full intensity
-#define FALL_TIME 4000 // time in ms to 0 intensity
 #define MAX_INTENSITY 1 // max intensity
-
+#define LERP 5 // number of points to lerp between variable
+double intensity[] = {0,100,75,50,25,0,50,37.5,25,12.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /* 
  * Uses the following defined variables
@@ -40,26 +40,25 @@ void pulse_led(){
     // set compare match register
     ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
     
-    double arr[] = {
-        0,100,75,50,25,0,50,37.5,25,12.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,75,50,25,0,50,37.5,25,12.5,0
-    };
-    
-    int len = (sizeof(arr) / sizeof(double));
+    int len = (sizeof(intensity) / sizeof(double));
 
     // time to spend at each duty cycle
-    int rise_ms = RISE_TIME/len; 
-    int fall_ms = FALL_TIME/len; 
+    int rise_ms = RISE_TIME/(len*LERP); 
     
     while(1){
         // rising
         for(int i = 0; i < len; ++i){
-            OCR1A = ICR1*arr[i]*MAX_INTENSITY;
-	    _delay_ms(rise_ms);
-        }
-        // falling
-        for(int i = len-1; i >= 0; --i){
-            OCR1A = ICR1*arr[i]*MAX_INTENSITY;
-	    _delay_ms(fall_ms);
+	    int lerp_i = 0;
+
+	    if(i < len - 1 && lerp_i < LERP){
+               
+  	       double lerp_intensity = (intensity[i+1] - intensity[i])*(lerp_i/LERP) + intensity[i];
+	       OCR1A = ICR1*lerp_intensity*MAX_INTENSITY;
+	       lerp_i++;
+
+	    } else OCR1A = ICR1*intensity[i]*MAX_INTENSITY;
+	 
+            _delay_ms(rise_ms);
         }
     }
 
@@ -68,5 +67,6 @@ void pulse_led(){
 
 int main(void)
 {
+    pulse_led();
     return 0;   /* never reached */
 }
