@@ -408,6 +408,26 @@ int main(void)
 
 ### 1.4.2
 
+#### Refactor code to use Subroutines and make Max Intensity variable
+
+#### Make the LED blink as if it were a heartbeat
+
+LED percentage intensity `i` should follow the pattern below at time `t` seconds but smoothly interpolated intensities between each value:
+
+| Time `t`	| Intensity `i`		|
+| :------------- | :----------: |
+| 0.0	| 0 |
+| 0.1	| 100 |
+| 0.5	| 0 |
+| 0.6	| 50 |
+| 1.0	| 0 |
+| 3.0	| 0 |
+| 3.1	| 100 |
+| 3.5	| 0 |
+| 3.6	| 50 |
+| 4.0	| 0 |
+| 	| 		|
+
 ## 5. Retrospective 
 
 Spent approximately 10 hours on this lab.
