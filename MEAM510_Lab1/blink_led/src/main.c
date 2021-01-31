@@ -10,6 +10,19 @@
 
 #define RISE_TIME 300 // time in ms to full intensity
 #define FALL_TIME 700 // time in ms to 0 intensity
+#define MAX_INTENSITY 1 // max intensity
+
+
+/* 
+ * Uses the following defined variables
+ * `RISE_TIME`, `FALL_TIME`, `MAX_INTENSITY`,
+ * `FREQ_HZ`, `PRESCALAR` and `SYS_CLOCK`
+ * Assumes LED is plugged into Port `B5`
+ * Uses Timer 1 for PWM functionality
+ */
+void pulse_led(){
+
+}
 
 int main(void)
 {
@@ -42,12 +55,12 @@ int main(void)
     while(1){
         // rising
         for(int i = 0; i < len; ++i){
-            OCR1A = ICR1*arr[i];
+            OCR1A = ICR1*arr[i]*MAX_INTENSITY;
 	    _delay_ms(rise_ms);
         }
         // falling
         for(int i = len-1; i >= 0; --i){
-            OCR1A = ICR1*arr[i];
+            OCR1A = ICR1*arr[i]*MAX_INTENSITY;
 	    _delay_ms(fall_ms);
         }
     }

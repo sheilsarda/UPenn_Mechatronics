@@ -406,9 +406,13 @@ int main(void)
 
 <img src="lab1_timer_circuit.jpg" width=800>
 
-### 1.4.2
+### 1.4.2 Pulsing LED like Heartbeat
 
 #### Refactor code to use Subroutines and make Max Intensity variable
+
+````c
+
+````
 
 #### Make the LED blink as if it were a heartbeat
 
@@ -419,6 +423,14 @@ LED percentage intensity `i` should follow the pattern below at time `t` seconds
 | Time `t`      	| 0.0 	| 0.1 	| 0.5 	| 0.6 	| 1.0 	| 3.0 	| 3.1 	| 3.5 	| 3.6 	| 4.0 	|
 | Intensity `i` 	| 0   	| 100 	| 0   	| 50  	| 0   	| 0   	| 100 	| 0   	| 50  	| 0   	|
 |             	|     	|     	|     	|     	|     	|     	|     	|     	|     	|     	|
+
+##### [Heartbeat LED Video]()
+
+##### C Code
+
+````c
+
+````
 
 ## 5. Retrospective 
 
