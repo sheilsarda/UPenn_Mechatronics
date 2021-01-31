@@ -45,24 +45,28 @@ void pulse_led(){
     // time to spend at each duty cycle
     int rise_ms = RISE_TIME/(len*LERP); 
     
+    int lerp_i = 0;
+    double lerp_intensity;
+    
     while(1){
-        // rising
         for(int i = 0; i < len; ++i){
-	    int lerp_i = 0;
-
-	    if(i < len - 1 && lerp_i < LERP){
+	    // LERP between values
+	    if(i < len - 1){ 
+            
+	        for(lerp_i = 0; lerp_i < LERP; ++lerp_i){
                
-  	       double lerp_intensity = (intensity[i+1] - intensity[i])*(lerp_i/LERP) + intensity[i];
-	       OCR1A = ICR1*lerp_intensity*MAX_INTENSITY;
-	       lerp_i++;
+  	           lerp_intensity = (intensity[i+1] - intensity[i])*(lerp_i/LERP);
+    	           lerp_intensity += intensity[i];
 
-	    } else OCR1A = ICR1*intensity[i]*MAX_INTENSITY;
-	 
-            _delay_ms(rise_ms);
+	           OCR1A = ICR1*lerp_intensity*MAX_INTENSITY;
+                   _delay_ms(rise_ms);
+	        }
+	    } else { // last value in array
+		OCR1A = ICR1*intensity[i]*MAX_INTENSITY;
+                _delay_ms(rise_ms);
+	    }
         }
     }
-
-
 }
 
 int main(void)
