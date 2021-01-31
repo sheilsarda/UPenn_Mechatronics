@@ -8,8 +8,8 @@
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 
-#define RISE_TIME 300 // time in ms to full intensity
-#define FALL_TIME 700 // time in ms to 0 intensity
+#define RISE_TIME 4000 // time in ms to full intensity
+#define FALL_TIME 4000 // time in ms to 0 intensity
 #define MAX_INTENSITY 1 // max intensity
 
 
@@ -21,11 +21,6 @@
  * Uses Timer 1 for PWM functionality
  */
 void pulse_led(){
-
-}
-
-int main(void)
-{
     set(TCCR1B, CS12); // set 256 prescalar    
     teensy_clockdivide(0); //set the clock speed
 
@@ -45,7 +40,10 @@ int main(void)
     // set compare match register
     ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
     
-    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1};
+    double arr[] = {
+        0,100,75,50,25,0,50,37.5,25,12.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,75,50,25,0,50,37.5,25,12.5,0
+    };
+    
     int len = (sizeof(arr) / sizeof(double));
 
     // time to spend at each duty cycle
@@ -65,5 +63,10 @@ int main(void)
         }
     }
 
+
+}
+
+int main(void)
+{
     return 0;   /* never reached */
 }
