@@ -112,3 +112,6 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 ### Teensy PWM
 
 <img src="imgs/fast_pwm.png" width=500>
+
+<img src="imgs/timer1.jpeg" width=500>
+

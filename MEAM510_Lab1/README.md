@@ -218,6 +218,10 @@ Do the same thing you did in 1.2.4
 
 <img src="../imgs/fast_pwm.png" width=500>
 
+- `OC1A` is `PB5`
+- Output compare is set on the compare match between `TCNT1` and `OCR1A`
+- 
+
 #### Duty Cycles 
 
 ##### 0% cycle
