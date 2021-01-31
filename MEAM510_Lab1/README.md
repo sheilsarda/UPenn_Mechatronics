@@ -287,17 +287,63 @@ int main(void)
 The pulse should start at 0 intensity, take 1 second to increase in intensity until it is full brightness, then 1 second to decrease in brightness and repeat.
 
 ````c
+#include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
+#define FREQ_HZ    50    // variable for frequency
+#define PRESCALAR  256  // prescalar used
+#define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 
+int main(void)
+{
+    set(TCCR1B, CS12); // set 256 prescalar    
+    teensy_clockdivide(0); //set the clock speed
+
+    set(DDRB, 5); // B5 is output compare pin
+
+    // (mode 14) UP to ICR1, PWM mode
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12); set(TCCR1A, WGM11);
+
+    // toggle B5 at OC
+    set(TCCR1A, COM1A1); 
+
+    /* Set OC1A on compare match when upcounting. Clear OC1A 
+     * on compare match when down-counting. 
+     */
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12);
+    
+    // set compare match register
+    ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
+    
+    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1};
+    int len = (sizeof(arr) / sizeof(double));
+    int delay_time = 1000/len; // how much time to spend at each duty cycle
+    
+    while(1){
+        // rising
+        for(int i = 0; i < len; ++i){
+            OCR1A = ICR1*arr[i];
+	    _delay_ms(delay_time);
+        }
+        // falling
+        for(int i = len-1; i >= 0; --i){
+            OCR1A = ICR1*arr[i];
+	    _delay_ms(delay_time);
+        }
+    }
+
+    return 0;   /* never reached */
+}
 ````
 
 #### Part B
 
-Make the time to increase and the time to decrease a variable. 
+- Make the time to increase and the time to decrease a variable. 
+- Make a video with the following configuration:
+    - 0.3 second to full intensity 
+    - 0.7 seconds to 0 intensity
 
 ##### [Video of Asymetric Pulses]()
 
-0.3 second to full intensity and 0.7 seconds to 0 intensity
 
 ##### C Code
 

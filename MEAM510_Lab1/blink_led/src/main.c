@@ -8,6 +8,9 @@
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 
+#define RISE_TIME 300 // time in ms to full intensity
+#define FALL_TIME 700 // time in ms to 0 intensity
+
 int main(void)
 {
     set(TCCR1B, CS12); // set 256 prescalar    
@@ -31,18 +34,21 @@ int main(void)
     
     double arr[] = {0, 0.05, 0.2, 0.5, 1, 1};
     int len = (sizeof(arr) / sizeof(double));
-    int delay_time = 1000/len; // how much time to spend at each duty cycle
+
+    // time to spend at each duty cycle
+    int rise_ms = RISE_TIME/len; 
+    int fall_ms = FALL_TIME/len; 
     
     while(1){
         // rising
         for(int i = 0; i < len; ++i){
             OCR1A = ICR1*arr[i];
-	    _delay_ms(delay_time);
+	    _delay_ms(rise_ms);
         }
         // falling
         for(int i = len-1; i >= 0; --i){
             OCR1A = ICR1*arr[i];
-	    _delay_ms(delay_time);
+	    _delay_ms(fall_ms);
         }
     }
 
