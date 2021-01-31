@@ -7,7 +7,7 @@
 #define FREQ_HZ    1    // variable for frequency
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
-#define DUTY_CYCLE 0.5  // duty cycle %
+#define DUTY_CYCLE .5    // duty cycle 
 
 int main(void)
 {

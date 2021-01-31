@@ -218,27 +218,65 @@ Do the same thing you did in 1.2.4
 
 <img src="../imgs/fast_pwm.png" width=500>
 
-- `OC1A` is `PB5`
 - Output compare is set on the compare match between `TCNT1` and `OCR1A`
-- 
+- Mode 14 on Timer 1 to count up to `ICR1`
+- Toggling Port `B5` at Output Compare Match
+- Set Compare match registers `ICR1` and `OCR1A`
+- `256x` prescalar
+- Set `OC1A` on compare match when up-counting and clear on compare match
+
+<img src="../imgs/timer1.jpeg" width=500>
 
 #### Duty Cycles 
 
 ##### 0% cycle
 
-<img src="" width=500>
+<img src="lab1_0duty.jpg" width=500>
 
 ##### 100% cycle
 
-<img src="" width=500>
+<img src="lab1_100duty.jpg" width=500>
 
 #### C Code
 
 ````c
+#include "teensy_general.h"  // includes the resources included in the teensy_general.h file
+
+#define FREQ_HZ    1    // variable for frequency
+#define PRESCALAR  256  // prescalar used
+#define SYS_CLOCK  16e6 // clock speed (16 Mhz)
+#define DUTY_CYCLE 1    // duty cycle 
+
+int main(void)
+{
+    set(TCCR1B, CS12); // set 256 prescalar    
+    teensy_clockdivide(0); //set the clock speed
+
+    set(DDRB, 5); // B5 is output compare pin
+
+    // (mode 14) UP to ICR1, PWM mode
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12); set(TCCR1A, WGM11);
+
+    // toggle B5 at OC
+    set(TCCR1A, COM1A1); 
+
+    // set compare match register
+    ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
+    // set duty cycle PWM
+    OCR1A = ICR1*DUTY_CYCLE;  
+
+    /* Set OC1A on compare match when upcounting. Clear OC1A 
+     * on compare match when down-counting. 
+     */
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12);
+   
+    while(1);
+    return 0;   /* never reached */
+}
 
 ```` 
 
-#### [Short Video]()
+#### [Video Demonstration](https://www.youtube.com/watch?v=AvenU_oT04E)
 
 ## 4. Practice with Loops
 
