@@ -256,7 +256,7 @@ int main(void)
     // (mode 14) UP to ICR1, PWM mode
     set(TCCR1B, WGM13); set(TCCR1B, WGM12); set(TCCR1A, WGM11);
 
-    // toggle B5 at OC
+    // clear B5 at OC (to start off part of duty cycle)
     set(TCCR1A, COM1A1); 
 
     // set compare match register
