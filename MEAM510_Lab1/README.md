@@ -131,7 +131,6 @@ int main(void)
 
 int main(void)
 {
-    /* insert your hardware initialization here */
 
     teensy_clockdivide(0); //set the clock speed
     set(DDRC, 7);
@@ -164,9 +163,11 @@ The GPIO output voltage of the Teensy is the limiting factor.
 
 ## 3. Timers
 
-### 1.3.1 Use the timer to get 200Hz
+### 1.3.1 Use the timer to get 20Hz
 
 #### Oscilloscope Output
+
+<img src="lab1_20hz.png" width=500>
 
 #### C Code
 
@@ -184,8 +185,6 @@ int main(void)
     set(DDRC, 7);
 
     set(TCCR1B, CS12); // set 256 prescalar
-
-    // set(TCCR1B, CS11); // 8 prescalar
 
     TCNT1 = 0x00;
     long cutoff = SYS_CLOCK/(2*FREQ_HZ*PRESCALAR);
@@ -314,7 +313,7 @@ int main(void)
     // set compare match register
     ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
     
-    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1};
+    double arr[] = {0, 0.05, 0.2, 0.5, 1, 1}; // duty cycles
     int len = (sizeof(arr) / sizeof(double));
     int delay_time = 1000/len; // how much time to spend at each duty cycle
     
@@ -443,7 +442,7 @@ LED percentage intensity `i` should follow the pattern below at time `t` seconds
 #define RISE_TIME 4000 // time in ms to full intensity
 #define MAX_INTENSITY 1 // max intensity
 #define LERP 5 // number of points to lerp between variable
-double intensity[] = {0,100,75,50,25,0,50,37.5,25,12.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+double intensity[] = {0,1,0.75,0.5,0.25,0,0.5,0.375,0.25,0.125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /* 
  * Uses the following defined variables
@@ -511,4 +510,6 @@ int main(void)
 
 ## 5. Retrospective 
 
-Spent approximately 20 hours on this lab.
+- Spent approximately 20 hours on this lab.
+- Spent 10+ hours on the Timers and Loops part of the lab combined
+

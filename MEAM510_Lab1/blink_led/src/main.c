@@ -1,7 +1,6 @@
 /* Name: main.c
  * Author: Sheil Sarda
  */
-
 #include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
 #define FREQ_HZ    50    // variable for frequency
@@ -11,7 +10,7 @@
 #define RISE_TIME 4000 // time in ms to full intensity
 #define MAX_INTENSITY 1 // max intensity
 #define LERP 5 // number of points to lerp between variable
-double intensity[] = {0,100,75,50,25,0,50,37.5,25,12.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+double intensity[] = {0,1,0.75,0.5,0.25,0,0.5,0.375,0.25,0.125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /* 
  * Uses the following defined variables
@@ -74,3 +73,4 @@ int main(void)
     pulse_led();
     return 0;   /* never reached */
 }
+
