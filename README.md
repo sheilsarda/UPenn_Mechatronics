@@ -109,7 +109,7 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 
 ### [Teensy Setup](Teensy_Setup.md)
 
-### Teensy PWM
+### [Teensy PWM](https://sites.google.com/site/qeewiki/books/avr-guide/pwm-on-the-atmega328)
 
 <img src="imgs/fast_pwm.png" width=500>
 
