@@ -264,11 +264,6 @@ int main(void)
     // set duty cycle PWM
     OCR1A = ICR1*DUTY_CYCLE;  
 
-    /* Set OC1A on compare match when upcounting. Clear OC1A 
-     * on compare match when down-counting. 
-     */
-    set(TCCR1B, WGM13); set(TCCR1B, WGM12);
-   
     while(1);
     return 0;   /* never reached */
 }
