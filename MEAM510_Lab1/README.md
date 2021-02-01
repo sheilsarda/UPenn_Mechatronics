@@ -10,7 +10,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 #### From Page 3:
 
-![](../imgs/led_datasheet.png)
+<img src="led_datasheet.png" width=500>
 
 #### Calculate the smallest resistor that you can safely use with this LED in series with 5V power. 
 
