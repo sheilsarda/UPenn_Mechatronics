@@ -3,13 +3,15 @@
  */
 #include "teensy_general.h"  // includes the resources included in the teensy_general.h file
 
-#define FREQ_HZ    50    // variable for frequency
+#define FREQ_HZ    100    // variable for frequency
 #define PRESCALAR  256  // prescalar used
 #define SYS_CLOCK  16e6 // clock speed (16 Mhz)
 
 #define RISE_TIME 4000 // time in ms to full intensity
-#define MAX_INTENSITY 1 // max intensity
 #define LERP 5 // number of points to lerp between variable
+#define TOTAL_BEATS 20 // heartbeat goes to zero intensity after these beats
+
+
 double intensity[] = {0,1,0.75,0.5,0.25,0,0.5,0.375,0.25,0.125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /* 
@@ -47,6 +49,9 @@ void pulse_led(){
     int lerp_i = 0;
     double lerp_intensity;
     
+    int beat_count = 1;
+    double max_intensity = 1.0;
+
     while(1){
         for(int i = 0; i < len; ++i){
 	    // LERP between values
@@ -56,15 +61,22 @@ void pulse_led(){
                
   	           lerp_intensity = (intensity[i+1] - intensity[i])*(lerp_i/LERP);
     	           lerp_intensity += intensity[i];
+		   
+		   max_intensity = 1- (beat_count*(i * len)*(lerp_i * LERP))
+			   /(len*LERP*TOTAL_BEATS);
 
-	           OCR1A = ICR1*lerp_intensity*MAX_INTENSITY;
+	           OCR1A = ICR1*lerp_intensity*max_intensity;
                    _delay_ms(rise_ms);
+	           
+	           
 	        }
 	    } else { // last value in array
-		OCR1A = ICR1*intensity[i]*MAX_INTENSITY;
+		OCR1A = ICR1*intensity[i]*max_intensity;
                 _delay_ms(rise_ms);
 	    }
         }
+        if(beat_count > TOTAL_BEATS) break;
+        beat_count++;
     }
 }
 

@@ -503,8 +503,108 @@ int main(void)
 
 ````
 
+### 1.4.3 **Extra Credit** Weaker Heartbeat
+
+- Heartbeat stays at a constant frequency, but maximum intensity slowly fades as if the heartbeat is getting weaker
+- Have it take 20 beats before it is reduced to 0 intensity
+- Show a TA your LED blinking; answer his/her questions, and get signed off
+
+#### C Code
+
+````c
+#include "teensy_general.h"  // includes the resources included in the teensy_general.h file
+
+#define FREQ_HZ    100    // variable for frequency
+#define PRESCALAR  256  // prescalar used
+#define SYS_CLOCK  16e6 // clock speed (16 Mhz)
+
+#define RISE_TIME 4000 // time in ms to full intensity
+#define LERP 5 // number of points to lerp between variable
+#define TOTAL_BEATS 20 // heartbeat goes to zero intensity after these beats
+
+
+double intensity[] = {0,1,0.75,0.5,0.25,0,0.5,0.375,0.25,0.125,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+/* 
+ * Uses the following defined variables
+ * `RISE_TIME`, `FALL_TIME`, `MAX_INTENSITY`,
+ * `FREQ_HZ`, `PRESCALAR` and `SYS_CLOCK`
+ * Assumes LED is plugged into Port `B5`
+ * Uses Timer 1 for PWM functionality
+ */
+void pulse_led(){
+    set(TCCR1B, CS12); // set 256 prescalar    
+    teensy_clockdivide(0); //set the clock speed
+
+    set(DDRB, 5); // B5 is output compare pin
+
+    // (mode 14) UP to ICR1, PWM mode
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12); set(TCCR1A, WGM11);
+
+    // toggle B5 at OC
+    set(TCCR1A, COM1A1); 
+
+    /* Set OC1A on compare match when upcounting. Clear OC1A 
+     * on compare match when down-counting. 
+     */
+    set(TCCR1B, WGM13); set(TCCR1B, WGM12);
+    
+    // set compare match register
+    ICR1  = SYS_CLOCK/(FREQ_HZ*PRESCALAR); 
+    
+    int len = (sizeof(intensity) / sizeof(double));
+
+    // time to spend at each duty cycle
+    int rise_ms = RISE_TIME/(len*LERP); 
+    
+    int lerp_i = 0;
+    double lerp_intensity;
+    
+    int beat_count = 1;
+    double max_intensity = 1.0;
+
+    while(1){
+        for(int i = 0; i < len; ++i){
+	    // LERP between values
+	    if(i < len - 1){ 
+            
+	        for(lerp_i = 0; lerp_i < LERP; ++lerp_i){
+               
+  	           lerp_intensity = (intensity[i+1] - intensity[i])*(lerp_i/LERP);
+    	           lerp_intensity += intensity[i];
+		   
+		   max_intensity = 1- (beat_count*(i * len)*(lerp_i * LERP))
+			   /(len*LERP*TOTAL_BEATS);
+
+	           OCR1A = ICR1*lerp_intensity*max_intensity;
+                   _delay_ms(rise_ms);
+	           
+	           
+	        }
+	    } else { // last value in array
+		OCR1A = ICR1*intensity[i]*max_intensity;
+                _delay_ms(rise_ms);
+	    }
+        }
+        if(beat_count > TOTAL_BEATS) break;
+        beat_count++;
+    }
+}
+
+int main(void)
+{
+    pulse_led();
+    return 0;   /* never reached */
+}
+
+
+
+````
+
 ## 5. Retrospective 
 
 - Spent approximately 20 hours on this lab.
 - Spent 10+ hours on the Timers and Loops part of the lab combined
+- Additionally, spent 5 hours on the Extra Credit
+
 
