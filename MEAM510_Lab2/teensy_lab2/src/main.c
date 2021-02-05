@@ -1,20 +1,17 @@
 /* Name: main.c
- * Author: <insert your name here>
- * Copyright: <insert your copyright message here>
- * License: <insert your license reference here>
+ * Author: Sheil Sarda
  */
 
 #include "teensy_general.h"
+#include "t_usb.h"
 
-int main(void)
-{
-    /* insert your hardware initialization here */
-	teensy_clockdivide(0);
-    teensy_wait(1000);
-    for(;;){
-        /* insert your main loop code here */
-		teensy_led(TOGGLE);
-        teensy_wait(1000);
+int main(void){
+    m_usb_init();
+
+    while(!m_usb_isconnected()); // wait for a connection
+    while(1){
+        m_usb_tx_string("Hello World\r\n");
+	teensy_wait(1000);
     }
-    return 0;   /* never reached */
 }
+

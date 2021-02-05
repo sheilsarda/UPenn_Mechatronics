@@ -120,19 +120,22 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 No need to edit makefile
 
 ````c
+#include "teensy_general.h"
 #include "t_usb.h"
 
 int main(void){
-    unsigned int value;
     m_usb_init();
-    while(!m_usb_isconnected()); // wait for a connection
 
+    while(!m_usb_isconnected()); // wait for a connection
     while(1){
-        if(m_usb_rx_available()){
-            value = m_usb_rx_char();
-            m_usb_tx_uint(value);
-        } 
+        m_usb_tx_string("Hello World\r\n");
+	teensy_wait(1000);
     }
 }
 
 ````
+
+### [Single-Pole-Single-Throw (SPST) Switch](https://industrial.panasonic.com/cdbs/www-data/pdf/ATB0000/ATB0000C14.pdf)
+
+<img src="imgs/spst_circuit.png" width=300>
+
