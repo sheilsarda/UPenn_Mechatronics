@@ -1,7 +1,14 @@
-/* Name: main.c
- * Author: Sheil Sarda
- */
+# Lab 2 - Capturing Inputs
 
+Sheil Sarda <sheils@seas.upenn.edu>
+
+## 1. Switches, Debouncing and Input Capture
+
+### 2.1.1 SPST Switch Wiring
+
+<img src="spst_schematic.jpeg" width=800>
+
+````c
 #include "teensy_general.h"
 #include "t_usb.h"
 
@@ -32,3 +39,6 @@ int main(void){
     }
 }
 
+````
+
+### 2.1.2 Debouncing the SPST
