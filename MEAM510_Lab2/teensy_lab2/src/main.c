@@ -4,6 +4,7 @@
 
 #include "teensy_general.h"
 #include "t_usb.h"
+#include <stdbool.h>
 
 int main(void){
     m_usb_init();
@@ -17,17 +18,22 @@ int main(void){
     set(DDRC, 7);  // C7 is output 
     clear(PORTC, 7); // no LED
 
+    bool prev_state = false; // true when switch is depressed
+
     while(!m_usb_isconnected()); // wait for a connection
     while(1){
 	// detect if button is pressed
         if(!bit_is_set(PINB, 7)){
             set(PORTC, 7);
 	    teensy_led(ON);
-	    m_usb_tx_string("Bit is set\r\n");
+	    if(!prev_state) m_usb_tx_string("Switch Toggled\r\n");
+	    prev_state = true;
 	} else {
 	    // button is not pressed
+	    if(prev_state) m_usb_tx_string("Switch Toggled\r\n");
 	    clear(PORTC, 7);
 	    teensy_led(OFF);
+	    prev_state = false;
 	}
     }
 }
