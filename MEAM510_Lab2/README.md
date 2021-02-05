@@ -42,3 +42,52 @@ int main(void){
 ````
 
 ### 2.1.2 Debouncing the SPST
+
+#### Add resistor and capacitor low-pass filter between the switch and the Teensy
+
+**Notes**
+
+- Make sure you have a large enough RC time constant so that you don’t see multiple bounces on a single press (i.e., 100Hz bounces)
+- Not too large that you distort button presses that occur at roughly 10 times per second (faster than most humans can press). 
+
+#### Verify RC Circuit
+
+- Use the output of a square wave from a function generator into the RC circuit and view the output on an oscilloscope or your OscilloSorta. 
+- Notice how the signal changes as the frequency goes from below 10Hz to above 100Hz.
+- Submit OscilloSorta images for each case. Ideally two traces:
+    - one with output of input signal square wave 
+    - one with filtered output 
+- Show your calculation for the cutoff frequency of your low pass filter.
+
+#### Input Capture
+
+Use the input capture function of the timer on the Atmega32U4 to measure how fast you can depress a switch
+
+**Note: ** make sure that the switch is debounced, so you only get valid presses. 
+
+#### Human Reaction Speed
+
+Change the code so that it:
+1. prompts the person when to start
+1. measures 5 presses 
+1. prints out the average time between the 5 presses in milliseconds
+
+**Leaderboard**
+
+| Tries | Fastest Time |
+| ----- | ------------ |
+|       |              |
+
+#### C Code 
+
+````c
+
+````
+
+#### Schematic 
+
+<img src="rc_schematic.jpeg" width=800>
+
+### Extra Credit: Improve Granularity
+
+Determine and implement the finest time resolution that you can measure these time presses using input capture 3 assuming the slowest a person will be is 0.5 seconds.

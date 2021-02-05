@@ -6,10 +6,18 @@
 #include "t_usb.h"
 #include <stdbool.h>
 
+void toggle_print(){
+    m_usb_tx_uint(TCNT3);
+    m_usb_tx_string(" >> Switch Toggled\r\n");
+
+}
+
 int main(void){
     m_usb_init();
 
-    set(TCCR1B, CS12); // set 256 prescalar    
+    // set 1024 prescalar    
+    set(TCCR3B, CS32); set(TCCR3B, CS30); 
+
     teensy_clockdivide(0); //set the clock speed
 
     clear(DDRB, 7); // B7 is input
@@ -26,11 +34,11 @@ int main(void){
         if(!bit_is_set(PINB, 7)){
             set(PORTC, 7);
 	    teensy_led(ON);
-	    if(!prev_state) m_usb_tx_string("Switch Toggled\r\n");
+	    if(!prev_state) toggle_print();
 	    prev_state = true;
 	} else {
 	    // button is not pressed
-	    if(prev_state) m_usb_tx_string("Switch Toggled\r\n");
+	    if(prev_state) toggle_print();
 	    clear(PORTC, 7);
 	    teensy_led(OFF);
 	    prev_state = false;
