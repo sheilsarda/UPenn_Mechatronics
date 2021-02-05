@@ -107,6 +107,17 @@ More in-depth breakdown of pins can be found [here](http://medesign.seas.upenn.e
 
 <img src="imgs/schematic.gif" width=500>
 
+### Pin Configurations
+
+- The DDxn bit in the DDRx Register selects the direction of each pin. 
+- If DDxn is written logic one, Pxn is configured as an output pin. If DDxn is written logic zero, Pxn is configured as an input pin.
+
+#### Internal Pull-Ups
+
+- If PORTxn is written logic one when the pin is configured as an input pin, the pull-up resistor is
+activated. 
+- To switch the pull-up resistor off, PORTxn has to be written logic zero or the pin has to be configured as an output pin. 
+
 ### [Teensy Setup](Teensy_Setup.md)
 
 ### [Teensy PWM](https://sites.google.com/site/qeewiki/books/avr-guide/pwm-on-the-atmega328)
