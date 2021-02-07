@@ -31,7 +31,13 @@ void compute_results(){
 void toggle_print(){
     m_usb_tx_int(press_i);
     m_usb_tx_string(" >> Button Press Recorded\r\n");
+}
 
+void display_prompt(){
+    m_usb_tx_string("||=================================|| \r\n");
+    m_usb_tx_string("||         Start Pressing!         || \r\n");
+    m_usb_tx_string("|| Next 5 Presses will be recorded || \r\n");
+    m_usb_tx_string("||=================================|| \r\n");
 }
 
 void record_press(bool new_state){
