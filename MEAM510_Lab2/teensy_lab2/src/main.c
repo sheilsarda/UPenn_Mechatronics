@@ -13,22 +13,25 @@
 #define CLOCK_SPEED 16e6 
 #define PRESCALAR 1024
 
-int button_presses[5]; // record tcnt3 values for each press
+unsigned int button_presses[5]; // record tcnt3 values for each press
 int press_i; // ix of button press being recorded
 bool prev_state; // true when switch is depressed
 bool prompt_shown;
 
 void compute_results(){
-    double sum_t = 0;
+    float sum_t = 0;
     for(int i = 1; i < 5; ++i){
         sum_t += (button_presses[i] - button_presses[i-1]);
     }
-    sum_t /= 4;
-    sum_t *= (double) PRESCALAR / (double) CLOCK_SPEED; 
+    
+    sum_t *= (PRESCALAR);
+    sum_t /= (CLOCK_SPEED*4.0); 
+    sum_t *= 1000;
 
-    m_usb_tx_string("||=======  Reaction Time: "); 
-    m_usb_tx_int((int)sum_t);
-    m_usb_tx_string(" ms  ==========||\r\n");
+    m_usb_tx_string("||====== Avg. Time: ");
+    m_usb_tx_uint(sum_t);
+    m_usb_tx_string(" (ms)  =======||\r\n");
+    
     prompt_shown = false;
 }
 
