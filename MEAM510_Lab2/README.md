@@ -59,6 +59,33 @@ int main(void){
     - one with filtered output 
 - Show your calculation for the cutoff frequency of your low pass filter.
 
+##### 3Hz Wave
+
+Raw
+
+<img src="3hz_raw.png" width=500>
+
+Filtered
+
+<img src="3hz_filtered.png" width=500>
+
+##### 270Hz Wave
+
+Raw
+
+<img src="270hz_raw.png" width=500>
+
+Filtered
+
+<img src="270hz_filtered.png" width=500>
+
+##### RC Constant
+
+Constant = `1/(2*pi*R*C) = 15Hz` for:
+
+- 1 kOhm Resistor
+- 10 microFarad Capacitor
+
 #### Input Capture
 
 Use the input capture function of the timer on the Atmega32U4 to measure how fast you can depress a switch
