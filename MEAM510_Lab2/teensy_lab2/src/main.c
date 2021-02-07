@@ -6,6 +6,7 @@
 #include "t_usb.h"
 #include <string.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define DEBUG_PRINTS 1
 #define MIN_TIME 1563 // 100ms in clock ticks
@@ -18,15 +19,15 @@ bool prev_state; // true when switch is depressed
 bool prompt_shown;
 
 void compute_results(){
-    unsigned long sum_t = 0;
+    double sum_t = 0;
     for(int i = 1; i < 5; ++i){
         sum_t += (button_presses[i] - button_presses[i-1]);
     }
     sum_t /= 4;
-    sum_t = (long) sum_t * CLOCK_SPEED / PRESCALAR; 
+    sum_t *= (double) PRESCALAR / (double) CLOCK_SPEED; 
 
     m_usb_tx_string("||=======  Reaction Time: "); 
-    m_usb_tx_ulong(sum_t);
+    m_usb_tx_int((int)sum_t);
     m_usb_tx_string(" ms  ==========||\r\n");
     prompt_shown = false;
 }
