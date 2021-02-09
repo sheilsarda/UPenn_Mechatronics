@@ -232,7 +232,7 @@ Determine and implement the finest time resolution that you can measure these ti
 
 #### Circuit Diagram
 
-<img src="photrans_circuit.jpg" width=800>
+<img src="phototrans_circuit.jpg" width=800>
 
 #### C Code
 
