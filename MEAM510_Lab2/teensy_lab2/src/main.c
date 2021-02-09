@@ -48,7 +48,8 @@ void record_press(bool new_state){
     if(prev_state != new_state){
 	// only record down presses
         if(new_state){
-            if(press_i == 0 || TCNT3 - button_presses[press_i-1] > 4*MIN_TIME){ 
+            if(press_i == 0 || 
+	TCNT3 - button_presses[press_i-1] > 3*MIN_TIME){ 
     	        button_presses[press_i] = TCNT3;
                 toggle_print();
                 press_i++;

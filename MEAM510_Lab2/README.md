@@ -103,11 +103,11 @@ Change the code so that it:
 
 | Tries | Fastest Time (ms) |
 | ----- | ------------ |
-| 1     |      597        |
-| 2     |      694        |
+| 1     |      312        |
+| 2     |      259        |
 | 3     |      559        |
-| 4     |      1156        |
-| 5     |      646        |
+| 4     |      367        |
+| 5     |      412        |
 
 #### C Code 
 
@@ -158,7 +158,8 @@ void record_press(bool new_state){
     if(prev_state != new_state){
 	// only record down presses
         if(new_state){
-            if(press_i == 0 || TCNT3 - button_presses[press_i-1] > 4*MIN_TIME){ 
+            if(press_i == 0 || 
+                TCNT3 - button_presses[press_i-1] > 3*MIN_TIME){ 
     	        button_presses[press_i] = TCNT3;
                 toggle_print();
                 press_i++;
@@ -218,3 +219,8 @@ int main(void){
 ### Extra Credit: Improve Granularity
 
 Determine and implement the finest time resolution that you can measure these time presses using input capture 3 assuming the slowest a person will be is 0.5 seconds.
+
+## 2. Phototransistors
+
+### 2.2.1 Creating Circuit
+
