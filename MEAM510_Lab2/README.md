@@ -214,7 +214,7 @@ int main(void){
 
 #### Schematic 
 
-<img src="rc_schematic.jpeg" width=800>
+<img src="spst_circuit1.jpg" width=800>
 
 ### Extra Credit: Improve Granularity
 
