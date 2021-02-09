@@ -238,15 +238,11 @@ Determine and implement the finest time resolution that you can measure these ti
 
 ````c
 #include "teensy_general.h"
-#include "t_usb.h"
 
 #define CLOCK_SPEED 16e6
 #define PRESCALAR 1024
 
-
 int main(void){
-    m_usb_init();
-
     // set 1024 prescalar
     set(TCCR3B, CS32); set(TCCR3B, CS30);
 
@@ -256,8 +252,6 @@ int main(void){
 
     set(DDRC, 7);  // C7 is output
     clear(PORTC, 7); // no LED
-
-    while(!m_usb_isconnected()); // wait for a connection
 
     while(1){
 
@@ -272,4 +266,8 @@ int main(void){
 ````
 
 #### [Video Demo of LED Phototransistor](https://www.youtube.com/watch?v=GB3uBvNIjmE)
+
+### 2.2.2 Tuning Gain of Transistor
+
+[Video Demo of Hand-Waiving](https://www.youtube.com/watch?v=TUO3oFkFpG4)
 
