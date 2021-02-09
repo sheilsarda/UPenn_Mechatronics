@@ -224,3 +224,52 @@ Determine and implement the finest time resolution that you can measure these ti
 
 ### 2.2.1 Creating Circuit
 
+#### Phototransistor Behavior w.r.t. Light
+
+- With no light, the phototransistor outputs logic low
+- With normal light, the phototransistor outputs logic high
+- If curcuit does not have a pull-up, `PINB` will be high when no light and low in normal light
+
+#### Circuit Diagram
+
+<img src="photrans_circuit.jpg" width=800>
+
+#### C Code
+
+````c
+#include "teensy_general.h"
+#include "t_usb.h"
+
+#define CLOCK_SPEED 16e6
+#define PRESCALAR 1024
+
+
+int main(void){
+    m_usb_init();
+
+    // set 1024 prescalar
+    set(TCCR3B, CS32); set(TCCR3B, CS30);
+
+    teensy_clockdivide(0); //set the clock speed
+
+    clear(DDRB, 7); // B7 is input
+
+    set(DDRC, 7);  // C7 is output
+    clear(PORTC, 7); // no LED
+
+    while(!m_usb_isconnected()); // wait for a connection
+
+    while(1){
+
+        // detect if light
+        if(bit_is_set(PINB, 7)){
+            set(PORTC, 7);
+        } else {
+            clear(PORTC, 7);
+        }
+    }
+}
+````
+
+#### [Video Demo of LED Phototransistor](https://www.youtube.com/watch?v=GB3uBvNIjmE)
+
