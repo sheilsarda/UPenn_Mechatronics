@@ -6,7 +6,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 ### 2.1.1 SPST Switch Wiring
 
-<img src="spst_schematic.jpeg" width=800>
+<img src="spst_circuit1.jpg" width=800>
 
 ````c
 #include "teensy_general.h"
