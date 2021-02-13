@@ -271,3 +271,26 @@ int main(void){
 
 [Video Demo of Hand-Waiving](https://www.youtube.com/watch?v=TUO3oFkFpG4)
 
+## 2.3 Operational Amplifier
+
+### 2.3.1 Drive IR LED
+
+[From the LED Datasheet](https://optoelectronics.liteon.com/upload/download/DS-50-92-0015/LTE-4208.pdf)
+
+|   |   |
+|---|---|
+| Vcc                               | 3.3V              |
+| Desired I                         | 30mA              |
+| Vforward                          | 1.2V              |
+| LED Continuous Forward Current    | 50mA              |
+| **R**                             | (Vcc-Vf) / I = 70 Ohms  |
+
+If we use 100 Ohm resistor, I = (3.3-1.2)/100 = 21mA
+
+### 2.3.2 Photo Detection Circuit
+
+From [datasheet for OpAmp](https://ww1.microchip.com/downloads/en/DeviceDoc/20001669e.pdf)
+
+<img src="opamp_application.png">
+
+<img src="opamp_circuit.png">
