@@ -327,3 +327,9 @@ From [datasheet for OpAmp](https://ww1.microchip.com/downloads/en/DeviceDoc/2000
 <img src="opamp_application.png">
 
 <img src="opamp_circuit.png">
+
+From [datasheet for Phototrans](https://www.mouser.com/datasheet/2/239/R4206-1141534.pdf)
+
+
+
+
