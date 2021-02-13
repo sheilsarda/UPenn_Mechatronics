@@ -6,7 +6,11 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 ### 2.1.1 SPST Switch Wiring
 
-<img src="spst_circuit1.jpg" width=800>
+#### Circuit Diagram
+
+<img src="spst_circuit1.jpg" width=500>
+
+#### C Code
 
 ````c
 #include "teensy_general.h"
@@ -79,18 +83,16 @@ Filtered
 
 <img src="270hz_filtered.png" width=500>
 
-##### RC Constant
+##### Cutoff Frequency Calculation
 
-Constant = `1/(2*pi*R*C) = 15Hz` for:
+Cutoff Frequency = `1/(2*pi*R*C) = 15Hz` for:
 
 - 1 kOhm Resistor
 - 10 microFarad Capacitor
 
-#### Input Capture
+#### Schematic w/ Low Pass Filter
 
-Use the input capture function of the timer on the Atmega32U4 to measure how fast you can depress a switch
-
-**Note: ** make sure that the switch is debounced, so you only get valid presses. 
+<img src="spst_circuit2.jpg" width=800>
 
 #### Human Reaction Speed
 
@@ -208,15 +210,9 @@ int main(void){
 	}
     }
 }
-
-
 ````
 
-#### Schematic 
-
-<img src="spst_circuit2.jpg" width=800>
-
-### Extra Credit: Improve Granularity
+### Extra Credit: Improve Granularity (Not Attempted)
 
 Determine and implement the finest time resolution that you can measure these time presses using input capture 3 assuming the slowest a person will be is 0.5 seconds.
 
@@ -229,6 +225,8 @@ Determine and implement the finest time resolution that you can measure these ti
 - With no light, the phototransistor outputs logic low
 - With normal light, the phototransistor outputs logic high
 - If curcuit does not have a pull-up, `PINB` will be high when no light and low in normal light
+- As resistance is increased, the phototransistor becomes more sensitive, following Ohms law
+- The relationship between the sensitivity of the phototransistor and the resistance in series with is defined by Ohm's law `V = IR`
 
 #### Circuit Diagram
 
@@ -269,7 +267,42 @@ int main(void){
 
 ### 2.2.2 Tuning Gain of Transistor
 
-[Video Demo of Hand-Waiving](https://www.youtube.com/watch?v=TUO3oFkFpG4)
+#### [Video Demo of Hand-Waiving](https://www.youtube.com/watch?v=TUO3oFkFpG4)
+
+#### Schematic
+
+<img src="phototrans_tuned.jpg" width=800>
+
+#### C Code
+
+````c
+#include "teensy_general.h"
+
+#define CLOCK_SPEED 16e6
+#define PRESCALAR 1024
+
+int main(void){
+    // set 1024 prescalar
+    set(TCCR3B, CS32); set(TCCR3B, CS30);
+
+    teensy_clockdivide(0); //set the clock speed
+
+    clear(DDRB, 7); // B7 is input
+
+    set(DDRC, 7);  // C7 is output
+    clear(PORTC, 7); // no LED
+    
+    while(1){
+
+        // detect if light
+        if(bit_is_set(PINB, 7)){
+            set(PORTC, 7);
+        } else {
+            clear(PORTC, 7);
+        }
+    }
+}
+````
 
 ## 2.3 Operational Amplifier
 
