@@ -6,7 +6,7 @@
 
 #define CLOCK_SPEED 16e6
 #define PRESCALAR 1024
-#define SW_SIZE 200
+#define SW_SIZE 800
 
 bool sw[SW_SIZE];
 int num_entries = 0;
@@ -36,7 +36,7 @@ int main(void){
     teensy_clockdivide(0); //set the clock speed
 
     clear(DDRB, 7); // B7 is input
-    set(PORTB, 7);  // internal pullup
+    // set(PORTB, 7);  // internal pullup
 
     set(DDRC, 7); clear(PORTC, 7); // RED
     set(DDRB, 4); clear(PORTB, 4); // GREEN
