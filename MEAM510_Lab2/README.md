@@ -8,7 +8,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 #### Circuit Diagram
 
-<img src="spst_circuit1.jpg" width=500>
+<img src="imgs/spst_circuit1.jpg" width=500>
 
 #### C Code
 
@@ -67,21 +67,21 @@ int main(void){
 
 Raw
 
-<img src="3hz_raw.png" width=500>
+<img src="imgs/3hz_raw.png" width=500>
 
 Filtered
 
-<img src="3hz_filtered.png" width=500>
+<img src="imgs/3hz_filtered.png" width=500>
 
 ##### 270Hz Wave
 
 Raw
 
-<img src="270hz_raw.png" width=500>
+<img src="imgs/270hz_raw.png" width=500>
 
 Filtered
 
-<img src="270hz_filtered.png" width=500>
+<img src="imgs/270hz_filtered.png" width=500>
 
 ##### Cutoff Frequency Calculation
 
@@ -92,7 +92,7 @@ Cutoff Frequency = `1/(2*pi*R*C) = 15Hz` for:
 
 #### Schematic w/ Low Pass Filter
 
-<img src="spst_circuit2.jpg" width=800>
+<img src="imgs/spst_circuit2.jpg" width=800>
 
 #### Human Reaction Speed
 
@@ -230,7 +230,7 @@ Determine and implement the finest time resolution that you can measure these ti
 
 #### Circuit Diagram
 
-<img src="phototrans_circuit.jpg" width=800>
+<img src="imgs/phototrans_circuit.jpg" width=800>
 
 #### C Code
 
@@ -271,7 +271,7 @@ int main(void){
 
 #### Schematic
 
-<img src="phototrans_tuned.jpg" width=800>
+<img src="imgs/phototrans_tuned.jpg" width=800>
 
 #### C Code
 
@@ -324,12 +324,14 @@ If we use 100 Ohm resistor, I = (3.3-1.2)/100 = 21mA
 
 From [datasheet for OpAmp](https://ww1.microchip.com/downloads/en/DeviceDoc/20001669e.pdf)
 
-<img src="opamp_application.png">
+<img src="imgs/opamp_application.png">
 
-<img src="opamp_circuit.png">
+<img src="imgs/opamp_circuit.png">
 
 From [datasheet for Phototrans](https://www.mouser.com/datasheet/2/239/R4206-1141534.pdf)
 
+**OpAmp Circuit Diagram**
 
+<img src="imgs/2.3circuit_diag.png">
 
 
