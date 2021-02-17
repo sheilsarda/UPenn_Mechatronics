@@ -334,6 +334,13 @@ From [datasheet for Phototrans](https://www.mouser.com/datasheet/2/239/R4206-114
 
 <img src="imgs/2.3circuit_diag.png">
 
+**OScope Diagrams**
+
+<img src="imgs/200hz_2.3.2.PNG">
+
+<img src="imgs/23hz_2.3.2.PNG">
+
+
 #### C Code
 
 ````c
