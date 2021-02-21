@@ -12,6 +12,8 @@ Sheil Sarda <sheils@seas.upenn.edu>
 |-|-|
 | Length | 8 inches |
 | Width | 6.5 inches |
+| Potentiometer - fixed part | Radius: 0.125 inches |
+| Potentiometer - rotating | Radius:  0.062 inches|
 | | |
 
 **Notes from check-off with Walter 2/19**
