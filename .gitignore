@@ -2,3 +2,5 @@
 *.o
 *.hex
 *.elf
+~$*.SLDPRT
+*.bak
