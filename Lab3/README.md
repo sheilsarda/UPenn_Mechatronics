@@ -25,6 +25,9 @@ Sheil Sarda <sheils@seas.upenn.edu>
 - Potentiometer stem might be too short to go all the way through the body and connect with the face or the paw
 - Since the servos we have to use for the actuation part of the assignment are quite tiny, may need to shrink the design for that part
     - Conduct a test
+- Best way to account for Kerf is to use the Shell command with `shell outward` enabled
+    - use shell radius of `0.007` inches
+- Line width of DWG files for lasercutting should be `0.05` mm, as opposed to the inches unit mentioned in the slides
 
 **Electrical Components**
 
