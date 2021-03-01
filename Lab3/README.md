@@ -18,15 +18,8 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 **Notes from check-off with Walter 2/19**
 
-- TODOs:
-  - Figure out potentiometer mounting for paw and face
-  - Create a U-shaped bracket which mounts near the pug's tail to hold the front and back piece together
-  - Create assembly to make sure everything fits together well, and has the rotational degree of freedom
-- Potentiometer stem might be too short to go all the way through the body and connect with the face or the paw
 - Since the servos we have to use for the actuation part of the assignment are quite tiny, may need to shrink the design for that part
-    - Conduct a test
-- Best way to account for Kerf is to use the Shell command with `shell outward` enabled
-    - use shell radius of `0.007` inches
+- Best way to account for Kerf is to use the Shell command with `shell outward` enabled. Use shell radius of `0.007` inches
 - Line width of DWG files for lasercutting should be `0.05` mm, as opposed to the inches unit mentioned in the slides
 
 **Electrical Components**
