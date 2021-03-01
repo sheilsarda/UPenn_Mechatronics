@@ -13,8 +13,6 @@
 void setup_ADC(char adc_num){
 
     set(ADMUX, REFS0); // AVcc
-    set(ADCSRA, ADEN); // enable ADC
-    set(ADCSRA, ADSC); // first conversion
 
     // 128 ADC prescalar
     set(ADCSRA, ADPS0); 
@@ -61,6 +59,23 @@ void setup_ADC(char adc_num){
                     set(ADMUX, MUX2);
                     set(ADMUX, MUX0);   break;
     }                    
+    
+    set(ADCSRA, ADEN); // enable ADC
+    set(ADCSRA, ADSC); // first conversion
+}
+
+int read_adc(){
+
+    while(!bit_is_set(ADCSRA, ADIF)); 
+    unsigned int result = ADC;
+    
+    #ifdef USB
+        m_usb_tx_string("ADC Result: ");
+        m_usb_tx_uint(result); 
+        m_usb_tx_string("\r\n");
+    #endif
+
+    return result;
 }
 
 int main(void){
@@ -73,9 +88,10 @@ int main(void){
     set(TCCR3B, CS32); set(TCCR3B, CS30);
     teensy_clockdivide(0); //set the clock speed
 
-    setup_ADC(); 
+    setup_ADC(10); // ADC10 or PD7
 
     while(1){
-    
+        read_adc();
+        teensy_wait(10); 
     }
 }
