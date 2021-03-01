@@ -150,3 +150,7 @@ int main(void){
 
 <img src="imgs/spst_circuit.png" width=300>
 
+### [Connecting Potentiometer as ADC Input](https://www.robotshop.com/media/files/PDF/ADC_App_Note_BX24.pdf)
+
+<img src="imgs/potentiometer_adc.png" width=500>
+
