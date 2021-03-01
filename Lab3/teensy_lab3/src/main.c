@@ -10,6 +10,8 @@
 #define PRESCALAR 1024 // freq of 15.625kHz
 #define TARGET 10e3
 #define USB 1
+#define MAX_ADC 1023
+#define MAX_ANG 300
 
 void setup_ADC(char adc_num){
 
@@ -116,6 +118,9 @@ int main(void){
 
         result2 = read_adc(10); // gives you ADC6
         result1 = read_adc(6);  // gives you ADC10
+
+        result2 *= ((float) MAX_ANG / MAX_ADC);
+        result1 *= ((float) MAX_ANG / MAX_ADC);
 
         #ifdef USB
             m_usb_tx_string("LEFT: ");
