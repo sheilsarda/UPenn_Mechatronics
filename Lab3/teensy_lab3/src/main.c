@@ -7,11 +7,16 @@
 #include <string.h>
 
 #define CLOCK_SPEED 16e6
-#define PRESCALAR 1024 // freq of 15.625kHz
+#define PRESCALAR3 1024 // freq of 15.625kHz
+#define PRESCALAR1 256
+
 #define TARGET 10e3
 #define USB 1
 #define MAX_ADC 1023
 #define MAX_ANG 300
+
+#define FREQ_HZ    2    // variable for frequency
+#define DUTY_CYCLE 50    // duty cycle
 
 void setup_ADC(char adc_num){
 
@@ -95,14 +100,33 @@ int read_adc(char next_adc){
     return result;
 }
 
+void setup_PWM(){
+    set(DDRB, 5); // output compare
+
+    // (mode 14) up to ICR1, PWM
+    set(TCCR1B, WGM13);
+    set(TCCR1B, WGM12);
+    set(TCCR1A, WGM11);
+
+    set(TCCR1A, COM1A1); // clear OC
+
+    ICR1 = CLOCK_SPEED/(FREQ_HZ * PRESCALAR1);
+    OCR1A = ICR1 * DUTY_CYCLE;
+}
+
 int main(void){
     #ifdef USB
         m_usb_init();
         while(!m_usb_isconnected());
     #endif
 
-    // set 1024 prescalar
+    // set 1024 prescalar - ADC clock
     set(TCCR3B, CS32); set(TCCR3B, CS30);
+    
+    // set 256 prescalar  - Servo PWM
+    set(TCCR1B, CS12);
+    setup_PWM();
+
     teensy_clockdivide(0); //set the clock speed
 
     setup_ADC(10);  // ADC10 or PD7
@@ -112,7 +136,7 @@ int main(void){
 
     while(1){
 
-        if(TCNT3 < TARGET * PRESCALAR / CLOCK_SPEED) continue;
+        if(TCNT3 < TARGET * PRESCALAR3 / CLOCK_SPEED) continue;
 
         TCNT3 = 0;
 
@@ -131,3 +155,6 @@ int main(void){
         #endif
     }
 }
+
+
+
