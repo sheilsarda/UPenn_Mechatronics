@@ -7,16 +7,22 @@
 #include <string.h>
 
 #define CLOCK_SPEED 16e6
-#define PRESCALAR3 1024 // freq of 15.625kHz
-#define PRESCALAR1 256
+#define PRESCALAR 256
 
 #define TARGET 10e3
 #define USB 1
 #define MAX_ADC 1023
 #define MAX_ANG 300
 
-#define FREQ_HZ    50    // variable for frequency
+#define FREQ_HZ    2    // variable for frequency
 #define DUTY_CYCLE 0.10    // duty cycle
+
+
+#define PAW_MIN 60.0
+#define PAW_MAX 200.0
+
+#define HEAD_MIN 40.0
+#define HEAD_MAX 230.0
 
 void setup_ADC(char adc_num){
 
@@ -100,22 +106,45 @@ int read_adc(char next_adc){
     return result;
 }
 
-void setup_PWM(float duty){
-    set(DDRB, 5); // output compare
+void setup_PWM(float duty, char timer){
 
-    // (mode 14) up to ICR1, PWM
-    set(TCCR1B, WGM13);
-    set(TCCR1B, WGM12);
-    set(TCCR1A, WGM11);
+    switch(timer){
+        case 1: 
+            set(DDRB, 5); // output compare
 
-    set(TCCR1A, COM1A1); // clear OC
+            // (mode 14) up to ICR1, PWM
+            set(TCCR1B, WGM13);
+            set(TCCR1B, WGM12);
+            set(TCCR1A, WGM11);
 
-    ICR1 = CLOCK_SPEED/(FREQ_HZ * PRESCALAR1);
-    OCR1A = ICR1 * duty;
+            set(TCCR1A, COM1A1); // clear OC
+
+            ICR1 = CLOCK_SPEED/(FREQ_HZ * PRESCALAR);
+            OCR1A = ICR1 * duty;
+            break;
+
+        case 3:
+            set(DDRC, 6);
+
+            set(TCCR3B, WGM33);
+            set(TCCR3B, WGM32);
+            set(TCCR3A, WGM31);
+
+            set(TCCR3A, COM3A1);
+            ICR3 = CLOCK_SPEED/(FREQ_HZ * PRESCALAR);
+
+            OCR3A = ICR3 * duty;
+            break;
+    }
 }
 
-void change_PWM(float duty){
-    OCR1A = ICR1 * duty;
+void change_PWM(float duty, char timer){
+    switch(timer){
+        case 1: OCR1A = ICR1 * duty;
+                break;
+        case 3: OCR3A = ICR3 * duty;
+                break;
+    }
 }
 
 int main(void){
@@ -125,24 +154,21 @@ int main(void){
         while(!m_usb_isconnected());
     #endif
 
-    // set 1024 prescalar - ADC clock
-    set(TCCR3B, CS32); set(TCCR3B, CS30);
+    // set 256 prescalar  - Servo PWM
+    set(TCCR3B, CS32);
+    setup_PWM(0.1, 3);
     
     // set 256 prescalar  - Servo PWM
     set(TCCR1B, CS12);
-    setup_PWM(0.1);
+    setup_PWM(0.1, 1);
 
     setup_ADC(10);  // ADC10 or PD7
     setup_ADC(6);   // ADC6 or PF6
 
     unsigned int result1, result2;
-    float duty2;
+    float duty1, duty2;
 
     while(1){
-
-        if(TCNT3 < TARGET * PRESCALAR3 / CLOCK_SPEED) continue;
-        if(!bit_is_set(ADCSRA, ADIF)) continue;
-        TCNT3 = 0;
 
         result2 = read_adc(10); // gives you ADC6
         result1 = read_adc(6);  // gives you ADC10
@@ -150,8 +176,11 @@ int main(void){
         result2 *= ((float) MAX_ANG / MAX_ADC);
         result1 *= ((float) MAX_ANG / MAX_ADC);
 
-        duty2    = ((float) result2 * 1.5 / MAX_ANG);
-        change_PWM(duty2);
+        duty1    = ((float) (result1 - HEAD_MIN) / (HEAD_MAX - HEAD_MIN));
+        duty2    = ((float) (result2 - PAW_MIN) / (PAW_MAX - PAW_MIN));
+        
+        change_PWM(duty1, 3);
+        change_PWM(duty2, 1);
 
         #ifdef USB
             m_usb_tx_string("LEFT: ");
