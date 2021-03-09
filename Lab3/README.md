@@ -185,4 +185,3 @@ The paw of the dog is free to rotate only in the CW direction. Hence, it's resti
 
 Potential sources of noise in the ADC values would be loose wiring connections between the potentiometer and the Teensy, as well as gravity sliding the mechanical components, causing the potentiometer to change resistances.
 
-## 3.2 Waldo Output - TBD
