@@ -5,6 +5,7 @@
 #include "t_usb.h"
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #define CLOCK_SPEED 16e6
 #define PRESCALAR 256
@@ -14,9 +15,10 @@
 #define MAX_ADC 1023
 #define MAX_ANG 300
 
-#define FREQ_HZ    2    // variable for frequency
-#define DUTY_CYCLE 0.10    // duty cycle
-
+#define FREQ_HZ    50    // variable for frequency
+#define DUTY_CYCLE 0.08    // duty cycle
+#define MAX_DUTY 0.111
+#define MIN_DUTY 0.055
 
 #define PAW_MIN 60.0
 #define PAW_MAX 200.0
@@ -156,11 +158,11 @@ int main(void){
 
     // set 256 prescalar  - Servo PWM
     set(TCCR3B, CS32);
-    setup_PWM(0.1, 3);
+    setup_PWM(DUTY_CYCLE, 3);
     
     // set 256 prescalar  - Servo PWM
     set(TCCR1B, CS12);
-    setup_PWM(0.1, 1);
+    setup_PWM(DUTY_CYCLE, 1);
 
     setup_ADC(10);  // ADC10 or PD7
     setup_ADC(6);   // ADC6 or PF6
@@ -176,17 +178,28 @@ int main(void){
         result2 *= ((float) MAX_ANG / MAX_ADC);
         result1 *= ((float) MAX_ANG / MAX_ADC);
 
-        duty1    = ((float) (result1 - HEAD_MIN) / (HEAD_MAX - HEAD_MIN));
-        duty2    = ((float) (result2 - PAW_MIN) / (PAW_MAX - PAW_MIN));
+        duty1   = ((float) fmax(result1 - HEAD_MIN, 0.0));
+        duty1   = ((float) (duty1*(MAX_DUTY - MIN_DUTY)/HEAD_MAX) + MIN_DUTY);
+
+        duty2   = ((float) fmax(result2 - PAW_MIN, 0.0));
+        duty2   = ((float) (duty2*(MAX_DUTY - MIN_DUTY)/PAW_MAX) + MIN_DUTY);
+
+        // need to flip paw
+        duty2   = MAX_DUTY - duty2;
         
         change_PWM(duty1, 3);
         change_PWM(duty2, 1);
 
         #ifdef USB
             m_usb_tx_string("LEFT: ");
-            m_usb_tx_uint(result2); 
+            m_usb_tx_uint(result2);
+            m_usb_tx_string(" duty: ");
+            m_usb_tx_uint(duty2*100); 
+
             m_usb_tx_string("  RIGHT: ");
             m_usb_tx_uint(result1); 
+            m_usb_tx_string(" duty: ");
+            m_usb_tx_uint(duty1*100); 
             m_usb_tx_string("\r\n");
         #endif
     }
