@@ -6,7 +6,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 ### 4.1.1 Driving Motors
 
-#### ​Setup the H-Bridge motor driver SN754420 to drive one of the supplied yellow motors 
+#### Setup the H-Bridge motor driver SN754420 to drive one of the supplied yellow motors 
 
 *Refer to Slide 51 of Lecture 14*
 
@@ -20,9 +20,12 @@ Sheil Sarda <sheils@seas.upenn.edu>
 1. Use this inverter so you need only one I/O line to set the direction of the motor 
 	1. the I/O line drives 1A and the input to the inverter, so the output of the 
 		inverter drives 2A 
+    1. To use a NAND gate as an inverter, connect the signal to both inputs and use
+        the output as the inverted signal
 1. Set up the OscilloSorta to drive the enable pin with PWM and control the 
 direction of the motor by switching voltages manually 
 	1. optionally connect a switch and pullup resistor
+    1. Use 50Hz with 0% to 100% duty cycle to change velocity of motor
 1. Demonstrate the motor changing speeds with varying PWM and different directions
 with different speeds. 
 1. Show a TA for check off. 
