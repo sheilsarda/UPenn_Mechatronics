@@ -48,6 +48,7 @@ circuit where the lines and motor are visible.
     1. [RC Car with power in opposite wheels](https://www.youtube.com/watch?v=vRmBVLQngJ8&ab_channel=DattaBenurCreation)
 
     <img src="imgs/2motor.png" width=500px>
+    
     1. [RC Car with Servo and DC Motor](https://www.youtube.com/watch?v=jjZU6sNkEV8&ab_channel=MOCreative)
 
     <img src="imgs/step1.png" width=500px>
