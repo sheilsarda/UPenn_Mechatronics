@@ -79,3 +79,11 @@ they assemble.
 1. Be sure to follow the laser-cutting guidelines (reproduced below for your
 convenience).
 1. ​Submit drafts to canvas.
+
+**Draft 1**
+
+<img src="imgs/draft1_1.png" width=400>
+<img src="imgs/draft1_2.png" width=400>
+<img src="imgs/draft1_3.png" width=400>
+
+**Draft 4 (vFinal)**
