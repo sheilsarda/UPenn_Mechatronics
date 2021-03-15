@@ -82,8 +82,12 @@ convenience).
 
 **Draft 1**
 
-<img src="imgs/draft1_1.png" width=400>
-<img src="imgs/draft1_2.png" width=400>
-<img src="imgs/draft1_3.png" width=400>
+<img src="imgs/draft1_1.png" width=600>
+<img src="imgs/draft1_2.png" width=600>
+<img src="imgs/draft1_3.png" width=600>
 
 **Draft 4 (vFinal)**
+
+<img src="imgs/final_1.png" width=600>
+<img src="imgs/final_2.png" width=600>
+<img src="imgs/final_3.png" width=600>
