@@ -68,7 +68,6 @@ capability of the battery and the limits of the motor drivers.
 
 <img src="imgs/motor_dims.jpg" width=600>
 
-
 #### Discuss with your TA/coach about your design.
 
 1. Have a completed draft CAD assembly of your car ready to be reviewed
