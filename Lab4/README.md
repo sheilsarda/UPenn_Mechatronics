@@ -36,7 +36,7 @@ circuit where the lines and motor are visible.
 
 ### 4.1.2 Car Architecture
 
-<!-- #### Research different types of mobile bases:
+#### Research different types of mobile bases:
 
 1. holonomic drives
 1. differential drives
@@ -61,7 +61,7 @@ circuit where the lines and motor are visible.
     1. [Wikipedia](https://en.wikipedia.org/wiki/Tank_steering_systems)
 
 If you choose to use different motors, be careful about the power
-capability of the battery and the limits of the motor drivers. -->
+capability of the battery and the limits of the motor drivers.
 
 **Motor Dimensions**
 
