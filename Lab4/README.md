@@ -60,11 +60,11 @@ convenience).
 
 **Draft 4**
 
-<img src="imgs/final_1.png" width=600>
-<img src="imgs/final_2.png" width=600>
-<img src="imgs/final_3.png" width=600>
+<img src="imgs/draft4_1.png" width=600>
+<img src="imgs/draft4_2.png" width=600>
+<img src="imgs/draft4_3.png" width=600>
 
-**Accompanying BoM**
+Accompanying BoM
 
 | Part | Quantity | Purchase Link | Unit Cost |
 |--|--|--|--|
@@ -93,3 +93,19 @@ convenience).
 - No point in saving more than 1/2 of the $75 allocation for the final project; try DC Motors with encoders
 - Add mounting points for DC Motors, Perfboard and ESP32
 - Make channels for cable-management
+
+**Final Version**
+
+<img src="imgs/final_1.png" width=600>
+<img src="imgs/final_2.png" width=600>
+
+Accompanying BoM
+
+| Part | Quantity | Purchase Link | Unit Cost |
+|--|--|--|--|
+|Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
+| Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
+|N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 2 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
+| ESP-32        | 1 |  Ministore |  |
+| Protoboards   | 2 |  Ministore |  |
+| | | |
