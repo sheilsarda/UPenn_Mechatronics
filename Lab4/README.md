@@ -91,3 +91,5 @@ convenience).
 
 - [Use a D-Shaft Adapter to extend DC Motor shaft](https://www.zoro.com/dayton-motor-shaft-adapter-14-20-dia-x-14-od-1-l-4x098/i/G2419112/)
 - No point in saving more than 1/2 of the $75 allocation for the final project; try DC Motors with encoders
+- Add mounting points for DC Motors, Perfboard and ESP32
+- Make channels for cable-management
