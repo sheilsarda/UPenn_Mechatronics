@@ -154,3 +154,7 @@ int main(void){
 
 <img src="imgs/potentiometer_adc.png" width=500>
 
+### Solidworks Tips for Lasercutting
+
+- Best way to account for Kerf is to use the Shell command with `shell outward` enabled. Use shell radius of `0.007` inches
+- Line width of DWG files for lasercutting should be `0.05` mm, as opposed to the inches unit mentioned in the slides
