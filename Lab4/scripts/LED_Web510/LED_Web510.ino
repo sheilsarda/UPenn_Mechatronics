@@ -15,6 +15,20 @@
 const char* ssid     = "Fios-rTWv7";
 const char* password = "Govinda1!";
 
+
+// the number of the LED pin
+const int ledPin1 = 21;  
+const int ledPin2 = 10;
+
+// setting PWM properties
+const int freq = 4000;
+const int ledChannel = 0;
+const int resolution = 8;
+
+int val = 0;  // variable to store the value read
+int dutyCycle = 255;
+ 
+
 WiFiServer server(80);              
 
 const char body[] PROGMEM = R"===(
@@ -23,10 +37,10 @@ const char body[] PROGMEM = R"===(
 <H1>
 <a href="/H">Turn ON</a> LED.<br>
 <a href="/L">Turn OFF</a> LED.<br>
-<span id="somelabel">  </span> <br>
+<span id="freqlabel"> LED State HERE </span> <br>
 
 </H1>
-<button type="button" onclick="hit()"> mybutton </button>
+<button type="button" onclick="hit()"> Turn ON then OFF </button>
 </body>
 <script>
 function hit() {
@@ -41,7 +55,7 @@ function updateLabel() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("somelabel").innerHTML =   
+      document.getElementById("freqlabel").innerHTML =   
              this.responseText;
     }
   };
@@ -52,7 +66,7 @@ function updateLabel() {
 </script>
 
 </html>
-)===";
+)==="
 
 /*****************/
 /* web handler   */
@@ -78,7 +92,10 @@ void handleHit(){
 }
 
 void handleLEDstate(){
-  String s = "LED state is "+String(digitalRead(LEDPIN));
+  String    s = "Frequency is " + String(freq) + "<br>";
+            s += "Duty Cycle is ";
+            s += String((float) dutyCycle/255 * 100.0);
+            s += "<br>"
   sendplain(s);
 }
 
@@ -104,9 +121,22 @@ void setup() {
   attachHandler("/hit",handleHit);
   attachHandler("/LEDstate",handleLEDstate);
 
+  analogReadResolution(10);
+  pinMode(4, INPUT);
+
+  // configure LED PWM functionalitites
+  ledcSetup(ledChannel, freq, resolution);
+
+  // attach the channel to the GPIO to be controlled
+  ledcAttachPin(ledPin1, ledChannel);
+  ledcAttachPin(ledPin2, ledChannel);
 }
 
 void loop(){
+
+  val       = analogRead(4);
+  dutyCycle = 255*((float) val/1024.0);
+  ledcWrite(ledChannel, dutyCycle);
+  
   serve(server, body);
-  delay(1);
 }

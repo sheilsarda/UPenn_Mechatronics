@@ -32,11 +32,5 @@ void loop(){
   
   val       = analogRead(4);   
   dutyCycle = 255*((float) val/1024.0);
-  Serial.print(analogRead(A0));
-  Serial.print(" : ADC 10-bit \r\n");
-  
-  
-  
   ledcWrite(ledChannel, dutyCycle);
-  
 }
