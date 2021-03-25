@@ -109,3 +109,14 @@ Accompanying BoM
 | ESP-32        | 1 |  Ministore |  |
 | Protoboards   | 2 |  Ministore |  |
 | | | |
+
+
+## 4.2 Code
+
+### Web510
+
+Dashboard can be found here: `http://192.168.1.6/`
+
+### LEDC
+
+![](imgs/ledc.jpg)
