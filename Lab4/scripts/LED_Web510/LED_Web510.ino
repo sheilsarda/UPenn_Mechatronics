@@ -1,24 +1,23 @@
 /*
- * MEAM510 HTML510 example w/LED
- * March 2021
- * 
- * Mark Yim
- * University of Pennsylvania
- * copyright (c) 2021 All Rights Reserved
- */
- 
-#include <WiFi.h> 
+   MEAM510 HTML510 example w/LED
+   March 2021
+   
+   Sheil Sarda
+   University of Pennsylvania
+   copyright (c) 2021 All Rights Reserved
+*/
+
+#include <WiFi.h>
 #include "html510.h"
 
-#define LEDPIN 21
-                         
+#define LEDPIN 10
+
 const char* ssid     = "Fios-rTWv7";
 const char* password = "Govinda1!";
 
 
 // the number of the LED pin
-const int ledPin1 = 21;  
-const int ledPin2 = 10;
+const int ledPin1 = 21;
 
 // setting PWM properties
 const int freq = 4000;
@@ -27,9 +26,9 @@ const int resolution = 8;
 
 int val = 0;  // variable to store the value read
 int dutyCycle = 255;
- 
 
-WiFiServer server(80);              
+
+WiFiServer server(80);
 
 const char body[] PROGMEM = R"===(
 <!DOCTYPE html>
@@ -49,7 +48,7 @@ function hit() {
   xhttp.send();
 }  
 
-setInterval(updateLabel,2000);
+setInterval(updateLabel,200);
 
 function updateLabel() {
   var xhttp = new XMLHttpRequest();
@@ -66,7 +65,7 @@ function updateLabel() {
 </script>
 
 </html>
-)==="
+)===";
 
 /*****************/
 /* web handler   */
@@ -94,15 +93,14 @@ void handleHit(){
 void handleLEDstate(){
   String    s = "Frequency is " + String(freq) + "<br>";
             s += "Duty Cycle is ";
-            s += String((float) dutyCycle/255 * 100.0);
-            s += "<br>"
+            s += String((float) dutyCycle/2.55);
+            s += "<br>";
   sendplain(s);
 }
 
 
 void setup() {
   Serial.begin(115200);                                             
-  pinMode(LEDPIN, OUTPUT);
   WiFi.mode(WIFI_MODE_STA);
   WiFi.begin(ssid, password);
   WiFi.config(IPAddress(192, 168, 1, 6),
@@ -113,8 +111,9 @@ void setup() {
     delay(500);
     Serial.print("."); 
   }
+  
   Serial.println("WiFi connected"); server.begin();
- 
+
   attachHandler("/H",handleH);
   attachHandler("/L",handleL);
   attachHandler("/ ",handleRoot);
@@ -126,17 +125,9 @@ void setup() {
 
   // configure LED PWM functionalitites
   ledcSetup(ledChannel, freq, resolution);
-
-  // attach the channel to the GPIO to be controlled
   ledcAttachPin(ledPin1, ledChannel);
-  ledcAttachPin(ledPin2, ledChannel);
 }
 
 void loop(){
-
-  val       = analogRead(4);
-  dutyCycle = 255*((float) val/1024.0);
-  ledcWrite(ledChannel, dutyCycle);
-  
   serve(server, body);
 }
