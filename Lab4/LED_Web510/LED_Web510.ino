@@ -44,7 +44,7 @@ function hit() {
   xhttp.send();
 }  
 
-setInterval(updateLabel,200);
+setInterval(updateLabel,400);
 
 function updateLabel() {
   var xhttp = new XMLHttpRequest();
@@ -89,7 +89,7 @@ void handleHit(){
 void handleLEDstate(){
   String    s = "Frequency is " + String(freq) + "<br>";
             s += "Duty Cycle is ";
-            s += String((float) dutyCycle/2.55);
+            s += String(dutyCycle);
             s += "<br>";
   sendplain(s);
 }
@@ -117,14 +117,19 @@ void setup() {
   attachHandler("/LEDstate",handleLEDstate);
 
   analogReadResolution(10);
-  pinMode(ledPin1, INPUT);
+  pinMode(4, INPUT);
+  pinMode(ledPin1, OUTPUT);
   pinMode(LEDPIN, OUTPUT);
 
   // configure LED PWM functionalitites
-  ledcSetup(ledChannel, freq, resolution);
   ledcAttachPin(ledPin1, ledChannel);
+  ledcSetup(ledChannel, freq, resolution);
 }
 
 void loop(){
+  val       = analogRead(4);   
+  dutyCycle = 255*((float) val/1024.0);
+  ledcWrite(ledChannel, dutyCycle);
+
   serve(server, body);
 }

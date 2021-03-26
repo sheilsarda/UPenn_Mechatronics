@@ -29,7 +29,9 @@ void setup(){
 }
  
 void loop(){
-  
+  Serial.println(String(dutyCycle)); 
+  delay(100);
+ 
   val       = analogRead(4);   
   dutyCycle = 255*((float) val/1024.0);
   ledcWrite(ledChannel, dutyCycle);
