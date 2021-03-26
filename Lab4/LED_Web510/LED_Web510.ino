@@ -1,7 +1,7 @@
 /*
    MEAM510 HTML510 example w/LED
    March 2021
-   
+
    Sheil Sarda
    University of Pennsylvania
    copyright (c) 2021 All Rights Reserved
@@ -11,10 +11,6 @@
 #include "html510.h"
 
 #define LEDPIN 10
-
-const char* ssid     = "Fios-rTWv7";
-const char* password = "Govinda1!";
-
 
 // the number of the LED pin
 const int ledPin1 = 21;
@@ -121,7 +117,8 @@ void setup() {
   attachHandler("/LEDstate",handleLEDstate);
 
   analogReadResolution(10);
-  pinMode(4, INPUT);
+  pinMode(ledPin1, INPUT);
+  pinMode(LEDPIN, OUTPUT);
 
   // configure LED PWM functionalitites
   ledcSetup(ledChannel, freq, resolution);

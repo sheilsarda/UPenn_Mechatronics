@@ -1,9 +1,7 @@
 /*
  * MEAM510 hacks for web interface
- * Jan 2021
- * Use at your own risk
  * 
- * Mark Yim
+ * Sheil Sarda
  * University of Pennsylvania
  * copyright (c) 2021 All Rights Reserved
  */
