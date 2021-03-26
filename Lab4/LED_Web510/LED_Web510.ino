@@ -10,19 +10,17 @@
 #include <WiFi.h>
 #include "html510.h"
 
-#define LEDPIN 10
-
-// the number of the LED pin
-const int ledPin1 = 21;
+#define TOGGLE_LED  10  // web
+#define BLINK_LED   21  // variable duty
+#define POT_PIN     4   // potentiometer
 
 // setting PWM properties
 const int freq = 4000;
 const int ledChannel = 0;
 const int resolution = 8;
 
-int val = 0;  // variable to store the value read
-int dutyCycle = 255;
-
+int val = 0;            // read in pot
+int dutyCycle = 255;    // start at 100%
 
 WiFiServer server(80);
 
@@ -70,19 +68,19 @@ void handleRoot(){
 }
 
 void handleH(){
-  digitalWrite(LEDPIN, HIGH);  // LED ON  
+  digitalWrite(TOGGLE_LED, HIGH);  // LED ON  
   sendhtml(body);
 }                    
                      
 void handleL(){
-  digitalWrite(LEDPIN, LOW);  // LED ON  
+  digitalWrite(TOGGLE_LED, LOW);  // LED ON  
   sendhtml(body);
 }
 
 void handleHit(){
   static int toggle;
-  if (++toggle%2)  digitalWrite(LEDPIN,HIGH);
-  else digitalWrite(LEDPIN,LOW);
+  if (++toggle%2)  digitalWrite(TOGGLE_LED,HIGH);
+  else digitalWrite(TOGGLE_LED,LOW);
   sendplain(""); // acknowledge         
 }
 
@@ -117,16 +115,19 @@ void setup() {
   attachHandler("/LEDstate",handleLEDstate);
 
   analogReadResolution(10);
-  pinMode(4, INPUT);
-  pinMode(ledPin1, OUTPUT);
-  pinMode(LEDPIN, OUTPUT);
+  pinMode(POT_PIN, INPUT);
+  pinMode(BLINK_LED, OUTPUT);
+  pinMode(TOGGLE_LED, OUTPUT);
 
   // configure LED PWM functionalitites
-  ledcAttachPin(ledPin1, ledChannel);
+  ledcAttachPin(BLINK_LED, ledChannel);
   ledcSetup(ledChannel, freq, resolution);
 }
 
 void loop(){
+  Serial.println(String(dutyCycle)); 
+  delay(100);
+ 
   val       = analogRead(4);   
   dutyCycle = 255*((float) val/1024.0);
   ledcWrite(ledChannel, dutyCycle);
