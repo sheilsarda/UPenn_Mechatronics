@@ -32,6 +32,8 @@ with different speeds.
 1. Submit a photo of your
 circuit where the lines and motor are visible.
 
+<img src="imgs/h_bridge_pinout.png" width=700px>
+
 <img src="imgs/h_bridge.jpg" width=500px>
 
 ### 4.1.2 Car Architecture
