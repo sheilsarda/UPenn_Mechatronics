@@ -118,19 +118,19 @@ void setup() {
   ledcSetup(ledChannel, freq, resolution);
 }
 
-float motorDuty(int adcIN){
-  int val           = (adcIN % 1024);
-  float dutyCycle   = 255*((float) val/1024.0);
-
-  return dutyCycle
-}
 
 void loop(){
   val       = analogRead(POT_PIN);   
-  dutyCycle = motorDuty(val);
 
-  if(val > 512) digitalWrite(DIR_PIN, HIGH);
-  else digitalWrite(DIR_PIN, LOW);
+  if(val > 512) {
+    digitalWrite(DIR_PIN, HIGH);
+    dutyCycle   = 255*((float) (val - 512)/512.0);
+  }
+  else {
+    digitalWrite(DIR_PIN, LOW);
+    dutyCycle   = 255*((float) (val)/512.0);
+  }
+
   ledcWrite(ledChannel, dutyCycle);
 
   serve(server, body);
