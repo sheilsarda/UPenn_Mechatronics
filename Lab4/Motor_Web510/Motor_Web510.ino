@@ -84,6 +84,8 @@ void handleLEDstate(){
             s += "Duty Cycle is ";
             s += String(dutyCycle*100/254);
             s += "% <br>";
+            s += "Forward (y/n) ";
+            s += String(digitalRead(DIR_PIN)) + "<br>";
   sendplain(s);
 }
 
@@ -121,6 +123,8 @@ void setup() {
 
 void loop(){
   val       = analogRead(POT_PIN);   
+
+  Serial.println(String(val));
 
   if(val > 512) {
     digitalWrite(DIR_PIN, HIGH);
