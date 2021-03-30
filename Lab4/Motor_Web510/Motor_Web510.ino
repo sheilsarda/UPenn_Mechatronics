@@ -10,7 +10,7 @@
 #include <WiFi.h>
 #include "html510.h"
 
-#define BLINK_LED   33  // variable duty
+#define MOTOR   33  // variable duty
 #define POT_PIN     35   // potentiometer
 
 // setting PWM properties

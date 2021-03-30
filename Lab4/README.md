@@ -33,7 +33,7 @@ with different speeds.
 circuit where the lines and motor are visible.
 
 <img src="imgs/h_bridge_pinout.png" width=700px>
-
+<img src="imgs/H-Bridge_example.jpg" width=500px>
 <img src="imgs/h_bridge.jpg" width=500px>
 
 ### 4.1.2 Car Architecture
