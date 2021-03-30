@@ -1,9 +1,7 @@
 /*
   Blink LED with variable frequency
-
 */
 
-// the number of the LED pin
 const int ledPin1 = 21;  
 const int ledPin2 = 10;
 

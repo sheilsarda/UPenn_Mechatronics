@@ -111,22 +111,16 @@ Accompanying BoM
 | | | |
 
 
-## 4.2 Code
+## Lab 4.2
 
-### Web510
+### 4.2.1 Toggling LED
 
-Dashboard can be found here: `http://192.168.1.6/`
-
-### LEDC
-
-````c
+````cpp
 /*
   Blink LED with variable frequency
-
 */
 
-// the number of the LED pin
-const int ledPin1 = 21;  
+const int ledPin1 = 21;
 const int ledPin2 = 10;
 
 // setting PWM properties
@@ -136,33 +130,45 @@ const int resolution = 8;
 
 int val = 0;  // variable to store the value read
 int dutyCycle = 255;
- 
+
 void setup(){
   analogReadResolution(10);
   pinMode(4, INPUT);
   Serial.begin(115200);
-  
+
   // configure LED PWM functionalitites
   ledcSetup(ledChannel, freq, resolution);
-  
+
   // attach the channel to the GPIO to be controlled
   ledcAttachPin(ledPin1, ledChannel);
   ledcAttachPin(ledPin2, ledChannel);
 }
- 
+
 void loop(){
-  
-  val       = analogRead(4);   
+  Serial.println(String(dutyCycle));
+  delay(100);
+
+  val       = analogRead(4);
   dutyCycle = 255*((float) val/1024.0);
-  Serial.print(analogRead(A0));
-  Serial.print(" : ADC 10-bit \r\n");
-  
-  
-  
   ledcWrite(ledChannel, dutyCycle);
-  
 }
 ````
 
+### 4.2.2 Using `ledc`
 
 ![](imgs/ledc.jpg)
+
+Circuit Diagram, video and website displayed in the next step.
+
+### 4.2.3 Website displaying duty cycle
+
+Dashboard can be found here: `http://192.168.1.6/`
+
+Circuit Diagram
+
+![](imgs/web510_circuit.png)
+
+````c
+````
+
+
