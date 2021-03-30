@@ -168,6 +168,8 @@ Circuit Diagram
 
 ![](imgs/web510_circuit.png)
 
+[Youtube Demo](https://www.youtube.com/watch?v=jmKuKUgpPbg): https://www.youtube.com/watch?v=jmKuKUgpPbg
+
 ````c
 /*
    Sheil Sarda
