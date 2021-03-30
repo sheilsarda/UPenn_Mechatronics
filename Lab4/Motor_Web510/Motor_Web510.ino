@@ -10,16 +10,17 @@
 #include <WiFi.h>
 #include "html510.h"
 
-#define MOTOR   33  // variable duty
-#define POT_PIN     35   // potentiometer
+#define MOTOR       33  // variable duty
+#define POT_PIN     35  // potentiometer
+#define DIR_PIN     32  // forward / backward
 
 // setting PWM properties
-const int freq = 10;
+const int freq = 50;
 const int ledChannel = 1;
 const int resolution = 8;
 
 int val = 0;            // read in pot
-int dutyCycle = 255;    // start at 100%
+int dutyCycle = 0;    // no movement
 
 WiFiServer server(80);
 
@@ -110,15 +111,26 @@ void setup() {
 
   analogReadResolution(10);
   pinMode(POT_PIN, INPUT);
-  pinMode(BLINK_LED, OUTPUT);
+  pinMode(DIR_PIN, OUTPUT);
+  pinMode(MOTOR, OUTPUT);
 
-  ledcAttachPin(BLINK_LED, ledChannel);
+  ledcAttachPin(MOTOR, ledChannel);
   ledcSetup(ledChannel, freq, resolution);
+}
+
+float motorDuty(int adcIN){
+  int val           = (adcIN % 1024);
+  float dutyCycle   = 255*((float) val/1024.0);
+
+  return dutyCycle
 }
 
 void loop(){
   val       = analogRead(POT_PIN);   
-  dutyCycle = 255*((float) val/1024.0);
+  dutyCycle = motorDuty(val);
+
+  if(val > 512) digitalWrite(DIR_PIN, HIGH);
+  else digitalWrite(DIR_PIN, LOW);
   ledcWrite(ledChannel, dutyCycle);
 
   serve(server, body);
