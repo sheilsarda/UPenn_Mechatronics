@@ -132,7 +132,7 @@ void loop(){
   }
   else {
     digitalWrite(DIR_PIN, LOW);
-    dutyCycle   = 255*((float) (val)/512.0);
+    dutyCycle   = 255*((float) (512 - val)/512.0);
   }
 
   ledcWrite(ledChannel, dutyCycle);
