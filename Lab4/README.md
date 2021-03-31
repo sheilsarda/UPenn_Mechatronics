@@ -298,7 +298,7 @@ void loop(){
 
 ### 4.2.4 Variable Direction and Speed of DC Motor
 
-**Circuit Diagram**
+**Circuit Diagram added to next part**
 
 [Youtube Demo](https://youtu.be/dYo8QofDLY8): https://youtu.be/dYo8QofDLY8
 
@@ -444,6 +444,8 @@ void loop(){
 ### 4.2.5 Drive Mobile Base via Web
 
 **Circuit Diagram**
+
+![](imgs/racecar_circuit.png)
 
 ````cpp
 /*
