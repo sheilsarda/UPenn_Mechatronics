@@ -1,10 +1,5 @@
-
-
 /*
- * MEAM510 Lab 4 demo
- * March 2021
- * 
- * Mark Yim
+ * Sheil Sarda
  * University of Pennsylvania
  * copyright (c) 2021 All Rights Reserved
  */
@@ -14,8 +9,6 @@
 #include "tankJS.h"
 
 WiFiServer server(80);
-//const char* ssid     = "#Skyroam_1t9";
-//const char* password = "55687127";
 const char *body;
 
 /********************/
@@ -39,16 +32,20 @@ void handleSwitch() { // Switch between JOYSTICK and TANK mode
 
 #define RIGHT_CHANNEL0      0 // use first channel of 16  
 #define LEFT_CHANNEL1       1
-#define SERVOPIN1    33
-#define SERVOPIN2    32
-#define SERVOFREQ    60
+#define SERVOPIN1   33
+#define SERVODIR1   21
+
+#define SERVOPIN2   32
+#define SERVODIR2   22
+
+#define SERVOFREQ   50
 #define LEDC_RESOLUTION_BITS  12
 #define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1) 
-#define FULLBACK LEDC_RESOLUTION*10*60/10000
-#define SERVOOFF  LEDC_RESOLUTION*15*60/10000
-#define FULLFRONT  LEDC_RESOLUTION*20*60/10000
+#define FULLBACK LEDC_RESOLUTION*1          
+#define SERVOOFF  LEDC_RESOLUTION*0  
+#define FULLFRONT  LEDC_RESOLUTION*1  
 
-int leftservo, rightservo;
+int leftservo, rightservo, leftdir, rightdir;
 
 void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {            
   uint32_t duty =  LEDC_RESOLUTION * min(value, valueMax) / valueMax;   
@@ -57,7 +54,10 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
 
 void updateServos() {
   ledcAnalogWrite(LEFT_CHANNEL1, leftservo, LEDC_RESOLUTION);
+  digitalWrite(SERVODIR1, leftdir);
+
   ledcAnalogWrite(RIGHT_CHANNEL0, rightservo, LEDC_RESOLUTION); 
+  digitalWrite(SERVODIR2, rightdir);
 }
 
 /************************/
@@ -109,6 +109,12 @@ void handleLever() {
 
  //  if (leftarm) do something?
  //  if (rightarm) do something?
+
+  if (leftstate > 0)    leftdir = HIGH;
+  else                  leftdir = LOW;
+
+  if (rightstate < 0)   rightdir = HIGH;
+  else                  rightdir = LOW;
  
   if (leftstate>0)      leftservo =  FULLBACK;
   else if (leftstate<0) leftservo =  FULLFRONT; 
@@ -120,7 +126,11 @@ void handleLever() {
   
   lastLeverMs = millis(); //timestamp command
   sendplain(s);
-  Serial.printf("received %d %d %d %d \n",leftarm, rightarm, leftstate, rightstate); // move bot  or something
+  
+  // move bot  or something
+  Serial.printf("received %d %d %d %d \n",leftarm, rightarm, leftstate, rightstate); 
+
+  updateServos();
 }
 
 void setup() 
@@ -128,7 +138,9 @@ void setup()
   Serial.begin(115200);
   WiFi.mode(WIFI_MODE_STA);
   WiFi.begin(ssid, password);
-  WiFi.config(IPAddress(192, 168, 1, 9), // change the last number to your assigned number
+
+  // change the last number to your assigned number
+  WiFi.config(IPAddress(192, 168, 1, 6),
               IPAddress(192, 168, 1, 1),
               IPAddress(255, 255, 255, 0));
   while(WiFi.status()!= WL_CONNECTED ) { 
@@ -154,6 +166,9 @@ void setup()
   
   attachHandler("/favicon.ico",handleFavicon);
   attachHandler("/ ",handleRoot);
+  
+  pinMode(SERVODIR1, OUTPUT);
+  pinMode(SERVODIR2, OUTPUT);
 }
 
 void loop()

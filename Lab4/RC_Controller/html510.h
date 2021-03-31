@@ -4,6 +4,8 @@
  * Use at your own risk
  * 
  */
+#define ssid      "Fios-rTWv7"
+#define password  "Govinda1!"
 
 // attach handler routine to URL parameter identifier
 void attachHandler(String key, void (*handler)());

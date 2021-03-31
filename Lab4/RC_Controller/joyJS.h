@@ -27,7 +27,7 @@ const char joybody[] PROGMEM = R"===(
       
 <script>
   var canvas, ctx;
-  var armstate ="up";
+  var armstate = 0;
   var x=0, y=0;
   var x_relative=0, y_relative=0;
   var resendflag=0;
@@ -38,10 +38,12 @@ const char joybody[] PROGMEM = R"===(
   var cts = 1; // clear to send
   function myTimer() {  
     cts = 1; 
-    if (x_relative != joystate[0] || y_relative != joystate[1]) {
+    if (x_relative != joystate[0] || y_relative != joystate[1]) { // Add any additional conditions for re-sending data
       upDate();
     }
   }
+
+
 
 // joystick UI
   window.addEventListener('load', () => {
@@ -57,6 +59,11 @@ const char joybody[] PROGMEM = R"===(
       document.addEventListener('touchend', stopDrawing);
       document.addEventListener('touchcancel', stopDrawing);
       document.addEventListener('touchmove', Draw);
+
+      // keyboard event listeners (from tankJS)
+      document.addEventListener('keydown', keyDownHandler, true);
+      document.addEventListener('keyup', keyUpHandler, true);
+
       window.addEventListener('resize', resize);
   
       document.getElementById("x_coord").innerText = 0;
@@ -74,14 +81,7 @@ const char joybody[] PROGMEM = R"===(
       upDate();
   }
 
-  function background() {
-      x_orig = width / 2;
-      y_orig = height / 2;
-      ctx.beginPath();
-      ctx.arc(x_orig, y_orig, radius + 20, 0, Math.PI * 2, true);
-      ctx.fillStyle = '#c5c5c5';
-      ctx.fill();
-  }
+
 
   function upDate(){
     joystick();
@@ -115,6 +115,65 @@ const char joybody[] PROGMEM = R"===(
       else return false
   }
 
+
+// keypress handlers from Tank Mode
+
+var keyboardCode = function(event) {
+  var code;
+  if (event.repeat) return 0; // ignore repeating if held down
+  if (event.key !== undefined) { code = event.key; } 
+  else if (event.keyCode !== undefined) {code = event.keyCode;}
+  return code;
+};
+  
+function keyDownHandler(event) {
+  var code = keyboardCode(event);
+    if (code == 0) return; // repeating
+    //document.getElementById("debug").innerHTML =  code;
+      
+    if(code == 81 || code == 'q') { // Q key
+      armstate = -4; //note that armstate is purely visual in this example, it is NOT sent over to the ESP
+      armup(); //"armup" is only sent on key press
+    }
+    if(code == 65 || code == 'a') { // A key
+      armstate = 4; //"armdown" is only sent on key press
+      armdown()
+    }
+    
+    upDate();
+    Draw(event);
+}
+
+function keyUpHandler(event) {
+  var code =keyboardCode(event);
+    
+    if(code == 81 || code == 'q' ) { // Q key
+      armstate = 0; //update visual, does not send anything to ESP
+    }    
+    if(code == 65 || code == 'a' ) { // A key
+      armstate = 0;
+    }
+    upDate();
+    Draw(event);
+
+}
+
+  function background() {
+      x_orig = width / 2;
+      y_orig = height / 2;
+      ctx.beginPath();
+      ctx.fillStyle = '#c5c5c5';
+      ctx.rect(width*1/4-5, height/2-50, 10, 100);
+      ctx.fill();
+      ctx.fillStyle = 'black';
+      ctx.fillText("[ Q ]",width*1/4-8, height/2-55);
+      ctx.fillText("[ A ]",width*1/4-8, height/2+60);
+      ctx.arc(x_orig, y_orig, radius + 20, 0, Math.PI * 2, true);
+      ctx.fillStyle = '#c5c5c5';
+      ctx.fill();
+  }
+
+
   function startDrawing(event) {
       getPosition(event);
       if (inCircle()) {
@@ -132,6 +191,7 @@ const char joybody[] PROGMEM = R"===(
       if (paint) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         background();
+        knob(width*1/4, height/2+armstate*10);
         cts = 1;      // hack to ensure message goes through    
         x = width/2; y= height/2;
         upDate();
@@ -147,6 +207,11 @@ const char joybody[] PROGMEM = R"===(
       if (paint) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           background();
+          
+          //update lever display
+          knob(width*1/4, height/2+armstate*10);
+
+          //update joystick display
           var angle_in_degrees,cx, cy;
           var angle = Math.atan2((coord.y - y_orig), (coord.x - x_orig));
 
@@ -165,7 +230,31 @@ const char joybody[] PROGMEM = R"===(
 
           getPosition(event);
       }
+      else{ //if paint is NOT true, i.e. mouse button has not been pressed
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        background();
+
+        //update lever display, leave joystick unchanged
+        knob(width*1/4, height/2+armstate*10);
+        upDate();
+        }
   } 
+  
+  function knob(x,y) {
+    var grd = ctx.createRadialGradient(x+10,y-10,3,x+10,y-10,50);
+    ctx.beginPath();
+    grd.addColorStop(0,"white");
+    grd.addColorStop(1,"red");
+    ctx.fillStyle = grd;
+    ctx.arc(x, y, 20, 0, Math.PI * 2, true);
+    ctx.fillStyle = grd;
+    ctx.fill();
+  }
+  
+  function drawLevers() {
+    knob(width*1/4, height/2+armstate*10); // left knob
+  }
+  
   
 // UI functions via AJAX to esp32
   function armup() {
@@ -228,6 +317,25 @@ const char joybody[] PROGMEM = R"===(
       xhttp.send();
       cts = 0;
     }
+  }
+
+    //can use this function to send over armstate if desired 
+    function sendState() {
+    var xhttp = new XMLHttpRequest();
+    var str = "lever?val=";
+    var res = str.concat(armstate,",");
+    document.getElementById("levers").innerHTML = res; 
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4) {
+        if (this.status == 200) {
+          resendflag = 0;         
+          leverstate = this.responseText.split(",");
+          document.getElementById("acknowledge").innerHTML = this.responseText;
+        }  else  resendflag = 1
+      }
+    };
+    xhttp.open("GET", res, true);
+    xhttp.send();
   }
 
 </script>
