@@ -3,10 +3,16 @@
  * Jan 2021
  * Use at your own risk
  * 
+ * HOME WIFI
+ * 
  */
 #define ssid      "Fios-rTWv7"
 #define password  "Govinda1!"
 
+/**
+#define ssid      "#Skyroam_1t9"
+#define password  "55687127"
+*/
 // attach handler routine to URL parameter identifier
 void attachHandler(String key, void (*handler)());
 

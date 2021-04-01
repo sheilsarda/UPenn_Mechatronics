@@ -32,10 +32,10 @@ void handleSwitch() { // Switch between JOYSTICK and TANK mode
 
 #define RIGHT_CHANNEL0      0 // use first channel of 16  
 #define LEFT_CHANNEL1       1
-#define SERVOPIN1   33
+#define SERVOPIN1   32
 #define SERVODIR1   21
 
-#define SERVOPIN2   32
+#define SERVOPIN2   33
 #define SERVODIR2   22
 
 #define SERVOFREQ   50
@@ -108,7 +108,7 @@ void handleLever() {
              String(leftstate) + "," + String(rightstate);
 
  //  if (leftarm) do something?
- //  if (rightarm) do something?
+ //  if (rightarm) do 192.168.43.100something?
 
   if (leftstate > 0)    leftdir = HIGH;
   else                  leftdir = LOW;
@@ -140,9 +140,14 @@ void setup()
   WiFi.begin(ssid, password);
 
   // change the last number to your assigned number
-  WiFi.config(IPAddress(192, 168, 1, 6),
+  WiFi.config(IPAddress(192, 168, 1, 128),
               IPAddress(192, 168, 1, 1),
               IPAddress(255, 255, 255, 0));
+  /**
+  WiFi.config(IPAddress(192, 168, 43, 128),
+              IPAddress(192, 168, 43, 1),
+              IPAddress(255, 255, 255, 0));
+  */
   while(WiFi.status()!= WL_CONNECTED ) { 
     delay(500); Serial.print("."); 
   }
