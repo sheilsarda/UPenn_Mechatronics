@@ -110,10 +110,9 @@ Accompanying BoM
 |Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
 | Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
 |N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 1 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
-| ESP-32        | 1 |  Ministore |  |
-| Protoboards   | 2 |  Ministore |  |
 | | | |
 
+<img src="imgs/gm_lab_bom.png" width=500>
 
 # Lab 4.2 Mobile Base
 
@@ -885,18 +884,21 @@ void loop()
 
 **Bill of Materials**
 
+**Ordered from vendors**
+
 | Part | Quantity | Purchase Link | Unit Cost |
 |--|--|--|--|
 |Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
 | Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
 |N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 1 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
-| ESP-32        | 1 |  Ministore |  |
-| Protoboards   | 2 |  Ministore |  |
 | **Total** | | | **$21.77** | 
 | | | |
 
+**From GM Lab Ministore**
+
+<img src="imgs/gm_lab_bom.png" width=500>
 
 **Circuit Diagram**
 
-<img src="imgs/racecar_circuit.png" width=500>
+<img src="imgs/racecar_circuit.png" width=800>
 
