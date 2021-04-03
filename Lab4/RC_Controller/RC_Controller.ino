@@ -139,15 +139,15 @@ void setup()
   WiFi.mode(WIFI_MODE_STA);
   WiFi.begin(ssid, password);
 
-  // change the last number to your assigned number
+  /**
+   * change the last number to your assigned number
   WiFi.config(IPAddress(192, 168, 1, 128),
               IPAddress(192, 168, 1, 1),
               IPAddress(255, 255, 255, 0));
-  /**
+  */
   WiFi.config(IPAddress(192, 168, 43, 128),
               IPAddress(192, 168, 43, 1),
               IPAddress(255, 255, 255, 0));
-  */
   while(WiFi.status()!= WL_CONNECTED ) { 
     delay(500); Serial.print("."); 
   }
