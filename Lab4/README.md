@@ -644,7 +644,7 @@ void loop()
 
 ### 4.2.6A 
 
-625 seconds
+**Race time was 625 seconds**
 
 ````cpp
 /*
@@ -849,11 +849,25 @@ void loop()
 **Description of Mobile Base Approach**
 
 
+<img src="imgs/final_1.png" width=600>
+<img src="imgs/final_2.png" width=600>
+
 
 **Circuit Diagram**
 
-![](imgs/racecar_circuit.png)
+<img src="imgs/racecar_circuit.png" width=500>
 
+**Bill of Materials**
+
+| Part | Quantity | Purchase Link | Unit Cost |
+|--|--|--|--|
+|Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
+| Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
+|N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 1 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
+| ESP-32        | 1 |  Ministore |  |
+| Protoboards   | 2 |  Ministore |  |
+| **Total** | | 21.77 | 
+| | | |
 
 
 
