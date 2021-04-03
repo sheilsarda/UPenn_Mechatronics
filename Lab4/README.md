@@ -654,6 +654,8 @@ void loop()
 <img src="imgs/final_1.png" width=600>
 <img src="imgs/final_2.png" width=600>
 
+**Pictures of Car in Real Life (from GM Lab Testing)** [here](https://youtu.be/T1XDWYNSUl4): https://youtu.be/T1XDWYNSUl4
+
 **Discussion of Performance**
 
 I was able to succesfully complete the race thanks to help from my race TA Walker, who helped repair my car when the motor standoff made of MDF snapped off and needed to be taped back on.
