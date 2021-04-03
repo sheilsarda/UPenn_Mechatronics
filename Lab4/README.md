@@ -1,4 +1,4 @@
-# Lab 4.2 Report
+# Lab 4 Report
 
 Sheil Sarda <sheils@seas.upenn.edu>
 
@@ -114,7 +114,7 @@ Accompanying BoM
 
 <img src="imgs/gm_lab_bom.png" width=500>
 
-# Lab 4.2 Mobile Base
+## Lab 4.2 Mobile Base
 
 ### 4.2.1 Toggling LED
 
