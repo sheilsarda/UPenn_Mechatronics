@@ -656,6 +656,14 @@ void loop()
 
 **Pictures of Car in Real Life (from GM Lab Testing)** [here](https://youtu.be/T1XDWYNSUl4): https://youtu.be/T1XDWYNSUl4
 
+During the design process, I received input from my TA, Walker, regarding parts choices and potential pitfalls to avoid on this project.
+
+During this process, I iterated on several different designs, including a rack and pinion steering model and an Ackerman Steering model before eventually landing on my differential drive system with a ball caster wheel.
+
+A CAD model of my Ackerman steering design attached below for reference:
+
+<img src="imgs/draft4_3.png" width=600>
+
 **Discussion of Performance**
 
 I was able to succesfully complete the race thanks to help from my race TA Walker, who helped repair my car when the motor standoff made of MDF snapped off and needed to be taped back on.
