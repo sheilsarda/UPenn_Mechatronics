@@ -442,10 +442,6 @@ void loop(){
 
 ### 4.2.5A Drive Mobile Base via Web
 
-**Circuit Diagram**
-
-![](imgs/racecar_circuit.png)
-
 **Received checkoff from Walker on 4/1/21**
 
 *Note: Code is the same as the following part.*
@@ -851,6 +847,13 @@ void loop()
 ### 4.2.6B
 
 **Description of Mobile Base Approach**
+
+
+
+**Circuit Diagram**
+
+![](imgs/racecar_circuit.png)
+
 
 
 
