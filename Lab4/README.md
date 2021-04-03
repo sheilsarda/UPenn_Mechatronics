@@ -1,6 +1,8 @@
-# Lab 4 - Mobility
+# Lab 4.2 Report
 
 Sheil Sarda <sheils@seas.upenn.edu>
+
+MEAM510 Spring 2021, Taught by Prof. Mark Yim
 
 ## 4.1 Fabrication and Motor Driving
 
@@ -113,7 +115,7 @@ Accompanying BoM
 | | | |
 
 
-## Lab 4.2
+# Lab 4.2 Mobile Base
 
 ### 4.2.1 Toggling LED
 
@@ -136,7 +138,7 @@ void setup(){
   pinMode(4, INPUT);
   Serial.begin(115200);
 
-  // configure LED PWM functionalitites
+  // configure LED PWM functionality
   ledcSetup(ledChannel, freq, resolution);
 
   // attach the channel to the GPIO to be controlled
@@ -156,7 +158,7 @@ void loop(){
 
 ### 4.2.2 Using `ledc`
 
-![](imgs/ledc.jpg)
+<img src="imgs/ledc.jpg" width=500px>
 
 Circuit Diagram, video and website displayed in the next step.
 
@@ -166,9 +168,10 @@ Circuit Diagram, video and website displayed in the next step.
 
 **Circuit Diagram**
 
-![](imgs/web510_circuit.png)
+<img src="imgs/web510_circuit.png" width=700px>
 
-[Youtube Demo](https://www.youtube.com/watch?v=jmKuKUgpPbg): https://www.youtube.com/watch?v=jmKuKUgpPbg
+
+[**Youtube Demo**](https://www.youtube.com/watch?v=jmKuKUgpPbg): https://www.youtube.com/watch?v=jmKuKUgpPbg
 
 ````c
 /*
@@ -296,7 +299,7 @@ void loop(){
 
 ### 4.2.4 Variable Direction and Speed of DC Motor
 
-**Circuit Diagram added to next part**
+**Circuit Diagram added to 4.2.6B**
 
 [Youtube Demo](https://youtu.be/dYo8QofDLY8): https://youtu.be/dYo8QofDLY8
 
@@ -446,7 +449,7 @@ void loop(){
 
 *Note: Code is the same as the following part.*
 
-### 4.2.5B Driving mobile base through the internet
+### 4.2.5B Driving mobile base through the Internet
 
 **Received checkoff from Walker on 4/1/21**
 
@@ -666,18 +669,18 @@ A CAD model of my Ackerman steering design attached below for reference:
 
 **Discussion of Performance**
 
-The controls aspect of the car performed well, and I was able to succesfully traverse the racecourse with my differential drive system.
+The controls aspect of the car performed well, and I was able to successfully traverse the racecourse with my differential drive system.
 
-However, midway through my second lap, my `1/8` inch MDF motor mount securing the DC motor to the chasis snapped off due to the strain of carrying the battery pack and circuit. My race TA Walker helped repair my car taping the motor back on.
+However, midway through my second lap, my `1/8` inch MDF motor mount securing the DC motor to the chassis snapped off due to the strain of carrying the battery pack and circuit. My race TA Walker helped repair my car taping the motor back on.
 
-Other weakpoints in my robot besides the motor mount included the lack of rigidity in my frame to keep 2 wheels in my differential drive system always on the ground, instead of the axels bowing upward and lifting up the wheels. As a result, at sharp turns, the inner wheel lost traction, making turning maneovers innacurate at times. 
+Other weak points in my robot besides the motor mount included the lack of rigidity in my frame to keep 2 wheels in my differential drive system always on the ground, instead of the axels bowing upward and lifting up the wheels. As a result, at sharp turns, the inner wheel lost traction, making turning maneuvers inaccurate at times. 
 
 **List of Improvements**
 
-1. Using Acrylic instead of MDF for laser cutting material. This would help make stronger motor mounts that would snap off during turning manouveres.
+1. Using Acrylic instead of MDF for laser cutting material. This would help make stronger motor mounts that would snap off during turning maneuverer.
 1. Using more portable battery pack. This would help lighten the load that the motors had to move, making my car faster.
-1. Using stronger DC motors to increase overall straightline and turning speed.
-1. Soldering instead of using breadboards. Altough I did not have any accidents with jumper cables falling off, this would provided added protection against attack manouveres from opponents in the final project.
+1. Using stronger DC motors to increase overall straight line and turning speed.
+1. Soldering instead of using breadboards. Although I did not have any accidents with jumper cables falling off, this would provided added protection against attack maneuverer from opponents in the final project.
 
 **Final Code**
 
