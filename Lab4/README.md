@@ -674,10 +674,10 @@ Other weakpoints in my robot besides the motor mount included the lack of rigidi
 
 **List of Improvements**
 
-1. Using Acrylic instead of MDF for laser cutting material
-1. Using more portable battery pack
-1. Using stronger DC motors
-1. Soldering instead of using breadboards
+1. Using Acrylic instead of MDF for laser cutting material. This would help make stronger motor mounts that would snap off during turning manouveres.
+1. Using more portable battery pack. This would help lighten the load that the motors had to move, making my car faster.
+1. Using stronger DC motors to increase overall straightline and turning speed.
+1. Soldering instead of using breadboards. Altough I did not have any accidents with jumper cables falling off, this would provided added protection against attack manouveres from opponents in the final project.
 
 **Final Code**
 
