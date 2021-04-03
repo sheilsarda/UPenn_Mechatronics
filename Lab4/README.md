@@ -666,11 +666,11 @@ A CAD model of my Ackerman steering design attached below for reference:
 
 **Discussion of Performance**
 
-I was able to succesfully complete the race thanks to help from my race TA Walker, who helped repair my car when the motor standoff made of MDF snapped off and needed to be taped back on.
+The controls aspect of the car performed well, and I was able to succesfully traverse the racecourse with my differential drive system.
 
-Other weakpoints in my robot besides the motor mount included the lack of rigidity in my frame to keep 2 wheels in my differential drive system always on the ground, instead of the axels bowing upward and lifting up the wheels.
+However, midway through my second lap, my `1/8` inch MDF motor mount securing the DC motor to the chasis snapped off due to the strain of carrying the battery pack and circuit. My race TA Walker helped repair my car taping the motor back on.
 
-The controls aspect of the car performed relatively well, and I was able to succesfully traverse the racecourse with my differential drive system.
+Other weakpoints in my robot besides the motor mount included the lack of rigidity in my frame to keep 2 wheels in my differential drive system always on the ground, instead of the axels bowing upward and lifting up the wheels. As a result, at sharp turns, the inner wheel lost traction, making turning maneovers innacurate at times. 
 
 **List of Improvements**
 
