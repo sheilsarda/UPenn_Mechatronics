@@ -646,16 +646,6 @@ void loop()
 
 **Race time was 625 seconds**
 
-
-### 4.2.6B
-
-**Description of Mobile Base Approach**
-
-<img src="imgs/final_1.png" width=600>
-<img src="imgs/final_2.png" width=600>
-
-**Final Code**
-
 ````cpp
 /*
  * Sheil Sarda
@@ -853,6 +843,17 @@ void loop()
 }
 
 ````
+
+### 4.2.6B
+
+**Description of Mobile Base Approach**
+
+<img src="imgs/final_1.png" width=600>
+<img src="imgs/final_2.png" width=600>
+
+**Final Code**
+
+Same as code submission above for [4.2.5B](4.2.5B)
 
 
 **Bill of Materials**
