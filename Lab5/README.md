@@ -27,6 +27,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
     - 1:50 Gear Ratio
     - Cost: $12.50
     - [Datasheet](https://www.adafruit.com/product/4638#technical-details)
+    - [Motor shafts to use orange wheels](https://www.pololu.com/category/179/motor-shaft-adapters)
 
         ![Motor Pinout](imgs/motor_pinout.png)
 1. TT Motor
@@ -38,3 +39,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
 |--|--|
 | [Right Mecanum Wheel - 48mm Diameter](https://www.adafruit.com/product/4678)  | $4.95 * 2 = $9.90 |
 | [Left Mecanum Wheel - 48mm Diameter](https://www.adafruit.com/product/4679)   | $4.95 * 2 = $9.90 |
+
+## Holonomic Drive Refs
+
+1. [Details of Mecanum Drive](https://www.servomagazine.com/magazine/article/a-look-at-holonomic-locomotion)
