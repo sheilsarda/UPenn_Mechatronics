@@ -146,15 +146,19 @@ int main(void){
 
 ````
 
-### [Single-Pole-Single-Throw (SPST) Switch](https://industrial.panasonic.com/cdbs/www-data/pdf/ATB0000/ATB0000C14.pdf)
+## [Single-Pole-Single-Throw (SPST) Switch](https://industrial.panasonic.com/cdbs/www-data/pdf/ATB0000/ATB0000C14.pdf)
 
 <img src="imgs/spst_circuit.png" width=300>
 
-### [Connecting Potentiometer as ADC Input](https://www.robotshop.com/media/files/PDF/ADC_App_Note_BX24.pdf)
+## [Connecting Potentiometer as ADC Input](https://www.robotshop.com/media/files/PDF/ADC_App_Note_BX24.pdf)
 
 <img src="imgs/potentiometer_adc.png" width=500>
 
-### Solidworks Tips for Lasercutting
+## Solidworks Tips for Lasercutting
 
 - Best way to account for Kerf is to use the Shell command with `shell outward` enabled. Use shell radius of `0.007` inches
 - Line width of DWG files for lasercutting should be `0.05` mm, as opposed to the inches unit mentioned in the slides
+
+## ESP32 Pinout
+
+![](imgs/esp32_pinout.png)

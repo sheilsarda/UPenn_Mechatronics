@@ -1,6 +1,8 @@
-# Lab 4 - Mobility
+# Lab 4 Report
 
 Sheil Sarda <sheils@seas.upenn.edu>
+
+MEAM510 Spring 2021, Taught by Prof. Mark Yim
 
 ## 4.1 Fabrication and Motor Driving
 
@@ -32,6 +34,8 @@ with different speeds.
 1. Submit a photo of your
 circuit where the lines and motor are visible.
 
+<img src="imgs/h_bridge_pinout.png" width=700px>
+<img src="imgs/H-Bridge_example.jpg" width=500px>
 <img src="imgs/h_bridge.jpg" width=500px>
 
 ### 4.1.2 Car Architecture
@@ -106,6 +110,795 @@ Accompanying BoM
 |Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
 | Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
 |N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 1 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
-| ESP-32        | 1 |  Ministore |  |
-| Protoboards   | 2 |  Ministore |  |
 | | | |
+
+<img src="imgs/gm_lab_bom.png" width=500>
+
+## Lab 4.2 Mobile Base
+
+### 4.2.1 Toggling LED
+
+````cpp
+// Blink LED with variable frequency 
+
+const int ledPin1 = 21;
+const int ledPin2 = 10;
+
+// setting PWM properties
+const int freq = 4000;
+const int ledChannel = 0;
+const int resolution = 8;
+
+int val = 0;  // variable to store the value read
+int dutyCycle = 255;
+
+void setup(){
+  analogReadResolution(10);
+  pinMode(4, INPUT);
+  Serial.begin(115200);
+
+  // configure LED PWM functionality
+  ledcSetup(ledChannel, freq, resolution);
+
+  // attach the channel to the GPIO to be controlled
+  ledcAttachPin(ledPin1, ledChannel);
+  ledcAttachPin(ledPin2, ledChannel);
+}
+
+void loop(){
+  Serial.println(String(dutyCycle));
+  delay(100);
+
+  val       = analogRead(4);
+  dutyCycle = 255*((float) val/1024.0);
+  ledcWrite(ledChannel, dutyCycle);
+}
+````
+
+### 4.2.2 Using `ledc`
+
+<img src="imgs/ledc.jpg" width=500px>
+
+Circuit Diagram, video and website displayed in the next step.
+
+### 4.2.3 Website displaying duty cycle
+
+[**Dashboard**:](http://192.168.1.6/) `192.168.1.6`
+
+**Circuit Diagram**
+
+<img src="imgs/web510_circuit.png" width=700px>
+
+
+[**Youtube Demo**](https://www.youtube.com/watch?v=jmKuKUgpPbg): https://www.youtube.com/watch?v=jmKuKUgpPbg
+
+````c
+/*
+   Sheil Sarda
+   University of Pennsylvania
+   copyright (c) 2021 All Rights Reserved
+*/
+
+#include <WiFi.h>
+#include "html510.h"
+
+#define BLINK_LED   33  // variable duty
+#define POT_PIN     35   // potentiometer
+
+// setting PWM properties
+const int freq = 10;
+const int ledChannel = 1;
+const int resolution = 8;
+
+int val = 0;            // read in pot
+int dutyCycle = 255;    // start at 100%
+
+WiFiServer server(80);
+
+const char body[] PROGMEM = R"===(
+<!DOCTYPE html>
+<html><body>
+<H1>
+<a href="/H">Turn ON</a> LED.<br>
+<a href="/L">Turn OFF</a> LED.<br>
+<span id="freqlabel"> LED State HERE </span> <br>
+
+</H1>
+<button type="button" onclick="hit()"> Turn ON then OFF </button>
+</body>
+<script>
+function hit() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "hit", true);
+  xhttp.send();
+}  
+
+setInterval(updateLabel,400);
+
+function updateLabel() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("freqlabel").innerHTML =   
+             this.responseText;
+    }
+  };
+  xhttp.open("GET", "LEDstate", true);
+  xhttp.send();
+}
+
+</script>
+
+</html>
+)===";
+
+/* web handler   */
+void handleRoot(){
+  sendhtml(body);
+}
+
+void handleH(){
+  sendhtml(body);
+}                    
+                     
+void handleL(){
+  sendhtml(body);
+}
+
+void handleHit(){
+  sendplain(""); // acknowledge         
+}
+
+void handleLEDstate(){
+  String    s = "Frequency is " + String(freq) + "<br>";
+            s += "Duty Cycle is ";
+            s += String(dutyCycle*100/254);
+            s += "% <br>";
+  sendplain(s);
+}
+
+
+void setup() {
+  Serial.begin(115200);                                             
+  WiFi.mode(WIFI_MODE_STA);
+  WiFi.begin(ssid, password);
+  WiFi.config(IPAddress(192, 168, 1, 6),
+              IPAddress(192, 168, 1, 1),
+              IPAddress(255, 255, 255, 0));
+              
+  while(WiFi.status()!= WL_CONNECTED ) { 
+    delay(500);
+    Serial.print("."); 
+  }
+  
+  Serial.println("WiFi connected"); server.begin();
+
+  attachHandler("/H",handleH);
+  attachHandler("/L",handleL);
+  attachHandler("/ ",handleRoot);
+  attachHandler("/hit",handleHit);
+  attachHandler("/LEDstate",handleLEDstate);
+
+  analogReadResolution(10);
+  pinMode(POT_PIN, INPUT);
+  pinMode(BLINK_LED, OUTPUT);
+
+  ledcAttachPin(BLINK_LED, ledChannel);
+  ledcSetup(ledChannel, freq, resolution);
+}
+
+void loop(){
+  val       = analogRead(POT_PIN);   
+  dutyCycle = 255*((float) val/1024.0);
+  ledcWrite(ledChannel, dutyCycle);
+
+  serve(server, body);
+}
+````
+
+### 4.2.4 Variable Direction and Speed of DC Motor
+
+**Circuit Diagram added to 4.2.6B**
+
+[Youtube Demo](https://youtu.be/dYo8QofDLY8): https://youtu.be/dYo8QofDLY8
+
+````cpp
+/*
+   Sheil Sarda
+   University of Pennsylvania
+   copyright (c) 2021 All Rights Reserved
+*/
+
+#include <WiFi.h>
+#include "html510.h"
+
+#define MOTOR       33  // variable duty
+#define POT_PIN     35  // potentiometer
+#define DIR_PIN     32  // forward / backward
+
+// setting PWM properties
+const int freq = 50;
+const int ledChannel = 1;
+const int resolution = 8;
+
+int val = 0;            // read in pot
+int dutyCycle = 0;    // no movement
+
+WiFiServer server(80);
+
+const char body[] PROGMEM = R"===(
+<!DOCTYPE html>
+<html><body>
+<H1>
+<a href="/H">Turn ON</a> LED.<br>
+<a href="/L">Turn OFF</a> LED.<br>
+<span id="freqlabel"> LED State HERE </span> <br>
+
+</H1>
+<button type="button" onclick="hit()"> Turn ON then OFF </button>
+</body>
+<script>
+function hit() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", "hit", true);
+  xhttp.send();
+}  
+
+setInterval(updateLabel,400);
+
+function updateLabel() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("freqlabel").innerHTML =   
+             this.responseText;
+    }
+  };
+  xhttp.open("GET", "LEDstate", true);
+  xhttp.send();
+}
+
+</script>
+
+</html>
+)===";
+
+/* web handler   */
+void handleRoot(){
+  sendhtml(body);
+}
+
+void handleH(){
+  sendhtml(body);
+}                    
+                     
+void handleL(){
+  sendhtml(body);
+}
+
+void handleHit(){
+  sendplain(""); // acknowledge         
+}
+
+void handleLEDstate(){
+  String    s = "Frequency is " + String(freq) + "<br>";
+            s += "Duty Cycle is ";
+            s += String(dutyCycle*100/254);
+            s += "% <br>";
+            s += "Forward (y/n) ";
+            s += String(digitalRead(DIR_PIN)) + "<br>";
+  sendplain(s);
+}
+
+
+void setup() {
+  Serial.begin(115200);                                             
+  WiFi.mode(WIFI_MODE_STA);
+  WiFi.begin(ssid, password);
+  WiFi.config(IPAddress(192, 168, 1, 6),
+              IPAddress(192, 168, 1, 1),
+              IPAddress(255, 255, 255, 0));
+              
+  while(WiFi.status()!= WL_CONNECTED ) { 
+    delay(500);
+    Serial.print("."); 
+  }
+  
+  Serial.println("WiFi connected"); server.begin();
+
+  attachHandler("/H",handleH);
+  attachHandler("/L",handleL);
+  attachHandler("/ ",handleRoot);
+  attachHandler("/hit",handleHit);
+  attachHandler("/LEDstate",handleLEDstate);
+
+  analogReadResolution(10);
+  pinMode(POT_PIN, INPUT);
+  pinMode(DIR_PIN, OUTPUT);
+  pinMode(MOTOR, OUTPUT);
+
+  ledcAttachPin(MOTOR, ledChannel);
+  ledcSetup(ledChannel, freq, resolution);
+}
+
+
+void loop(){
+  val       = analogRead(POT_PIN);   
+
+  Serial.println(String(val));
+
+  if(val > 512) {
+    digitalWrite(DIR_PIN, HIGH);
+    dutyCycle   = 255*((float) (val - 512)/512.0);
+  }
+  else {
+    digitalWrite(DIR_PIN, LOW);
+    dutyCycle   = 255*((float) (512 - val)/512.0);
+  }
+
+  ledcWrite(ledChannel, dutyCycle);
+
+  serve(server, body);
+}
+````
+
+### 4.2.5A Drive Mobile Base via Web
+
+**Received checkoff from Walker on 4/1/21**
+
+*Note: Code is the same as the following part.*
+
+### 4.2.5B Driving mobile base through the Internet
+
+**Received checkoff from Walker on 4/1/21**
+
+````cpp
+/*
+ * Sheil Sarda
+ * University of Pennsylvania
+ * copyright (c) 2021 All Rights Reserved
+ */
+#include <WiFi.h>
+#include "html510.h"
+#include "joyJS.h"
+#include "tankJS.h"
+
+WiFiServer server(80);
+const char *body;
+
+/********************/
+/* HTML510  web   */
+void handleFavicon(){
+  sendplain(""); // acknowledge
+}
+
+void handleRoot() {
+  sendhtml(body);
+}
+
+void handleSwitch() { // Switch between JOYSTICK and TANK mode
+  String s="";
+  static int toggle=0;
+  if (toggle) body = joybody;
+  else body = tankbody;
+  toggle = !toggle;
+  sendplain(s); //acknowledge
+}
+
+#define RIGHT_CHANNEL0      0 // use first channel of 16  
+#define LEFT_CHANNEL1       1
+#define SERVOPIN1   33
+#define SERVODIR1   21
+
+#define SERVOPIN2   32
+#define SERVODIR2   22
+
+#define SERVOFREQ   50
+#define LEDC_RESOLUTION_BITS  12
+#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1) 
+#define FULLBACK LEDC_RESOLUTION*1          
+#define SERVOOFF  LEDC_RESOLUTION*0  
+#define FULLFRONT  LEDC_RESOLUTION*1  
+
+int leftservo, rightservo, leftdir, rightdir;
+
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {            
+  uint32_t duty =  LEDC_RESOLUTION * min(value, valueMax) / valueMax;   
+  ledcWrite(channel, duty);  // write duty to LEDC 
+}
+
+void updateServos() {
+  ledcAnalogWrite(LEFT_CHANNEL1, leftservo, LEDC_RESOLUTION);
+  digitalWrite(SERVODIR1, leftdir);
+
+  ledcAnalogWrite(RIGHT_CHANNEL0, rightservo, LEDC_RESOLUTION); 
+  digitalWrite(SERVODIR2, rightdir);
+}
+
+/************************/
+/* joystick mode  code  */
+
+int leftarm, rightarm;
+int x,y;
+
+void handleJoy() {
+  int left, right;
+  x = getVal(); // from -50 to +50
+  y = getVal();
+  String s = String(x) + "," + String(y);
+
+  left = x - y;
+  right = x + y;
+
+  leftservo = map(left, -50, 50, FULLBACK, FULLFRONT);
+  rightservo = map(right, -50, 50, FULLBACK, FULLFRONT); 
+
+  sendplain(s);
+  Serial.printf("received X,Y:=%d,%d\n",x,y); 
+}
+
+void handleArmdown() {
+  // do something? 
+  Serial.println("armdown");
+  sendplain(""); //acknowledge
+}
+
+void handleArmup() {
+  // do something? 
+  Serial.println("armup");
+  sendplain(""); //acknowledge
+}
+
+/*********************/
+/* tank mode  code  */
+int leftstate, rightstate;
+long lastLeverMs;
+
+void handleLever() {
+  leftarm = getVal();
+  rightarm = getVal();
+  leftstate = getVal();
+  rightstate = getVal();
+  String s = String(leftarm) + "," + String(rightarm) + "," +
+             String(leftstate) + "," + String(rightstate);
+
+ //  if (leftarm) do something?
+ //  if (rightarm) do something?
+
+  if (leftstate > 0)    leftdir = HIGH;
+  else                  leftdir = LOW;
+
+  if (rightstate < 0)   rightdir = HIGH;
+  else                  rightdir = LOW;
+ 
+  if (leftstate>0)      leftservo =  FULLBACK;
+  else if (leftstate<0) leftservo =  FULLFRONT; 
+  else                  leftservo =  SERVOOFF; 
+  
+  if (rightstate>0)      rightservo =  FULLFRONT; 
+  else if (rightstate<0) rightservo =  FULLBACK; 
+  else                   rightservo =  SERVOOFF; 
+  
+  lastLeverMs = millis(); //timestamp command
+  sendplain(s);
+  
+  // move bot  or something
+  Serial.printf("received %d %d %d %d \n",leftarm, rightarm, leftstate, rightstate); 
+
+  updateServos();
+}
+
+void setup() 
+{
+  Serial.begin(115200);
+  WiFi.mode(WIFI_MODE_STA);
+  WiFi.begin(ssid, password);
+
+  // change the last number to your assigned number
+  WiFi.config(IPAddress(192, 168, 1, 6),
+              IPAddress(192, 168, 1, 1),
+              IPAddress(255, 255, 255, 0));
+  while(WiFi.status()!= WL_CONNECTED ) { 
+    delay(500); Serial.print("."); 
+  }
+  Serial.println("WiFi connected"); 
+  Serial.printf("Use this URL http://%s/\n",WiFi.localIP().toString().c_str());
+  server.begin();                  //Start server
+
+ // Servo initialization
+  ledcSetup(RIGHT_CHANNEL0, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN1, RIGHT_CHANNEL0);
+  ledcSetup(LEFT_CHANNEL1, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN2, LEFT_CHANNEL1);
+
+ // HTML510 initialization
+  attachHandler("/joy?val=",handleJoy);
+  attachHandler("/armup",handleArmup);
+  attachHandler("/armdown",handleArmdown);
+  attachHandler("/switchmode",handleSwitch);
+  attachHandler("/lever?val=",handleLever);
+  body = joybody;
+  
+  attachHandler("/favicon.ico",handleFavicon);
+  attachHandler("/ ",handleRoot);
+  
+  pinMode(SERVODIR1, OUTPUT);
+  pinMode(SERVODIR2, OUTPUT);
+}
+
+void loop()
+{ 
+  static long lastWebCheck = millis();
+  static long lastServoUpdate = millis();
+  uint32_t ms;
+
+  ms = millis();
+  if (ms-lastWebCheck > 2){ 
+    serve(server,body);    
+    lastWebCheck = ms;
+  }
+  if (ms-lastServoUpdate > 1000/SERVOFREQ) {
+    updateServos();
+    lastServoUpdate = ms;
+  }
+}
+````
+
+### 4.2.6A 
+
+**Race time was 625 seconds**
+
+
+### 4.2.6B
+
+**Description of Mobile Base Approach**
+
+<img src="imgs/final_1.png" width=600>
+<img src="imgs/final_2.png" width=600>
+
+**Pictures of Car in Real Life (from GM Lab Testing)** [here](https://youtu.be/T1XDWYNSUl4): https://youtu.be/T1XDWYNSUl4
+
+During the design process, I received input from my TA, Walker, regarding parts choices and potential pitfalls to avoid on this project.
+
+During this process, I iterated on several different designs, including a rack and pinion steering model and an Ackerman Steering model before eventually landing on my differential drive system with a ball caster wheel.
+
+A CAD model of my Ackerman steering design attached below for reference:
+
+<img src="imgs/draft4_3.png" width=600>
+
+**Discussion of Performance**
+
+The controls aspect of the car performed well, and I was able to successfully traverse the racecourse with my differential drive system.
+
+However, midway through my second lap, my `1/8` inch MDF motor mount securing the DC motor to the chassis snapped off due to the strain of carrying the battery pack and circuit. My race TA Walker helped repair my car taping the motor back on.
+
+Other weak points in my robot besides the motor mount included the lack of rigidity in my frame to keep 2 wheels in my differential drive system always on the ground, instead of the axels bowing upward and lifting up the wheels. As a result, at sharp turns, the inner wheel lost traction, making turning maneuvers inaccurate at times. 
+
+**List of Improvements**
+
+1. Using Acrylic instead of MDF for laser cutting material. This would help make stronger motor mounts that would snap off during turning maneuverer.
+1. Using more portable battery pack. This would help lighten the load that the motors had to move, making my car faster.
+1. Using stronger DC motors to increase overall straight line and turning speed.
+1. Soldering instead of using breadboards. Although I did not have any accidents with jumper cables falling off, this would provided added protection against attack maneuverer from opponents in the final project.
+
+**Final Code**
+
+````cpp
+/*
+ * Sheil Sarda
+ * University of Pennsylvania
+ * copyright (c) 2021 All Rights Reserved
+ */
+#include <WiFi.h>
+#include "html510.h"
+#include "joyJS.h"
+#include "tankJS.h"
+
+WiFiServer server(80);
+const char *body;
+
+/********************/
+/* HTML510  web   */
+void handleFavicon(){
+  sendplain(""); // acknowledge
+}
+
+void handleRoot() {
+  sendhtml(body);
+}
+
+void handleSwitch() { // Switch between JOYSTICK and TANK mode
+  String s="";
+  static int toggle=0;
+  if (toggle) body = joybody;
+  else body = tankbody;
+  toggle = !toggle;
+  sendplain(s); //acknowledge
+}
+
+#define RIGHT_CHANNEL0      0 // use first channel of 16  
+#define LEFT_CHANNEL1       1
+#define SERVOPIN1   32
+#define SERVODIR1   21
+
+#define SERVOPIN2   33
+#define SERVODIR2   22
+
+#define SERVOFREQ   50
+#define LEDC_RESOLUTION_BITS  12
+#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1) 
+#define FULLBACK LEDC_RESOLUTION*1          
+#define SERVOOFF  LEDC_RESOLUTION*0  
+#define FULLFRONT  LEDC_RESOLUTION*1  
+
+int leftservo, rightservo, leftdir, rightdir;
+
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {            
+  uint32_t duty =  LEDC_RESOLUTION * min(value, valueMax) / valueMax;   
+  ledcWrite(channel, duty);  // write duty to LEDC 
+}
+
+void updateServos() {
+  ledcAnalogWrite(LEFT_CHANNEL1, leftservo, LEDC_RESOLUTION);
+  digitalWrite(SERVODIR1, leftdir);
+
+  ledcAnalogWrite(RIGHT_CHANNEL0, rightservo, LEDC_RESOLUTION); 
+  digitalWrite(SERVODIR2, rightdir);
+}
+
+/************************/
+/* joystick mode  code  */
+
+int leftarm, rightarm;
+int x,y;
+
+void handleJoy() {
+  int left, right;
+  x = getVal(); // from -50 to +50
+  y = getVal();
+  String s = String(x) + "," + String(y);
+
+  left = x - y;
+  right = x + y;
+
+  leftservo = map(left, -50, 50, FULLBACK, FULLFRONT);
+  rightservo = map(right, -50, 50, FULLBACK, FULLFRONT); 
+
+  sendplain(s);
+  Serial.printf("received X,Y:=%d,%d\n",x,y); 
+}
+
+void handleArmdown() {
+  // do something? 
+  Serial.println("armdown");
+  sendplain(""); //acknowledge
+}
+
+void handleArmup() {
+  // do something? 
+  Serial.println("armup");
+  sendplain(""); //acknowledge
+}
+
+/*********************/
+/* tank mode  code  */
+int leftstate, rightstate;
+long lastLeverMs;
+
+void handleLever() {
+  leftarm = getVal();
+  rightarm = getVal();
+  leftstate = getVal();
+  rightstate = getVal();
+  String s = String(leftarm) + "," + String(rightarm) + "," +
+             String(leftstate) + "," + String(rightstate);
+
+ //  if (leftarm) do something?
+ //  if (rightarm) do 192.168.43.100something?
+
+  if (leftstate > 0)    leftdir = HIGH;
+  else                  leftdir = LOW;
+
+  if (rightstate < 0)   rightdir = HIGH;
+  else                  rightdir = LOW;
+ 
+  if (leftstate>0)      leftservo =  FULLBACK;
+  else if (leftstate<0) leftservo =  FULLFRONT; 
+  else                  leftservo =  SERVOOFF; 
+  
+  if (rightstate>0)      rightservo =  FULLFRONT; 
+  else if (rightstate<0) rightservo =  FULLBACK; 
+  else                   rightservo =  SERVOOFF; 
+  
+  lastLeverMs = millis(); //timestamp command
+  sendplain(s);
+  
+  // move bot  or something
+  Serial.printf("received %d %d %d %d \n",leftarm, rightarm, leftstate, rightstate); 
+
+  updateServos();
+}
+
+void setup() 
+{
+  Serial.begin(115200);
+  WiFi.mode(WIFI_MODE_STA);
+  WiFi.begin(ssid, password);
+
+  /**
+   * change the last number to your assigned number
+  WiFi.config(IPAddress(192, 168, 1, 128),
+              IPAddress(192, 168, 1, 1),
+              IPAddress(255, 255, 255, 0));
+  */
+  WiFi.config(IPAddress(192, 168, 43, 128),
+              IPAddress(192, 168, 43, 1),
+              IPAddress(255, 255, 255, 0));
+  while(WiFi.status()!= WL_CONNECTED ) { 
+    delay(500); Serial.print("."); 
+  }
+  Serial.println("WiFi connected"); 
+  Serial.printf("Use this URL http://%s/\n",WiFi.localIP().toString().c_str());
+  server.begin();                  //Start server
+
+ // Servo initialization
+  ledcSetup(RIGHT_CHANNEL0, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN1, RIGHT_CHANNEL0);
+  ledcSetup(LEFT_CHANNEL1, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN2, LEFT_CHANNEL1);
+
+ // HTML510 initialization
+  attachHandler("/joy?val=",handleJoy);
+  attachHandler("/armup",handleArmup);
+  attachHandler("/armdown",handleArmdown);
+  attachHandler("/switchmode",handleSwitch);
+  attachHandler("/lever?val=",handleLever);
+  body = joybody;
+  
+  attachHandler("/favicon.ico",handleFavicon);
+  attachHandler("/ ",handleRoot);
+  
+  pinMode(SERVODIR1, OUTPUT);
+  pinMode(SERVODIR2, OUTPUT);
+}
+
+void loop()
+{ 
+  static long lastWebCheck = millis();
+  static long lastServoUpdate = millis();
+  uint32_t ms;
+
+  ms = millis();
+  if (ms-lastWebCheck > 2){ 
+    serve(server,body);    
+    lastWebCheck = ms;
+  }
+  if (ms-lastServoUpdate > 1000/SERVOFREQ) {
+    updateServos();
+    lastServoUpdate = ms;
+  }
+}
+
+````
+
+
+**Bill of Materials**
+
+**Ordered from vendors**
+
+| Part | Quantity | Purchase Link | Unit Cost |
+|--|--|--|--|
+|Recessed Flange-Mount Ball Transfer, 1" Diameter Steel Ball | 1 | [McMaster Carr](https://www.mcmaster.com/2415T33/) | 6.27 |
+| Wheel         | 2 |  [Adafruit](https://www.adafruit.com/product/3766) | 1.50 * 2  = 3 |
+|N20 DC Motor with Magnetic Encoder - 6V with 1:50 Gear Ratio | 1 | [Adafruit](https://www.adafruit.com/product/4638#description) | 12.50 |
+| **Total** | | | **$21.77** | 
+| | | |
+
+**From GM Lab Ministore**
+
+<img src="imgs/gm_lab_bom.png" width=500>
+
+**Circuit Diagram**
+
+<img src="imgs/racecar_circuit.png" width=800>
+
