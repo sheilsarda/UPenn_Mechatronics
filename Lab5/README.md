@@ -5,8 +5,10 @@ Sheil Sarda <sheils@seas.upenn.edu>
 ## Sensor List
 
 1. [Reflective Infrared IR Optical Sensor](https://www.adafruit.com/product/2349)
+    - Also available on [Digikey](https://www.digikey.com/en/products/detail/tt-electronics-optek-technology/OPB742/374792?s=N4IgTCBcDaIMwDYCsBaAjABjQFhQOQBEQBdAXyA)
     - Cost: $1.95
-    - Detection range is ~2-10mm
+    - Detection range is ~0.2-0.10cm
+    - [Datasheet](https://www.ttelectronics.com/TTElectronics/media/ProductFiles/Optoelectronics/Datasheets/OPB708-709-740-748.pdf)
 1. Ultrasonic Ranging
     1. [RCWL-1601](https://www.adafruit.com/product/4007)
         - Cost: $3.95
@@ -28,6 +30,12 @@ Sheil Sarda <sheils@seas.upenn.edu>
     1. [VL53L0X](https://www.adafruit.com/product/3317)
         - Cost: $14.95
         - Distance range: 5-120cm  
+
+| Range | Sensor | Quantity |
+|--|--|--|
+| Long      | Sharp IR              | 1 |
+| Short     | ToF Distance Ranging  | 1 |
+| Short     | Ultrasonic            | 2 |
 
 ## Actuator
 
