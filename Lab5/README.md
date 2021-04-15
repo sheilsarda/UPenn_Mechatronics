@@ -7,7 +7,6 @@ Sheil Sarda <sheils@seas.upenn.edu>
 1. [Reflective Infrared IR Optical Sensor](https://www.adafruit.com/product/2349)
     - Cost: $1.95
     - Detection range is ~2-10mm
-1. [IR distance sensor](https://www.adafruit.com/product/164)
 1. Ultrasonic Ranging
     1. [RCWL-1601](https://www.adafruit.com/product/4007)
         - Cost: $3.95
@@ -17,10 +16,18 @@ Sheil Sarda <sheils@seas.upenn.edu>
     1. [HC-SR04](https://www.adafruit.com/product/3942)
 1. [Sharp GP2Y0A21YK0F](https://www.pololu.com/product/136)
     - Cost: $10.90
+    - Also available on [Adafruit](https://www.adafruit.com/product/164) for $14.95
     - Analog output can be connected to ADC pin for distance measurements
     - Detection range is ~10-80 cm (4″ to 32″)
-    - [Datasheet](http://www.socle-tech.com/doc/IC%20Channel%20Product/Sensors/Distance%20Measuring%20Sensor/Analog%20Output/GP2Y0A21YK0F_spec.pdf)
-
+    - [Datasheet1](http://www.socle-tech.com/doc/IC%20Channel%20Product/Sensors/Distance%20Measuring%20Sensor/Analog%20Output/GP2Y0A21YK0F_spec.pdf), [Datasheet2](https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y0a21yk_e.pdf)
+    - Distance range: 10-80cm / 4-31inches
+1. Time of Flight Distance Ranging
+    1. [VL6180](https://www.adafruit.com/product/3316)
+        - Cost: $13.95
+        - Distance range: 0.5-20cm 
+    1. [VL53L0X](https://www.adafruit.com/product/3317)
+        - Cost: $14.95
+        - Distance range: 5-120cm  
 
 ## Actuator
 
