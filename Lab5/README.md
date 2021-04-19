@@ -31,11 +31,11 @@ Sheil Sarda <sheils@seas.upenn.edu>
         - Cost: $14.95
         - Distance range: 5-120cm  
 
-| Range | Sensor | Quantity |
-|--|--|--|
-| Long      | Sharp IR              | 1 |
-| Short     | ToF Distance Ranging  | 1 |
-| Short     | Ultrasonic            | 2 |
+| Range | Sensor | Quantity | Seller |
+|--|--|--|--|
+| Long      | Sharp IR              | 1 | Amazon    |
+| Short     | ToF Distance Ranging  | 1 | Pololu    |
+| Short     | Ultrasonic            | 2 | Adafruit  |
 
 ## Actuator
 
