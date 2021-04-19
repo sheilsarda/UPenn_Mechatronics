@@ -61,6 +61,17 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 **NOTE** Designed for 1/4" MDF instead of the usual 1/8"
 
+### Soda Can Dimensions (inches)
+
+|  |  |
+|--|--|
+Height | 4.83 |
+Diameter (top) | 2.13 |
+Diameter (body) | 2.6 |
+Volume | 12 ounces |
+| | |
+
+
 ## Holonomic Drive Refs
 
 1. [Details of Mecanum Drive](https://www.servomagazine.com/magazine/article/a-look-at-holonomic-locomotion)
