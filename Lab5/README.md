@@ -59,6 +59,8 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
 ![Base](imgs/base.jpg)
 
+**NOTE** Designed for 1/4" MDF instead of the usual 1/8"
+
 ## Holonomic Drive Refs
 
 1. [Details of Mecanum Drive](https://www.servomagazine.com/magazine/article/a-look-at-holonomic-locomotion)
