@@ -4,3 +4,4 @@
 *.elf
 ~$*.SLDPRT
 *.bak
+~$*.SLDASM
