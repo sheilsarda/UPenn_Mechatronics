@@ -22,3 +22,6 @@ Highest frequency square wave
 
 ## 3. OscilloSorta feedback
 
+Single value readings to capture logic transitions are not implemented on the 
+Oscillosorta, but would be quite helpful to detect transitions in logic levels
+based on user input.
