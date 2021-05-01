@@ -10,7 +10,7 @@ Sheil Sarda <sheils@seas.upenn.edu>
     - Detection range is ~0.2-0.10cm
     - [Datasheet](https://www.ttelectronics.com/TTElectronics/media/ProductFiles/Optoelectronics/Datasheets/OPB708-709-740-748.pdf)
 1. Ultrasonic Ranging
-    1. [RCWL-1601](https://www.adafruit.com/product/4007)
+    1. [**RCWL-1601**](https://www.adafruit.com/product/4007)
         - Cost: $3.95
         - Range: 10cm – 250cm
         - Speed: ~10 samples/sec
