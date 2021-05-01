@@ -18,7 +18,7 @@ Highest frequency square wave
 
 ## 2. Single Mode
 
-
+![Square Wave](imgs/single_mode.jpg)
 
 ## 3. OscilloSorta feedback
 
