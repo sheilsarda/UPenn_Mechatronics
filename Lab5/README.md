@@ -91,7 +91,7 @@ Volume | 12 ounces |
 | Low(0) | High(1) | Backward 	|
 | High(1) | High(1) | Motor OFF |
 
-![Motor Driver Circuit](imgs/L298n_pinout.png)
+![Motor Driver Circuit](imgs/L298N_pinout.png)
 
 ## Holonomic Drive Refs
 
