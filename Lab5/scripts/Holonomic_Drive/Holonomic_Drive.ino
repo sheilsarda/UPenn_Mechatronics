@@ -1,18 +1,9 @@
-
-/*
- * Lab 4.2.5 (modified - MEAM510 Lab 4 demo)
- * March 2021
- * Sahachar Reddy Tippana
- */
-
 #include <WiFi.h>
 #include "html510.h"
 #include "joyJS.h"
 #include "tankJS.h"
 
 WiFiServer server(80);
-const char* ssid     = "TunnelShade";
-const char* password = "reddy4you";
 const char *body;
 
 /********************/
@@ -45,11 +36,9 @@ void handleSwitch() { // Switch between JOYSTICK and TANK mode
 #define SERVOFREQ    60       // Frequency of the PWM
 #define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
 #define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution
-//#define FULLBACK  //LEDC_RESOLUTION*10*60/10000
-//#define SERVOOFF  LEDC_RESOLUTION*15*60/10000
-//#define FULLFRONT  0 //LEDC_RESOLUTION*20*60/10000
-#define leftpin 15            //Direction pin for left motor
-#define rightpin 13           //Direction for right motor
+
+#define leftpin 15            //Direction pin for front left motor
+#define rightpin 13           //Direction for front right motor
 #define rleftpin 10            //Direction pin for rear left motor
 #define rrightpin 9           //Direction for rear right motor
 #define NEUTRAL 0             //Variable storing the no spin condition of motor
@@ -107,12 +96,10 @@ void updateServos() {
   RMduty = map(abs(rightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
   rLMduty = map(abs(rleftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
   rRMduty = map(abs(rrightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-//  Serial.printf("LMduty = %d /n", LMduty);
-//  Serial.printf("RMduty = %d /n", RMduty);
-//  Serial.printf("rLMduty = %d /n", rLMduty);
-//  Serial.printf("rRMduty = %d /n", rRMduty);
-  ledcWrite(LEFT_CHANNEL1, LMduty);
+  
+ledcWrite(LEFT_CHANNEL1, LMduty);
   ledcWrite(RIGHT_CHANNEL0, RMduty); 
+
 //Rear Motors
   ledcWrite(rLEFT_CHANNEL7, rLMduty);
   ledcWrite(rRIGHT_CHANNEL6, rRMduty); 
@@ -213,9 +200,6 @@ void handleLever() {
   rightstate = getVal();
   String s = String(leftarm) + "," + String(rightarm) + "," +
              String(leftstate) + "," + String(rightstate);
-
- //  if (leftarm) do something?
- //  if (rightarm) do something?
  
   if (leftstate>0)      leftmotor =  REVERSE;
   else if (leftstate<0) leftmotor =  MAX; 
