@@ -85,7 +85,6 @@ Volume | 12 ounces |
 
 | Input 1 | Input 2 | Direction |
 |--|--|--|
-| Input1 | Input2	| Spinning Direction |
 | Low(0) | Low(0) | Motor OFF 	|
 | High(1) | Low(0) | Forward 	|
 | Low(0) | High(1) | Backward 	|
