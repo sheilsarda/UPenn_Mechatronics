@@ -11,7 +11,7 @@
 #include "tankJS.h"
 
 WiFiServer server(80);
-const char* ssid     = "#TunnelShade";
+const char* ssid     = "";
 const char* password = "reddy4you";
 const char *body;
 
