@@ -71,6 +71,26 @@ Diameter (body) | 2.6 |
 Volume | 12 ounces |
 | | |
 
+## L298N Motor Driver
+
+1. The module has two direction control pins for each channel
+    1. The IN1 and IN2 pins control the spinning direction of the motor A 
+    1. IN3 and IN4 control motor B
+1. The spinning direction of a motor can be controlled by applying either a logic HIGH(5 Volts) or logic LOW(Ground) to these inputs
+1. `ENA` and `ENB` are used to turn the motors ON, OFF and control its speed
+    1. Pulling pin high will make motor spin
+    1. Pulling pin low will make motor stop
+1. `OUT1` and `OUT2` are connected to Motor A
+1. `OUT3` and `OUT4` are connected to Motor B
+
+| Input 1 | Input 2 | Direction |
+|--|--|--|
+| Low(0) | Low(0) | Motor OFF 	|
+| High(1) | Low(0) | Forward 	|
+| Low(0) | High(1) | Backward 	|
+| High(1) | High(1) | Motor OFF |
+
+![Motor Driver Circuit](imgs/L298N_pinout.png)
 
 ## Holonomic Drive Refs
 
