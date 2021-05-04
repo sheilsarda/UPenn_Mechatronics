@@ -1,5 +1,51 @@
 # Lab 5 Scripts
 
+## TODO LIST
+
+Events and Services Model
+1. FSM
+1. Interrupts
+1. Sensors
+1. Web input
+1. Web interface inputs to FSM
+
+Hardware
+1. PID Control
+	1. Control for ultrasonic
+	1. ToF
+1. Drive Motor Control
+	1. Limit Switches
+	1. IR Retroreflective
+1. Servo Motor Control
+	1. Can detection
+	1. Can picking up
+	1. Can release
+
+Communication
+	1. Figure out SPI / I2C for ESPs
+	1. SPI / I2C for 2 ESP
+
+Web Interface
+	1. Buttons for autonomous mode
+	1. Ranging code to get sensor data
+	1. Increase resolution of joystick
+		1. Discrete
+		1. Bigger joystick
+	1. Add rotation functionality
+
+Holonomic drive to do using `LEDC_Write`
+	1. Forward
+	1. Backward
+	1. Left 
+	1. Right
+	1. Turn CW / CCW by X degrees
+
+Plan for capacitive touch:
+1. Have capacitive touch sensors on the top layer of the bot to detect whether a potential object is a can or not
+1. Also have capacitive touch sensors inside the gripper arms so we know the precise location of the can in relation to the robot geometry
+1. Actuate the servo closest to the can first, have a tiny delay, then actuate the second robotic arm-- prevent accidentally tipping over the can
+
+
 ## Walker's Wall Following code
 
 ### Wall Following Modes
@@ -11,6 +57,14 @@
 | Back up, then turn slightly left | 3 | 4 |
 | Drive slight left | 4 | 5 |
 | Slight right turn | 5 | 0 |
+
+### PID Control with Follow States
+
+![PID](../imgs/PID_control.png)
+
+### Modifying the Interface
+
+![Joystick](../imgs/joystick_discrete.png)
 
 ### Finite State Machine Skeleton
 
