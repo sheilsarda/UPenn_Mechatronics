@@ -22,23 +22,23 @@ Hardware
 	1. Can release
 
 Communication
-	1. Figure out SPI / I2C for ESPs
-	1. SPI / I2C for 2 ESP
+1. Figure out SPI / I2C for ESPs
+1. SPI / I2C for 2 ESP
 
 Web Interface
-	1. Buttons for autonomous mode
-	1. Ranging code to get sensor data
-	1. Increase resolution of joystick
-		1. Discrete
-		1. Bigger joystick
-	1. Add rotation functionality
+1. Buttons for autonomous mode
+1. Ranging code to get sensor data
+1. Increase resolution of joystick
+	1. Discrete
+	1. Bigger joystick
+1. Add rotation functionality
 
 Holonomic drive to do using `LEDC_Write`
-	1. Forward
-	1. Backward
-	1. Left 
-	1. Right
-	1. Turn CW / CCW by X degrees
+1. Forward
+1. Backward
+1. Left 
+1. Right
+1. Turn CW / CCW by X degrees
 
 Plan for capacitive touch:
 1. Have capacitive touch sensors on the top layer of the bot to detect whether a potential object is a can or not
