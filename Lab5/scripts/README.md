@@ -1,5 +1,14 @@
 # Lab 5 Scripts
 
+## Wall Following Modes
+
+| Follow State | Mode | 
+|--|--|
+| Back up | 3 |
+| Go straight | 2 |
+| Turn left | 1 |
+| Turn right | 0 |
+
 ## TODO LIST
 
 Events and Services Model
