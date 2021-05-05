@@ -1,7 +1,5 @@
 /****************************************************** 
  * Scans range sensor mounted on servo and displays on web
- * 
- * ToF ranger VL53L0X uses I2C on ESP32 SCL = GPIO21 and SDA = GPIO22
  * Ultrasonic ranger  uses TriggerPin GPIO19 and EchoPin GPIO18
  ******************************************************/
 
@@ -11,16 +9,24 @@
 #define trigPin 18
 #define echoPin 19
 
+long duration; // variable for the duration of sound wave travel
+int distance; // variable for the distance measurement
+
 int rangeSonar() {    // return range distance in mm
-  int mm;
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPin,LOW);
-  mm = 10*pulseIn(echoPin,HIGH) / 58;
-  //Serial.printf("sonar range %d\n",mm);
-  return mm;
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  return distance * 10;
 }
-
 //****************************
 //********* Servo stuff:
 //****************************
@@ -28,13 +34,6 @@ int rangeSonar() {    // return range distance in mm
 #define LEDC_RESOLUTION_BITS  14
 #define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1) 
 #define LEDC_FREQ_HZ     60
-#define SERVO_PIN        23
-#define SERVO_SCAN       6   // can increase this to have wider sweep
-#define FULLBACK  LEDC_RESOLUTION*(15-SERVO_SCAN)*60/10000 
-#define SERVOOFF  LEDC_RESOLUTION*15*60/10000   // center servo (1.5ms pulse)
-#define FULLFRONT LEDC_RESOLUTION*(15+SERVO_SCAN)*60/10000
-#define SERVOTODEG(x) ((x)*(int8_t)90*10000)/(12*LEDC_RESOLUTION*60)
-
 void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {            
   uint32_t duty =  LEDC_RESOLUTION * min(value, valueMax) / valueMax;   
   ledcWrite(channel, duty);  // write duty to LEDC 
@@ -48,37 +47,24 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
 #define SCANSIZE 45
 #define ARRAYMAX SCANSIZE*2 // needs to be bigger than scansize
 int scanR[ARRAYMAX];
-int scanA[ARRAYMAX];
 int scanoffset = SCANSIZE; // start at SCANSIZE so we don't endup negative mod
 
 void printScan(){
   for (int i=0; i< 100; i++) {
     if (scanR[i]) {
       Serial.print(i);
-      for (int j=0; j<scanA[i]; j+=10) {
-        Serial.print(".");
-      }
+      // for (int j=0; j<scanR[i]; j+=10) Serial.print(".");
       Serial.println("#");
     }
   }
 }
 
+
 void scanStep(int range) {
-  static int angle;
-  static int dir=SCANSPEED;
-  
-  if (angle+SERVOOFF > FULLFRONT) {
-    dir = -SCANSPEED;
-  }
-  if (angle+SERVOOFF < FULLBACK) {
-    dir = SCANSPEED;    
-//    printScan();
-  }
+  printScan();
+    
   scanR[scanoffset % ARRAYMAX] = range;
-  scanA[scanoffset % ARRAYMAX] = -SERVOTODEG(angle);
   scanoffset++;
-  angle += dir;
-  ledcAnalogWrite(LEDC_CHANNEL, SERVOOFF+angle, LEDC_RESOLUTION);
 }
 
 //****************************
@@ -100,9 +86,6 @@ void handleUpdate() {
   for (int i=0; i<SCANSIZE; i++) { // add range values
     s = s+","+ scanR[(scanoffset-i) % ARRAYMAX]; // range sensor lags angle by 1 step
   }
-  for (int i=0; i<SCANSIZE; i++) { // add angle value
-    s = s+","+ scanA[(scanoffset-i-1) % ARRAYMAX];
-  }
   
   sendplain(s);
 }
@@ -121,9 +104,6 @@ void handleRoot() {
 void setup()
 {
   Serial.begin(115200);
-  ledcSetup(LEDC_CHANNEL, 60, LEDC_RESOLUTION_BITS); // channel, freq, bits
-  ledcAttachPin(SERVO_PIN, LEDC_CHANNEL);
-  ledcAnalogWrite(LEDC_CHANNEL, SERVOOFF, LEDC_RESOLUTION); 
   Serial.println("starting");
   
   pinMode(trigPin, OUTPUT);
@@ -149,7 +129,7 @@ void setup()
 
 void loop()
 {
-  static uint32_t lastServo = micros();
+  static uint32_t lastUpdate = micros();
   static uint32_t lastmicros = micros();
   static uint32_t us = micros();
   int range;
@@ -159,11 +139,9 @@ void loop()
     lastmicros = us;
     serve(server,body);    
   }
-  if (us-lastServo > 1000000/SAMPLEFREQ) { // update the servo position
-    //range = rangeToF();     // uncomment if using ToF sensor
+  if (us-lastUpdate > 1000000/SAMPLEFREQ) { // update the servo position
     range = rangeSonar();   // uncomment if using Sonar
-    //range = 100;              // uncomment if testing display send dummy data
     scanStep(range);
-    lastServo = us;
+    lastUpdate = us;
   }
 }
