@@ -8,73 +8,76 @@ const char *body;
 
 /********************/
 /* HTML510  web   */
-void handleFavicon() {
+void handleFavicon()
+{
     sendplain(""); // acknowledge
 }
 
-void handleRoot() {
+void handleRoot()
+{
     sendhtml(body);
 }
 
-void handleSwitch() { // Switch between JOYSTICK and TANK mode
-    String s="";
-    static int toggle=0;
-    if (toggle) body = joybody;
-    else body = tankbody;
+void handleSwitch()
+{ // Switch between JOYSTICK and TANK mode
+    String s = "";
+    static int toggle = 0;
+    if (toggle)
+        body = joybody;
+    else
+        body = tankbody;
     toggle = !toggle;
     sendplain(s); //acknowledge
 }
 
-#define RIGHT_CHANNEL0      0 // use first channel of 16  
-#define LEFT_CHANNEL1       1 // use 2nd channel of 16
-#define rRIGHT_CHANNEL6      6 // use first channel of 16  
-#define rLEFT_CHANNEL7       7 // use 2nd channel of 16
-#define SERVOPIN1    33       // PWM generating pin (33) for Right Motor
-#define SERVOPIN2    32       // PWM generating pin (32) for left Motor
-#define SERVOPIN3    27       // PWM generating pin (34) for Rear Right Motor  12, 25
-#define SERVOPIN4    14       // PWM generating pin (35) for Rear left Motor   13, 26
-#define SERVOFREQ    60       // Frequency of the PWM
-#define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
-#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution
+#define RIGHT_CHANNEL0 0                                  // use first channel of 16
+#define LEFT_CHANNEL1 1                                   // use 2nd channel of 16
+#define rRIGHT_CHANNEL6 6                                 // use first channel of 16
+#define rLEFT_CHANNEL7 7                                  // use 2nd channel of 16
+#define SERVOPIN1 33                                      // PWM generating pin (33) for Right Motor
+#define SERVOPIN2 32                                      // PWM generating pin (32) for left Motor
+#define SERVOPIN3 27                                      // PWM generating pin (34) for Rear Right Motor  12, 25
+#define SERVOPIN4 14                                      // PWM generating pin (35) for Rear left Motor   13, 26
+#define SERVOFREQ 60                                      // Frequency of the PWM
+#define LEDC_RESOLUTION_BITS 16                           //LEDC resolution in bits
+#define LEDC_RESOLUTION ((1 << LEDC_RESOLUTION_BITS) - 1) //LEDC resolution
 
-#define leftpin 15            //Direction pin for front left motor
-#define rightpin 13           //Direction for front right motor
-#define rleftpin 10            //Direction pin for rear left motor
-#define rrightpin 9           //Direction for rear right motor
-#define NEUTRAL 0             //Variable storing the no spin condition of motor
-#define MAX 50*100            //Variable storing the full forward spin condition of motor
-#define REVERSE -50*100       //Variable storing the full backward spin condition of motor
+#define leftpin 15        //Direction pin for front left motor
+#define rightpin 13       //Direction for front right motor
+#define rleftpin 10       //Direction pin for rear left motor
+#define rrightpin 9       //Direction for rear right motor
+#define NEUTRAL 0         //Variable storing the no spin condition of motor
+#define MAX 50 * 100      //Variable storing the full forward spin condition of motor
+#define REVERSE -50 * 100 //Variable storing the full backward spin condition of motor
 
-uint32_t LMduty;              //Duty Cycle variable for the left motor
-uint32_t RMduty;              //Duty Cycle variable for the right motor
-uint32_t rLMduty;              //Duty Cycle variable for the REAR left motor
-uint32_t rRMduty;              //Duty Cycle variable for the REAR right motor
-int leftmotor, rightmotor, rleftmotor, rrightmotor;    //Variables determining the spin condition of motors
+uint32_t LMduty;                                    //Duty Cycle variable for the left motor
+uint32_t RMduty;                                    //Duty Cycle variable for the right motor
+uint32_t rLMduty;                                   //Duty Cycle variable for the REAR left motor
+uint32_t rRMduty;                                   //Duty Cycle variable for the REAR right motor
+int leftmotor, rightmotor, rleftmotor, rrightmotor; //Variables determining the spin condition of motors
 
-
-
-void updateServos() {
-    if(leftmotor < 0)
+void updateServos()
+{
+    if (leftmotor < 0)
         digitalWrite(leftpin, LOW);
     else
         digitalWrite(leftpin, HIGH);
 
-    if(rightmotor < 0)
+    if (rightmotor < 0)
         digitalWrite(rightpin, LOW);
     else
         digitalWrite(rightpin, HIGH);
 
     //Rear Motors
-    if(rleftmotor < 0)
+    if (rleftmotor < 0)
         digitalWrite(rleftpin, LOW);
     else
         digitalWrite(rleftpin, HIGH);
 
-    if(rrightmotor < 0)
+    if (rrightmotor < 0)
         digitalWrite(rrightpin, LOW);
     else
         digitalWrite(rrightpin, HIGH);
-
 
     LMduty = map(abs(leftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
     RMduty = map(abs(rightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
@@ -93,34 +96,31 @@ void updateServos() {
 /* joystick mode  code  */
 
 int leftarm, rightarm;
-int x,y;
+int x, y;
 
-void handleJoy() {
+void handleJoy()
+{
     int left, right;
     x = getVal(); // from -50 to +50
     y = getVal();
     String s = String(x) + "," + String(y);
 
-    float Left;     //Left motor movement variable
-    float Right;    //Right motor movement variable
-    float rLeft;     //Rear Left motor movement variable
-    float rRight;    //Rear Right motor movement variable
+    float Left;   //Left motor movement variable
+    float Right;  //Right motor movement variable
+    float rLeft;  //Rear Left motor movement variable
+    float rRight; //Rear Right motor movement variable
 
-
-    float z = sqrt(x * x + y * y);   //hypotenuse
+    float z = sqrt(x * x + y * y); //hypotenuse
     // Serial.println("z = %d", z);
 
+    float rad = acos(abs(x) / z); //Computing the unsigned angle in radians
 
-    float rad = acos(abs(x) / z);    //Computing the unsigned angle in radians
-
-
-    if (isnan(rad) == true)          //Cater for NaN values
+    if (isnan(rad) == true) //Cater for NaN values
     {
         rad = 0;
     }
 
-
-    float angle = rad * 180 / PI;    //Computing the unsigned angle (0-90) in degrees
+    float angle = rad * 180 / PI; //Computing the unsigned angle (0-90) in degrees
 
     /**
      * Measuring turns with the angle of turn
@@ -129,12 +129,11 @@ void handleJoy() {
      * For a straight line path the turn coefficient will remain the same
      */
 
-    float tcoeff = -1 + (angle / 90) * 2;     //turn co-efficient
-    float turn = tcoeff * abs(abs(y) - abs(x));    //Variable determining the turn movement
+    float tcoeff = -1 + (angle / 90) * 2;       //turn co-efficient
+    float turn = tcoeff * abs(abs(y) - abs(x)); //Variable determining the turn movement
     turn = round(turn * 100) / 100;
 
-
-    float mov = max(abs(y), abs(x));      // Max of y or x is the movement
+    float mov = max(abs(y), abs(x)); // Max of y or x is the movement
 
     // First and third quadrant
     if ((x >= 0 && y <= 0) || (x < 0 && y > 0))
@@ -153,29 +152,32 @@ void handleJoy() {
     }
 
     // reverse spin direction condition
-    if (y > 0) {
+    if (y > 0)
+    {
         Left = 0 - Left;
         Right = 0 - Right;
         rLeft = 0 - rLeft;
         rRight = 0 - rRight;
     }
 
-    leftmotor = -100*Left;
-    rightmotor = -100*Right;
-    rleftmotor = 100*rLeft;
-    rrightmotor = 100*rRight;
+    leftmotor = -100 * Left;
+    rightmotor = -100 * Right;
+    rleftmotor = 100 * rLeft;
+    rrightmotor = 100 * rRight;
 
     sendplain(s);
-    Serial.printf("received X,Y:=%d,%d\n",x,y);
+    Serial.printf("received X,Y:=%d,%d\n", x, y);
 }
 
-void handleArmdown() {
+void handleArmdown()
+{
     // do something?
     Serial.println("armdown");
     sendplain(""); //acknowledge
 }
 
-void handleArmup() {
+void handleArmup()
+{
     // do something?
     Serial.println("armup");
     sendplain(""); //acknowledge
@@ -186,7 +188,8 @@ void handleArmup() {
 int leftstate, rightstate;
 long lastLeverMs;
 
-void handleLever() {
+void handleLever()
+{
     leftarm = getVal();
     rightarm = getVal();
     leftstate = getVal();
@@ -194,17 +197,23 @@ void handleLever() {
     String s = String(leftarm) + "," + String(rightarm) + "," +
                String(leftstate) + "," + String(rightstate);
 
-    if (leftstate>0)      leftmotor =  REVERSE;
-    else if (leftstate<0) leftmotor =  MAX;
-    else                  leftmotor =  NEUTRAL;
+    if (leftstate > 0)
+        leftmotor = REVERSE;
+    else if (leftstate < 0)
+        leftmotor = MAX;
+    else
+        leftmotor = NEUTRAL;
 
-    if (rightstate>0)      rightmotor =  REVERSE;
-    else if (rightstate<0) rightmotor =  MAX;
-    else                   rightmotor =  NEUTRAL;
+    if (rightstate > 0)
+        rightmotor = REVERSE;
+    else if (rightstate < 0)
+        rightmotor = MAX;
+    else
+        rightmotor = NEUTRAL;
 
     lastLeverMs = millis(); //timestamp command
     sendplain(s);
-    Serial.printf("received %d %d %d %d \n",leftarm, rightarm, leftstate, rightstate); // move bot  or something
+    Serial.printf("received %d %d %d %d \n", leftarm, rightarm, leftstate, rightstate); // move bot  or something
 }
 
 void setup()
@@ -215,13 +224,14 @@ void setup()
     WiFi.config(IPAddress(192, 168, 1, 133), // change the last number to your assigned number
                 IPAddress(192, 168, 1, 1),
                 IPAddress(255, 255, 255, 0));
-    while(WiFi.status()!= WL_CONNECTED ) {
+    while (WiFi.status() != WL_CONNECTED)
+    {
         delay(500);
         Serial.print(".");
     }
     Serial.println("WiFi connected");
-    Serial.printf("Use this URL http://%s/\n",WiFi.localIP().toString().c_str());
-    server.begin();                  //Start server
+    Serial.printf("Use this URL http://%s/\n", WiFi.localIP().toString().c_str());
+    server.begin(); //Start server
 
     // Servo initialization
     ledcSetup(RIGHT_CHANNEL0, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
@@ -239,15 +249,15 @@ void setup()
     pinMode(rrightpin, OUTPUT);
 
     // HTML510 initialization
-    attachHandler("/joy?val=",handleJoy);
-    attachHandler("/armup",handleArmup);
-    attachHandler("/armdown",handleArmdown);
-    attachHandler("/switchmode",handleSwitch);
-    attachHandler("/lever?val=",handleLever);
+    attachHandler("/joy?val=", handleJoy);
+    attachHandler("/armup", handleArmup);
+    attachHandler("/armdown", handleArmdown);
+    attachHandler("/switchmode", handleSwitch);
+    attachHandler("/lever?val=", handleLever);
     body = joybody;
 
-    attachHandler("/favicon.ico",handleFavicon);
-    attachHandler("/ ",handleRoot);
+    attachHandler("/favicon.ico", handleFavicon);
+    attachHandler("/ ", handleRoot);
 }
 
 void loop()
@@ -257,11 +267,13 @@ void loop()
     uint32_t ms;
 
     ms = millis();
-    if (ms-lastWebCheck > 2) {
-        serve(server,body);
+    if (ms - lastWebCheck > 2)
+    {
+        serve(server, body);
         lastWebCheck = ms;
     }
-    if (ms-lastServoUpdate > 1000/SERVOFREQ) {
+    if (ms - lastServoUpdate > 1000 / SERVOFREQ)
+    {
         updateServos();
         lastServoUpdate = ms;
     }

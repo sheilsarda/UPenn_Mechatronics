@@ -39,209 +39,221 @@ void handleSwitch()
   sendplain(s); //acknowledge
 }
 
-#define RIGHT_CHANNEL0      0 // use first channel of 16  
-#define LEFT_CHANNEL1       1
-#define SERVOPIN1    32
-#define DIR_PIN1     21
-#define SERVOPIN2    33
-#define DIR_PIN2     22
-#define SERVOFREQ    60
-#define LEDC_RESOLUTION_BITS  12
-#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1) 
-#define FULLBACK LEDC_RESOLUTION*1
-#define SERVOOFF  LEDC_RESOLUTION*0
-#define FULLFRONT  LEDC_RESOLUTION*1
+#define RIGHT_CHANNEL0 0 // use first channel of 16
+#define LEFT_CHANNEL1 1
+#define SERVOPIN1 32
+#define DIR_PIN1 21
+#define SERVOPIN2 33
+#define DIR_PIN2 22
+#define SERVOFREQ 60
+#define LEDC_RESOLUTION_BITS 12
+#define LEDC_RESOLUTION ((1 << LEDC_RESOLUTION_BITS) - 1)
+#define FULLBACK LEDC_RESOLUTION * 1
+#define SERVOOFF LEDC_RESOLUTION * 0
+#define FULLFRONT LEDC_RESOLUTION * 1
 
-double  leftservo, rightservo; 
+double leftservo, rightservo;
 int left_dir, right_dir;
 
 int oldleftservo, oldrightservo;
 int auto_state = 0;
 int follow_state = 0;
 
-
-void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 4095) {            
-  uint32_t duty =  LEDC_RESOLUTION * min(value, valueMax) / valueMax;   
-  ledcWrite(channel, duty);  // write duty to LEDC 
+void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 4095)
+{
+  uint32_t duty = LEDC_RESOLUTION * min(value, valueMax) / valueMax;
+  ledcWrite(channel, duty); // write duty to LEDC
 }
 
-void updateServos() {
+void updateServos()
+{
   ledcAnalogWrite(LEFT_CHANNEL1, leftservo, LEDC_RESOLUTION);
-  digitalWrite(DIR_PIN1,left_dir);
-  
-  ledcAnalogWrite(RIGHT_CHANNEL0, rightservo, LEDC_RESOLUTION); 
-  digitalWrite(DIR_PIN2,right_dir);
+  digitalWrite(DIR_PIN1, left_dir);
+
+  ledcAnalogWrite(RIGHT_CHANNEL0, rightservo, LEDC_RESOLUTION);
+  digitalWrite(DIR_PIN2, right_dir);
 }
 
-int trigpin_right=34;
-int echopin_right=35;
+int trigpin_right = 34;
+int echopin_right = 35;
 
-int trigpin_front=9;
-int echopin_front=10;
+int trigpin_front = 9;
+int echopin_front = 10;
 
-
-int movingavg(int newvalue,int WEIGHT) {
-int update;
-static int lastvalue;
-update = (WEIGHT*lastvalue + newvalue)/(WEIGHT+1);
-lastvalue = update;
-return update;
+int movingavg(int newvalue, int WEIGHT)
+{
+  int update;
+  static int lastvalue;
+  update = (WEIGHT * lastvalue + newvalue) / (WEIGHT + 1);
+  lastvalue = update;
+  return update;
 }
 
-long right_range(int trigpin_right, int echopin_right) { 
-  digitalWrite(trigpin_right,LOW);
+long right_range(int trigpin_right, int echopin_right)
+{
+  digitalWrite(trigpin_right, LOW);
   delayMicroseconds(2);
 
-  digitalWrite(trigpin_right,HIGH);
+  digitalWrite(trigpin_right, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigpin_right,LOW);
+  digitalWrite(trigpin_right, LOW);
 
   long duration, range_cm, range_cm_filtered;
-  duration=pulseIn(echopin_right,HIGH);
-  range_cm=duration*0.017;
-  range_cm_filtered=movingavg(range_cm,1);
-  return range_cm_filtered; 
+  duration = pulseIn(echopin_right, HIGH);
+  range_cm = duration * 0.017;
+  range_cm_filtered = movingavg(range_cm, 1);
+  return range_cm_filtered;
 }
 
-long front_range(int trigpin_front, int echopin_front) { 
-  digitalWrite(trigpin_front,LOW);
+long front_range(int trigpin_front, int echopin_front)
+{
+  digitalWrite(trigpin_front, LOW);
   delayMicroseconds(2);
 
-  digitalWrite(trigpin_front,HIGH);
+  digitalWrite(trigpin_front, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigpin_front,LOW);
+  digitalWrite(trigpin_front, LOW);
 
   long duration, range_cm, range_cm_filtered;
-  duration=pulseIn(echopin_front,HIGH);
-  range_cm=duration*0.017;
-  range_cm_filtered=movingavg(range_cm,1);
-  return range_cm_filtered; 
+  duration = pulseIn(echopin_front, HIGH);
+  range_cm = duration * 0.017;
+  range_cm_filtered = movingavg(range_cm, 1);
+  return range_cm_filtered;
 }
 
-void control(int desired_front, int measured_front, int desired_right, int measured_right ) {
-  double kp=10;
+void control(int desired_front, int measured_front, int desired_right, int measured_right)
+{
+  double kp = 10;
   //double ki=0.01;
   //static int sumederror;
-  
-  double error_front=desired_front-measured_front;
-  double error_right=desired_right-measured_right;
+
+  double error_front = desired_front - measured_front;
+  double error_right = desired_right - measured_right;
   //summederror=summederror+error;
   //if(error==0)summederror=0;
-  
-  int u_front = kp*error_front;
-  int u_right = kp*error_right;
- 
-  if(u_front>0) follow_state=2; //back up
-  else if(u_front<0) follow_state=1; //go straight
 
-  if(u_right>0) follow_state=3; //turn slight left
-  else if(u_right<0) follow_state=4; //turn slight right
-  else follow_state=2; //go straight
+  int u_front = kp * error_front;
+  int u_right = kp * error_right;
+
+  if (u_front > 0)
+    follow_state = 2; //back up
+  else if (u_front < 0)
+    follow_state = 1; //go straight
+
+  if (u_right > 0)
+    follow_state = 3; //turn slight left
+  else if (u_right < 0)
+    follow_state = 4; //turn slight right
+  else
+    follow_state = 2; //go straight
 }
 
-void handleWallFollow() {
+void handleWallFollow()
+{
   static long last_right = millis();
   static long last_front = millis();
   static long since_turning_left = millis();
   static long since_turning_slight_left = millis();
   uint32_t ms2;
- 
 
   ms2 = millis();
-  
+
   //handle button states
   //may want to do this with interrupts
-  long right_sensor = right_range(trigpin_right,echopin_right);
-  long front_sensor = front_range(trigpin_front,echopin_front);
-  int delay_bounce = 500; //how long (ms) to turn left after the right button is pressed
-  int delay_back = 500; //how long to back up (ms) after the front button is pressed
-  int delay_left = 500; //how long to turn left (ms) after backing up
+  long right_sensor = right_range(trigpin_right, echopin_right);
+  long front_sensor = front_range(trigpin_front, echopin_front);
+  int delay_bounce = 500;      //how long (ms) to turn left after the right button is pressed
+  int delay_back = 500;        //how long to back up (ms) after the front button is pressed
+  int delay_left = 500;        //how long to turn left (ms) after backing up
   int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
-  control(20,front_sensor,20,right_sensor); //controls and sets certain follow states
+  control(20, front_sensor, 20, right_sensor); //controls and sets certain follow states
 
   Serial.printf("right: %d, front: %d, follow_state: %d \n", right_sensor, front_sensor, follow_state);
 
-
-  if (follow_state == 0){ // Do nothing
-    leftservo=SERVOOFF;
-    rightservo=SERVOOFF;
+  if (follow_state == 0)
+  { // Do nothing
+    leftservo = SERVOOFF;
+    rightservo = SERVOOFF;
   }
 
-  if (follow_state == 1){ //Drive straight
+  if (follow_state == 1)
+  { //Drive straight
 
-    leftservo=FULLFRONT;
-    left_dir=HIGH;
-    rightservo=FULLFRONT;
-    right_dir=LOW;
+    leftservo = FULLFRONT;
+    left_dir = HIGH;
+    rightservo = FULLFRONT;
+    right_dir = LOW;
   }
 
-  if (follow_state == 2) { //Drive backwards
-    if(ms2 - last_front <= delay_back){
+  if (follow_state == 2)
+  { //Drive backwards
+    if (ms2 - last_front <= delay_back)
+    {
 
-      leftservo=FULLBACK;
-      left_dir=LOW;
-      rightservo=FULLBACK;
-      right_dir=HIGH;
-    
-    } else  follow_state=5;
-
-   }
-  
-  if ((follow_state == 3) && (ms2-last_right <= delay_bounce)) { //slight left
-
-     
-      //insert motor driving code here
-    leftservo=0.7*FULLFRONT;
-    left_dir=HIGH;
-    rightservo=FULLFRONT;
-    right_dir=LOW;
+      leftservo = FULLBACK;
+      left_dir = LOW;
+      rightservo = FULLBACK;
+      right_dir = HIGH;
+    }
+    else
+      follow_state = 5;
   }
 
-  if (follow_state == 4){ //slight right
+  if ((follow_state == 3) && (ms2 - last_right <= delay_bounce))
+  { //slight left
+
+    //insert motor driving code here
+    leftservo = 0.7 * FULLFRONT;
+    left_dir = HIGH;
+    rightservo = FULLFRONT;
+    right_dir = LOW;
+  }
+
+  if (follow_state == 4)
+  { //slight right
     /*if (ms2 - since_turning_slight_left > delay_slight_left){
       follow_state = 0; //slight right
     }*/
-    leftservo=FULLFRONT;
-    left_dir=HIGH;
-    rightservo=0.7*FULLFRONT;
-    right_dir=LOW;
+    leftservo = FULLFRONT;
+    left_dir = HIGH;
+    rightservo = 0.7 * FULLFRONT;
+    right_dir = LOW;
   }
 
-  if ((follow_state == 5) && (ms2-since_turning_left > delay_left)) { //slight left
+  if ((follow_state == 5) && (ms2 - since_turning_left > delay_left))
+  { //slight left
 
-     
-      //insert motor driving code here
-    leftservo=FULLBACK;
-    left_dir=LOW;
-    rightservo=FULLFRONT;
-    right_dir=LOW;
+    //insert motor driving code here
+    leftservo = FULLBACK;
+    left_dir = LOW;
+    rightservo = FULLFRONT;
+    right_dir = LOW;
   }
-  
 }
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
-Serial.begin(115200);
-pinMode(trigpin_right,OUTPUT);
-pinMode(echopin_right,INPUT);
-pinMode(trigpin_front,OUTPUT);
-pinMode(echopin_front,INPUT);
+  Serial.begin(115200);
+  pinMode(trigpin_right, OUTPUT);
+  pinMode(echopin_right, INPUT);
+  pinMode(trigpin_front, OUTPUT);
+  pinMode(echopin_front, INPUT);
 
-// Servo initialization
-ledcSetup(RIGHT_CHANNEL0, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
-ledcAttachPin(SERVOPIN1, RIGHT_CHANNEL0);
-ledcSetup(LEFT_CHANNEL1, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
-ledcAttachPin(SERVOPIN2, LEFT_CHANNEL1);
+  // Servo initialization
+  ledcSetup(RIGHT_CHANNEL0, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN1, RIGHT_CHANNEL0);
+  ledcSetup(LEFT_CHANNEL1, SERVOFREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+  ledcAttachPin(SERVOPIN2, LEFT_CHANNEL1);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
-  long range=right_range(trigpin_right,echopin_right);
+  long range = right_range(trigpin_right, echopin_right);
   Serial.println(range);
 }
-
-
 
 /************************/
 /* joystick mode  code  */

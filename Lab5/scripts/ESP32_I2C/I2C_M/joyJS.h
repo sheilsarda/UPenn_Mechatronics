@@ -6,7 +6,7 @@
  * https://www.instructables.com/Making-a-Joystick-With-HTML-pure-JavaScript/
  * added esp32 stuff and extra buttons and gradient graphics
  */
- 
+
 const char joybody[] PROGMEM = R"===( 
 <!DOCTYPE html>
 <html>
