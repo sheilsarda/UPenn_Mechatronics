@@ -20,6 +20,7 @@
 #include "joyJS.h"
 #include "tankJS.h"
 
+#include <CSV_Parser.h>
 //****************************
 //********* Drivetrain stuff:
 //****************************
@@ -368,7 +369,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
         follow_state = 2; //go straight
 }
 
-void handleWallFollow()
+void handleWallFollow(int front_target, int front, int right_target, int right)
 {
     static long last_right = millis();
     static long last_front = millis();
@@ -383,9 +384,9 @@ void handleWallFollow()
     int delay_left = 500;        //how long to turn left (ms) after backing up
     int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
-    control(20, front_sensor, 20, right_sensor); //controls and sets certain follow states
-    Serial.printf("right: %d, front: %d, follow_state: %d \n", right_sensor, front_sensor, follow_state);
-
+    control(front_target, front, right_target, right); //controls and sets certain follow states
+    Serial.printf("right: %d, front: %d, follow_state: %d \n", right, front, follow_state);
+    /**
     if (follow_state == 0)
     { // Do nothing
         leftservo = SERVOOFF;
@@ -438,6 +439,7 @@ void handleWallFollow()
         rightservo = FULLFRONT;
         right_dir = LOW;
     }
+    */
 }
 
 uint8_t data_wr[] = "GO";
@@ -490,6 +492,13 @@ void setup()
 }
 
 #define I2CDelay 200 // ms
+#define FRONT_TARGET 40
+#define RIGHT_TARGET 40
+
+void processSensors(){
+    CSV_Parser cp((char *) data_rd, /*format*/ "d");
+    cp.print();
+}
 
 void loop()
 {
@@ -514,6 +523,7 @@ void loop()
     if (ms - lastI2CRec > I2CDelay && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK))
     {
         Serial.printf("Read: %s\n", data_rd);
+        processSensors();
         lastI2CRec = ms;
     }
 
