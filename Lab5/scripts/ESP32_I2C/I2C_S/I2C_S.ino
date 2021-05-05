@@ -28,21 +28,21 @@
 //****************************
 //********* Ultrasonic sensor stuff:
 //****************************
-#define trigPin1 18
-#define echoPin1 19
+#define trigPin1 23 // 18
+#define echoPin1 22 // 19
 
-#define trigPin2 23
-#define echoPin2 22
+#define trigPin2 18 // 23
+#define echoPin2 19 // 22
 
 #define SAMPLEFREQ 15   // TOF can use 30, Ultrasonic maybe 15
 
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
+  int trigPin, echoPin;
 
 int rangeSonar(char select) {    // return range distance in mm
-  int trigPin, echoPin;
    switch(select){
-    case 1: trigPin = trigPin1;
+    case '1': trigPin = trigPin1;
             echoPin = echoPin1;    
             break;
     default: trigPin = trigPin2;
@@ -131,8 +131,8 @@ void loop() {
   
   us = micros();
   if (us-lastUpdate > 1000000/SAMPLEFREQ) { // update the servo position
-    range1 = rangeSonar(1);   // uncomment if using Sonar
-    range2 = rangeSonar(2);   // uncomment if using Sonar
+    range1 = rangeSonar('1');   // uncomment if using Sonar
+    range2 = rangeSonar('2');   // uncomment if using Sonar
     snprintf((char *) data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d", range1, range2);
     Serial.printf("SIDE SENSOR\n");
     printScan(range1);
