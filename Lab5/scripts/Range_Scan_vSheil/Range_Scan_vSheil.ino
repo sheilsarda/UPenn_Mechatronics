@@ -1,31 +1,9 @@
 /****************************************************** 
- * RANGER DEMO scans range sensor mounted on servo and displays on web
+ * Scans range sensor mounted on servo and displays on web
  * 
  * ToF ranger VL53L0X uses I2C on ESP32 SCL = GPIO21 and SDA = GPIO22
  * Ultrasonic ranger  uses TriggerPin GPIO19 and EchoPin GPIO18
- *
- * Mark Yim
- * University of Pennsylvania
- * copyright (c) 2021 All Rights Reserved
  ******************************************************/
-
-//****************************
-//********* ToF sensor stuff:
-//****************************
-#include "Adafruit_VL53L0X.h"
-Adafruit_VL53L0X lox = Adafruit_VL53L0X();
-
-int rangeToF (){
-  VL53L0X_RangingMeasurementData_t measure;
-  
-  lox.rangingTest(&measure, false); // pass 'true' for debugging info 
-  if (measure.RangeStatus != 4) {  // phase failures have incorrect data
-  //Serial.printf("Distance (mm): %d\n",measure.RangeMilliMeter);
-    return measure.RangeMilliMeter;
-  }
-//Serial.println(" out of range ");
-  return 0;  // error, real values are never 0
-}
 
 //****************************
 //********* Ultrasonic sensor stuff:
@@ -148,10 +126,6 @@ void setup()
   ledcAnalogWrite(LEDC_CHANNEL, SERVOOFF, LEDC_RESOLUTION); 
   Serial.println("starting");
   
-  if (!lox.begin(0x53)) { // for debugging use lox.begin(0x29,true), if device
-    Serial.println(F("Failed to boot VL53L0X"));
-    delay(2000);
-  }
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 
