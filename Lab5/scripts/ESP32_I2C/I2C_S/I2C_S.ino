@@ -15,8 +15,8 @@
 #include "driver/i2c.h"
 #include "sdkconfig.h"
 
-#define DATA_LENGTH 128                  /*!< Data buffer length of test buffer */
-#define RW_TEST_LENGTH 20               /*!< Data length for r/w test, [0,DATA_LENGTH] */
+#define DATA_LENGTH 100                  /*!< Data buffer length of test buffer */
+// #define RW_TEST_LENGTH 20               /*!< Data length for r/w test, [0,DATA_LENGTH] */
 
 #define I2C_SLAVE_SCL_IO (gpio_num_t)26               /*!< gpio number for i2c slave clock */
 #define I2C_SLAVE_SDA_IO (gpio_num_t)25               /*!< gpio number for i2c slave data */
@@ -113,31 +113,37 @@ void setup() {
     memset(data_wr, 0, sizeof(data_wr));
 }
 
-
+// #define DEBUG
 void loop() {
-    if (i2c_slave_read_buffer(I2C_NUM_0, data_rd, RW_TEST_LENGTH, 0) > 0 ) { // last term is timeout period, 0 means don't wait  
-      if (data_rd[0] == 'G' && data_rd[1] == 'O')
-         Serial.println("GO!");
-      Serial.printf("READ: %s\n",data_rd);
-      if (i2c_slave_write_buffer(I2C_NUM_0, data_wr, RW_TEST_LENGTH, 10 / portTICK_RATE_MS) ) {
-        Serial.printf("WRITE: %s\n",data_wr);
-      }  
-    } // otherwise no data to read
-  
+
   static uint32_t lastUpdate = micros();
   static uint32_t lastmicros = micros();
   static uint32_t us = micros();
   static int range1, range2;
+
+
+    if (i2c_slave_read_buffer(I2C_NUM_0, data_rd, DATA_LENGTH, 0) > 0 ) { // last term is timeout period, 0 means don't wait  
+      // if (data_rd[0] == 'G' && data_rd[1] == 'O')
+      //    Serial.println("GO!");
+      // Serial.printf("READ: %s\n",data_rd);
+    snprintf((char *) data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d", range1, range2);
+      
+      if (i2c_slave_write_buffer(I2C_NUM_0, data_wr, DATA_LENGTH, 10 / portTICK_RATE_MS) ) {
+        Serial.printf("WRITE: %s\n",data_wr);
+      }  
+    } // otherwise no data to read
+  
   
   us = micros();
   if (us-lastUpdate > 1000000/SAMPLEFREQ) { // update the servo position
     range1 = rangeSonar('1');   // uncomment if using Sonar
     range2 = rangeSonar('2');   // uncomment if using Sonar
-    snprintf((char *) data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d", range1, range2);
-    Serial.printf("SIDE SENSOR\n");
-    printScan(range1);
-    Serial.printf("FRONT SENSOR\n");
-    printScan(range2);
+    #ifdef DEBUG
+        Serial.printf("SIDE SENSOR\n");
+        printScan(range1);
+        Serial.printf("FRONT SENSOR\n");
+        printScan(range2);
+    #endif
     lastUpdate = us;
   }
 }
