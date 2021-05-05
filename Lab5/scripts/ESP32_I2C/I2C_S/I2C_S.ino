@@ -1,9 +1,6 @@
-/* i2c_slave_test - Example
+/* i2c_secondary
  *  Slave i2c expecting slave ESP32 on i2c_master_test
- *  modified from 
    https://github.com/espressif/esp-idf/tree/master/examples/peripherals/i2c/i2c_self_test
-   For other examples please check:
-   https://github.com/espressif/esp-idf/tree/master/examples
 
     Attach SCL wire to GPIO 26, and  SDA to GPIO 25
    
@@ -18,7 +15,6 @@
 #include "driver/i2c.h"
 #include "sdkconfig.h"
 
-
 #define DATA_LENGTH 128                  /*!< Data buffer length of test buffer */
 #define RW_TEST_LENGTH 20               /*!< Data length for r/w test, [0,DATA_LENGTH] */
 
@@ -29,6 +25,45 @@
 
 #define ESP_SLAVE_ADDR       0x28 /*!< ESP32 slave address, you can set any 7bit value */
 
+//****************************
+//********* Ultrasonic sensor stuff:
+//****************************
+#define trigPin 18
+#define echoPin 19
+#define SAMPLEFREQ 15   // TOF can use 30, Ultrasonic maybe 15
+
+long duration; // variable for the duration of sound wave travel
+int distance; // variable for the distance measurement
+
+int rangeSonar() {    // return range distance in mm
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  return distance * 10;
+}
+
+void printScan(int range){
+    int offset = 10;
+    Serial.print(range);
+    for (int j=0; j<range; j+=offset){
+        Serial.print(".");
+        offset *= 1.5;
+    }
+    Serial.println("#");
+}
+
+//****************************
+//********* I2C stuff:
+//****************************
 /**
  * @brief i2c slave initialization
  */
@@ -49,13 +84,18 @@ static esp_err_t i2c_slave_init()
                               I2C_SLAVE_TX_BUF_LEN, 0);
 }
 
-uint8_t data_rd[DATA_LENGTH];
-uint8_t data_wr[] = "Message from slave     ";
 
 void setup() {
   Serial.begin(115200);  // put your setup code here, to run once:
   i2c_slave_init();
+  Serial.println("starting");
+  
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
+
+uint8_t data_rd[DATA_LENGTH];
+uint8_t data_wr[DATA_LENGTH];
 
 void loop() {
     if (i2c_slave_read_buffer(I2C_NUM_0, data_rd, RW_TEST_LENGTH, 0) > 0 ) { // last term is timeout period, 0 means don't wait  
@@ -66,5 +106,17 @@ void loop() {
         Serial.printf("WRITE: %s\n",data_wr);
       }  
     } // otherwise no data to read
-    delay(10); // pretend we're doing something else here.
+  
+  static uint32_t lastUpdate = micros();
+  static uint32_t lastmicros = micros();
+  static uint32_t us = micros();
+  static int range;
+  
+  us = micros();
+  if (us-lastUpdate > 1000000/SAMPLEFREQ) { // update the servo position
+    range = rangeSonar();   // uncomment if using Sonar
+    snprintf((char *) data_wr, DATA_LENGTH, "RANGE: %d", range);
+    printScan(range);
+    lastUpdate = us;
+  }
 }
