@@ -47,6 +47,18 @@ Sheil Sarda <sheils@seas.upenn.edu>
 
         ![Motor Pinout](imgs/motor_pinout.png)
 1. SG90 Servo
+1. DC TT Motor
+
+| Motor | Order |
+|--|--|
+| Front Left | Red |
+| | Black |
+| Front Right | Black |
+| | Red |
+| Back Left | Black |
+| | Red |
+| Back Right | Red |
+| | Black |
 
 ## Base and Wheels
 
@@ -60,6 +72,13 @@ Sheil Sarda <sheils@seas.upenn.edu>
 ![Base](imgs/base.jpg)
 
 **NOTE** Designed for 1/4" MDF instead of the usual 1/8"
+
+### Parts Required from GM Lab after first pick-up
+
+1. Need Pan head M3 screws (25mm) to mount TT motor -- 4x
+    1. Currently making do with the flat head screws
+    1. Hot gluing the screws from the other end
+1. 
 
 ### Soda Can Dimensions (inches)
 

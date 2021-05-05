@@ -31,8 +31,8 @@ void handleSwitch() { // Switch between JOYSTICK and TANK mode
 #define rLEFT_CHANNEL7       7 // use 2nd channel of 16
 #define SERVOPIN1    33       // PWM generating pin (33) for Right Motor
 #define SERVOPIN2    32       // PWM generating pin (32) for left Motor
-#define SERVOPIN3    36       // PWM generating pin (34) for Rear Right Motor
-#define SERVOPIN4    39       // PWM generating pin (35) for Rear left Motor
+#define SERVOPIN3    27       // PWM generating pin (34) for Rear Right Motor  12, 25
+#define SERVOPIN4    14       // PWM generating pin (35) for Rear left Motor   13, 26
 #define SERVOFREQ    60       // Frequency of the PWM
 #define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
 #define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution

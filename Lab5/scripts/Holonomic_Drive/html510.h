@@ -1,8 +1,5 @@
 /*
  * header for MEAM510 hacks for web interface
- * Jan 2021
- * Use at your own risk
- * 
  */
 #define ssid     "Fios-rTWv7"
 #define password "Govinda1!"
