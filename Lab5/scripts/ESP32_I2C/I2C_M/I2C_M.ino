@@ -360,8 +360,6 @@ void handleWallFollow() {
 
   ms2 = millis();
   
-  //handle button states
-  //may want to do this with interrupts
   int delay_bounce = 500; //how long (ms) to turn left after the right button is pressed
   int delay_back = 500; //how long to back up (ms) after the front button is pressed
   int delay_left = 500; //how long to turn left (ms) after backing up
