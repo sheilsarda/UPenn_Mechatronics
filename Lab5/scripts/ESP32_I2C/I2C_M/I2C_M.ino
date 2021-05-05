@@ -21,6 +21,73 @@
 #include "tankJS.h"
 
 //****************************
+//********* Drivetrain stuff:
+//****************************
+
+#define RIGHT_CHANNEL0      0 // use first channel of 16  
+#define LEFT_CHANNEL1       1 // use 2nd channel of 16
+#define rRIGHT_CHANNEL6      6 // use first channel of 16  
+#define rLEFT_CHANNEL7       7 // use 2nd channel of 16
+#define SERVOPIN1    33       // PWM generating pin (33) for Right Motor
+#define SERVOPIN2    32       // PWM generating pin (32) for left Motor
+#define SERVOPIN3    27       // PWM generating pin (34) for Rear Right Motor  12, 25
+#define SERVOPIN4    14       // PWM generating pin (35) for Rear left Motor   13, 26
+#define SERVOFREQ    60       // Frequency of the PWM
+#define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
+#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution
+
+#define leftpin 15            //Direction pin for front left motor
+#define rightpin 13           //Direction for front right motor
+#define rleftpin 10            //Direction pin for rear left motor
+#define rrightpin 9           //Direction for rear right motor
+#define NEUTRAL 0             //Variable storing the no spin condition of motor
+#define MAX 50*100            //Variable storing the full forward spin condition of motor
+#define REVERSE -50*100       //Variable storing the full backward spin condition of motor
+
+uint32_t LMduty;              //Duty Cycle variable for the left motor
+uint32_t RMduty;              //Duty Cycle variable for the right motor
+uint32_t rLMduty;              //Duty Cycle variable for the REAR left motor
+uint32_t rRMduty;              //Duty Cycle variable for the REAR right motor
+int leftmotor, rightmotor, rleftmotor, rrightmotor;    //Variables determining the spin condition of motors
+
+void updateServos() {
+    if(leftmotor < 0)
+        digitalWrite(leftpin, LOW);
+    else
+        digitalWrite(leftpin, HIGH);
+
+    if(rightmotor < 0)
+        digitalWrite(rightpin, LOW);
+    else
+        digitalWrite(rightpin, HIGH);
+
+    //Rear Motors
+    if(rleftmotor < 0)
+        digitalWrite(rleftpin, LOW);
+    else
+        digitalWrite(rleftpin, HIGH);
+
+    if(rrightmotor < 0)
+        digitalWrite(rrightpin, LOW);
+    else
+        digitalWrite(rrightpin, HIGH);
+
+
+    LMduty = map(abs(leftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    RMduty = map(abs(rightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    rLMduty = map(abs(rleftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    rRMduty = map(abs(rrightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+
+    ledcWrite(LEFT_CHANNEL1, LMduty);
+    ledcWrite(RIGHT_CHANNEL0, RMduty);
+
+    //Rear Motors
+    ledcWrite(rLEFT_CHANNEL7, rLMduty);
+    ledcWrite(rRIGHT_CHANNEL6, rRMduty);
+}
+
+
+//****************************
 //********* Web interface stuff:
 //****************************
 
@@ -163,73 +230,6 @@ void handleLever() {
 }
 
 //****************************
-//********* Drivetrain stuff:
-//****************************
-
-#define RIGHT_CHANNEL0      0 // use first channel of 16  
-#define LEFT_CHANNEL1       1 // use 2nd channel of 16
-#define rRIGHT_CHANNEL6      6 // use first channel of 16  
-#define rLEFT_CHANNEL7       7 // use 2nd channel of 16
-#define SERVOPIN1    33       // PWM generating pin (33) for Right Motor
-#define SERVOPIN2    32       // PWM generating pin (32) for left Motor
-#define SERVOPIN3    27       // PWM generating pin (34) for Rear Right Motor  12, 25
-#define SERVOPIN4    14       // PWM generating pin (35) for Rear left Motor   13, 26
-#define SERVOFREQ    60       // Frequency of the PWM
-#define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
-#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution
-
-#define leftpin 15            //Direction pin for front left motor
-#define rightpin 13           //Direction for front right motor
-#define rleftpin 10            //Direction pin for rear left motor
-#define rrightpin 9           //Direction for rear right motor
-#define NEUTRAL 0             //Variable storing the no spin condition of motor
-#define MAX 50*100            //Variable storing the full forward spin condition of motor
-#define REVERSE -50*100       //Variable storing the full backward spin condition of motor
-
-uint32_t LMduty;              //Duty Cycle variable for the left motor
-uint32_t RMduty;              //Duty Cycle variable for the right motor
-uint32_t rLMduty;              //Duty Cycle variable for the REAR left motor
-uint32_t rRMduty;              //Duty Cycle variable for the REAR right motor
-int leftmotor, rightmotor, rleftmotor, rrightmotor;    //Variables determining the spin condition of motors
-
-void updateServos() {
-    if(leftmotor < 0)
-        digitalWrite(leftpin, LOW);
-    else
-        digitalWrite(leftpin, HIGH);
-
-    if(rightmotor < 0)
-        digitalWrite(rightpin, LOW);
-    else
-        digitalWrite(rightpin, HIGH);
-
-    //Rear Motors
-    if(rleftmotor < 0)
-        digitalWrite(rleftpin, LOW);
-    else
-        digitalWrite(rleftpin, HIGH);
-
-    if(rrightmotor < 0)
-        digitalWrite(rrightpin, LOW);
-    else
-        digitalWrite(rrightpin, HIGH);
-
-
-    LMduty = map(abs(leftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-    RMduty = map(abs(rightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-    rLMduty = map(abs(rleftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-    rRMduty = map(abs(rrightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-
-    ledcWrite(LEFT_CHANNEL1, LMduty);
-    ledcWrite(RIGHT_CHANNEL0, RMduty);
-
-    //Rear Motors
-    ledcWrite(rLEFT_CHANNEL7, rLMduty);
-    ledcWrite(rRIGHT_CHANNEL6, rRMduty);
-}
-
-
-//****************************
 //********* I2C stuff:
 //****************************
 
@@ -367,9 +367,13 @@ void setup() {
     attachHandler("/ ",handleRoot);
 }
 
+#define I2CDelay 1000 // ms
+
 void loop() {
     static long lastWebCheck = millis();
     static long lastServoUpdate = millis();
+    static long lastI2CSent = millis();
+    static long lastI2CRec = millis();
     uint32_t ms;
 
     ms = millis();
@@ -382,10 +386,12 @@ void loop() {
         lastServoUpdate = ms;
     }
     
-    if (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH)== ESP_OK)
+    if (ms - lastI2CRec > I2CDelay && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH)== ESP_OK)){
       Serial.printf("Read: %s\n",data_rd);
-    delay(1000);
-    if (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK)
-      Serial.printf ("Write: %s\n",data_wr);
-    delay(1000);
+        lastI2CRec = ms;
+    }
+    
+    if (ms - lastI2CRec > I2CDelay && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK)){
+        lastI2CSent = ms;
+   } 
 }
