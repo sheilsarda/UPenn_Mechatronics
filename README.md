@@ -161,4 +161,6 @@ int main(void){
 
 ## ESP32 Pinout
 
-![](imgs/esp32_pinout.png)
+![](imgs/esp32_pico_pinout.png)
+
+![](imgs/esp32_node_pinout.png)
