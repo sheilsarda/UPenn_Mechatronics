@@ -28,11 +28,11 @@
 //****************************
 //********* Ultrasonic sensor stuff:
 //****************************
-#define trigPin1 23 // 18
-#define echoPin1 22 // 19
+#define trigPin1 18 // 18
+#define echoPin1 19 // 19
 
-#define trigPin2 18 // 23
-#define echoPin2 19 // 22
+#define trigPin2 23 // 23
+#define echoPin2 22 // 22
 
 #define SAMPLEFREQ 15   // TOF can use 30, Ultrasonic maybe 15
 
