@@ -78,8 +78,6 @@ void scanStep(int range) {
 #include "html510.h"
 WiFiServer server(80);
 
-//const char* ssid     = "YOURSSID";
-//const char* password = "YOURPASSWORD";
 
 void handleUpdate() {
   String s = "";

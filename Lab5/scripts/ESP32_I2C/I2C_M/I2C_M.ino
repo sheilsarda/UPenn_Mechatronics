@@ -15,6 +15,107 @@
 #include "driver/i2c.h"
 #include "sdkconfig.h"
 
+#include <WiFi.h>
+#include "html510.h"
+#include "joyJS.h"
+#include "tankJS.h"
+
+WiFiServer server(80);
+const char *body;
+
+/********************/
+/* HTML510  web   */
+void handleFavicon() {
+    sendplain(""); // acknowledge
+}
+
+void handleRoot() {
+    sendhtml(body);
+}
+
+void handleSwitch() { // Switch between JOYSTICK and TANK mode
+    String s="";
+    static int toggle=0;
+    if (toggle) body = joybody;
+    else body = tankbody;
+    toggle = !toggle;
+    sendplain(s); //acknowledge
+}
+
+
+//****************************
+//********* Drivetrain stuff:
+//****************************
+
+#define RIGHT_CHANNEL0      0 // use first channel of 16  
+#define LEFT_CHANNEL1       1 // use 2nd channel of 16
+#define rRIGHT_CHANNEL6      6 // use first channel of 16  
+#define rLEFT_CHANNEL7       7 // use 2nd channel of 16
+#define SERVOPIN1    33       // PWM generating pin (33) for Right Motor
+#define SERVOPIN2    32       // PWM generating pin (32) for left Motor
+#define SERVOPIN3    27       // PWM generating pin (34) for Rear Right Motor  12, 25
+#define SERVOPIN4    14       // PWM generating pin (35) for Rear left Motor   13, 26
+#define SERVOFREQ    60       // Frequency of the PWM
+#define LEDC_RESOLUTION_BITS  16  //LEDC resolution in bits
+#define LEDC_RESOLUTION  ((1<<LEDC_RESOLUTION_BITS)-1)  //LEDC resolution
+
+#define leftpin 15            //Direction pin for front left motor
+#define rightpin 13           //Direction for front right motor
+#define rleftpin 10            //Direction pin for rear left motor
+#define rrightpin 9           //Direction for rear right motor
+#define NEUTRAL 0             //Variable storing the no spin condition of motor
+#define MAX 50*100            //Variable storing the full forward spin condition of motor
+#define REVERSE -50*100       //Variable storing the full backward spin condition of motor
+
+uint32_t LMduty;              //Duty Cycle variable for the left motor
+uint32_t RMduty;              //Duty Cycle variable for the right motor
+uint32_t rLMduty;              //Duty Cycle variable for the REAR left motor
+uint32_t rRMduty;              //Duty Cycle variable for the REAR right motor
+int leftmotor, rightmotor, rleftmotor, rrightmotor;    //Variables determining the spin condition of motors
+
+
+
+void updateServos() {
+    if(leftmotor < 0)
+        digitalWrite(leftpin, LOW);
+    else
+        digitalWrite(leftpin, HIGH);
+
+    if(rightmotor < 0)
+        digitalWrite(rightpin, LOW);
+    else
+        digitalWrite(rightpin, HIGH);
+
+    //Rear Motors
+    if(rleftmotor < 0)
+        digitalWrite(rleftpin, LOW);
+    else
+        digitalWrite(rleftpin, HIGH);
+
+    if(rrightmotor < 0)
+        digitalWrite(rrightpin, LOW);
+    else
+        digitalWrite(rrightpin, HIGH);
+
+
+    LMduty = map(abs(leftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    RMduty = map(abs(rightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    rLMduty = map(abs(rleftmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+    rRMduty = map(abs(rrightmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
+
+    ledcWrite(LEFT_CHANNEL1, LMduty);
+    ledcWrite(RIGHT_CHANNEL0, RMduty);
+
+    //Rear Motors
+    ledcWrite(rLEFT_CHANNEL7, rLMduty);
+    ledcWrite(rRIGHT_CHANNEL6, rRMduty);
+}
+
+
+//****************************
+//********* I2C stuff:
+//****************************
+
 #define DATA_LENGTH 128                  /*!< Data buffer length of test buffer */
 #define RW_TEST_LENGTH 10                /*!< Data length for r/w test, [0,DATA_LENGTH] */
 
