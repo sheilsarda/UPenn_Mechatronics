@@ -16,6 +16,7 @@ const char body[] PROGMEM = R"===(
   Your browser does not support the HTML5 canvas tag.
   </canvas> <br>
   <span style="font-size: 25px;"> Ranging </span>  &nbsp;
+  <span id="dataView" style="font-size: 15px;"> DATA HERE </span>  &nbsp;
   
   <button type="button" onclick="zoomf()"> &nbsp; toggle zoom &nbsp; </button> <br>
 </article>
@@ -72,9 +73,11 @@ function getData() {
   xhttp.send();
 }
 
-function radius(i){return ch[i+1]; }
+function radius(i){return ch[i]; }
+// function radius(i){return ch[i+1]; }
 
-function theta(i){ return ch[i+1+scansize]*Math.PI/180; }
+function theta(i){ return 0; }
+// function theta(i){ return ch[i+1+scansize]*Math.PI/180; }
 
 function x(i){     return radius(i)*Math.cos(theta(i))/zoom; }
 
@@ -90,6 +93,8 @@ function drawDataCircles() {
   }
 }
 
+var range_sum;
+
 function updateGraph(xhttp) {
       scansize = parseInt(xhttp.responseText); // get 1st value
       drawScreen(); 
@@ -98,11 +103,20 @@ function updateGraph(xhttp) {
       ctx.strokeStyle = "#88FF88"; 
       drawDataCircles();
       
+      range_sum = ch.reduce((a, b) => a + b, 0);
+      
       // draw new data in dark green
       ch = xhttp.responseText.split(","); // get ranging data
       ctx.strokeStyle = "#008800";
       drawDataCircles();
-//  debug.innerHTML = ch; // debugging print
+      
+      //  debug.innerHTML = ch; // debugging print
+      if(ch.reduce((a, b) => a + b, 0)  > range_sum + 100)
+          document.getElementById("dataView").innerHTML = "Obstacle distance INCREASED";
+      else if(ch.reduce((a, b) => a + b, 0)  < range_sum + 100)   
+          document.getElementById("dataView").innerHTML = "Obstacle distance DECREASED";
+      else document.getElementById("dataView").innerHTML = "Obstacle distance UNCHANGED"; 
+      
 }
 </script>
 </body>

@@ -48,15 +48,17 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
 #define ARRAYMAX SCANSIZE*2 // needs to be bigger than scansize
 int scanR[ARRAYMAX];
 int scanoffset = SCANSIZE; // start at SCANSIZE so we don't endup negative mod
+int i;
 
 void printScan(){
-  for (int i=0; i< 100; i++) {
-    if (scanR[i]) {
-      Serial.print(i);
-      // for (int j=0; j<scanR[i]; j+=10) Serial.print(".");
-      Serial.println("#");
+    int offset = 10;
+    i = (scanoffset - 1) % ARRAYMAX;  
+    Serial.print(scanR[i]);
+    for (int j=0; j<scanR[i]; j+=offset){
+        Serial.print(".");
+        offset *= 1.5;
     }
-  }
+    Serial.println("#");
 }
 
 
