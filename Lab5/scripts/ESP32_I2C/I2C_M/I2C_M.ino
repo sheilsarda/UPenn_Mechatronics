@@ -1,10 +1,7 @@
-/* i2c_master_test - Example
+/* i2c_master
  *  Master i2c expecting slave ESP32 on i2c_slave_test
- *  modified from 
    https://github.com/espressif/esp-idf/tree/master/examples/peripherals/i2c/i2c_self_test
-   For other examples please check:
-   https://github.com/espressif/esp-idf/tree/master/examples
-
+    
     Attach SCL wire to GPIO 19, and  SDA to GPIO 18
    
    See README.md file to get detailed usage of this example.
