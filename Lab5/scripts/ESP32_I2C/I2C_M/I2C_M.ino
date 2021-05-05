@@ -319,6 +319,106 @@ static esp_err_t i2c_master_init()
                               I2C_MASTER_RX_BUF_DISABLE,
                               I2C_MASTER_TX_BUF_DISABLE, 0);
 }
+//****************************
+//********* Wall following:
+//****************************
+
+double  leftservo, rightservo; 
+int left_dir, right_dir;
+
+int oldleftservo, oldrightservo;
+int auto_state = 0;
+int follow_state = 0;
+
+void control(int desired_front, int measured_front, int desired_right, int measured_right ) {
+  double kp=10;
+  //double ki=0.01;
+  //static int sumederror;
+  
+  double error_front=desired_front-measured_front;
+  double error_right=desired_right-measured_right;
+  //summederror=summederror+error;
+  //if(error==0)summederror=0;
+  
+  int u_front = kp*error_front;
+  int u_right = kp*error_right;
+ 
+  if(u_front>0) follow_state=2; //back up
+  else if(u_front<0) follow_state=1; //go straight
+
+  if(u_right>0) follow_state=3; //turn slight left
+  else if(u_right<0) follow_state=4; //turn slight right
+  else follow_state=2; //go straight
+}
+
+void handleWallFollow() {
+  static long last_right = millis();
+  static long last_front = millis();
+  static long since_turning_left = millis();
+  static long since_turning_slight_left = millis();
+  uint32_t ms2;
+
+  ms2 = millis();
+  
+  //handle button states
+  //may want to do this with interrupts
+  int delay_bounce = 500; //how long (ms) to turn left after the right button is pressed
+  int delay_back = 500; //how long to back up (ms) after the front button is pressed
+  int delay_left = 500; //how long to turn left (ms) after backing up
+  int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
+
+  control(20,front_sensor,20,right_sensor); //controls and sets certain follow states
+  Serial.printf("right: %d, front: %d, follow_state: %d \n", right_sensor, front_sensor, follow_state);
+
+  if (follow_state == 0){ // Do nothing
+    leftservo=SERVOOFF;
+    rightservo=SERVOOFF;
+  }
+
+  if (follow_state == 1){ //Drive straight
+
+    leftservo=FULLFRONT;
+    left_dir=HIGH;
+    rightservo=FULLFRONT;
+    right_dir=LOW;
+  }
+
+  if (follow_state == 2) { //Drive backwards
+    if(ms2 - last_front <= delay_back){
+
+      leftservo=FULLBACK;
+      left_dir=LOW;
+      rightservo=FULLBACK;
+      right_dir=HIGH;
+    
+    } else  follow_state=5;
+
+   }
+  
+  if ((follow_state == 3) && (ms2-last_right <= delay_bounce)) { //slight left
+
+      //insert motor driving code here
+    leftservo=0.7*FULLFRONT;
+    left_dir=HIGH;
+    rightservo=FULLFRONT;
+    right_dir=LOW;
+  }
+
+  if (follow_state == 4){ //slight right
+    leftservo=FULLFRONT;
+    left_dir=HIGH;
+    rightservo=0.7*FULLFRONT;
+    right_dir=LOW;
+  }
+
+  if ((follow_state == 5) && (ms2-since_turning_left > delay_left)) { //slight left
+    leftservo=FULLBACK;
+    left_dir=LOW;
+    rightservo=FULLFRONT;
+    right_dir=LOW;
+  }
+  
+}
 
 uint8_t data_wr[] = "GO";
 uint8_t data_rd[DATA_LENGTH];
