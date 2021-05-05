@@ -28,14 +28,27 @@
 //****************************
 //********* Ultrasonic sensor stuff:
 //****************************
-#define trigPin 18
-#define echoPin 19
+#define trigPin1 18
+#define echoPin1 19
+
+#define trigPin2 23
+#define echoPin2 22
+
 #define SAMPLEFREQ 15   // TOF can use 30, Ultrasonic maybe 15
 
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
 
-int rangeSonar() {    // return range distance in mm
+int rangeSonar(char select) {    // return range distance in mm
+  int trigPin, echoPin;
+   switch(select){
+    case 1: trigPin = trigPin1;
+            echoPin = echoPin1;    
+            break;
+    default: trigPin = trigPin2;
+            echoPin = echoPin2;
+}
+
   // Clears the trigPin condition
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -84,18 +97,22 @@ static esp_err_t i2c_slave_init()
                               I2C_SLAVE_TX_BUF_LEN, 0);
 }
 
+uint8_t data_rd[DATA_LENGTH];
+uint8_t data_wr[DATA_LENGTH];
+
 
 void setup() {
   Serial.begin(115200);  // put your setup code here, to run once:
   i2c_slave_init();
   Serial.println("starting");
   
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+    memset(data_wr, 0, sizeof(data_wr));
 }
 
-uint8_t data_rd[DATA_LENGTH];
-uint8_t data_wr[DATA_LENGTH];
 
 void loop() {
     if (i2c_slave_read_buffer(I2C_NUM_0, data_rd, RW_TEST_LENGTH, 0) > 0 ) { // last term is timeout period, 0 means don't wait  
@@ -110,13 +127,17 @@ void loop() {
   static uint32_t lastUpdate = micros();
   static uint32_t lastmicros = micros();
   static uint32_t us = micros();
-  static int range;
+  static int range1, range2;
   
   us = micros();
   if (us-lastUpdate > 1000000/SAMPLEFREQ) { // update the servo position
-    range = rangeSonar();   // uncomment if using Sonar
-    snprintf((char *) data_wr, DATA_LENGTH, "RANGE: %d", range);
-    printScan(range);
+    range1 = rangeSonar(1);   // uncomment if using Sonar
+    range2 = rangeSonar(2);   // uncomment if using Sonar
+    snprintf((char *) data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d", range1, range2);
+    Serial.printf("SIDE SENSOR\n");
+    printScan(range1);
+    Serial.printf("FRONT SENSOR\n");
+    printScan(range2);
     lastUpdate = us;
   }
 }
