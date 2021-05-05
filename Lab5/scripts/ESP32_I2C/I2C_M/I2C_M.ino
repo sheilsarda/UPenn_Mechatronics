@@ -367,7 +367,7 @@ void setup() {
     attachHandler("/ ",handleRoot);
 }
 
-#define I2CDelay 1000 // ms
+#define I2CDelay 200 // ms
 
 void loop() {
     static long lastWebCheck = millis();
@@ -391,7 +391,7 @@ void loop() {
         lastI2CRec = ms;
     }
     
-    if (ms - lastI2CRec > I2CDelay && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK)){
+    if (ms - lastI2CSent > I2CDelay && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK)){
         lastI2CSent = ms;
    } 
 }
