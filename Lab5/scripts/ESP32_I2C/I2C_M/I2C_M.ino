@@ -496,8 +496,20 @@ void setup()
 #define RIGHT_TARGET 40
 
 void processSensors(){
-    CSV_Parser cp((char *) data_rd, /*format*/ "d");
-    cp.print();
+    int sensorData[4];
+    char *p = (char *) data_rd;
+    int i = 0;
+
+    while (*p) { // While there are more characters to process...
+        if ( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)) )) {
+            // Found a number
+            long val = strtol(p, &p, 10); // Read number
+            sensorData[i++] = val;
+        } else p++;
+        
+    }
+    handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[1]);
+
 }
 
 void loop()
