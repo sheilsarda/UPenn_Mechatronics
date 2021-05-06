@@ -129,6 +129,8 @@ int x, y;
 
 void handleJoy()
 {
+    if (auto_state) return;
+
     int left, right;
     x = getVal(); // from -50 to +50
     y = getVal();
@@ -204,6 +206,11 @@ void handleArmdown()
   Serial.println("LEAVING WALL FOLLOW MODE");
   auto_state = 0;
   sendplain(""); //acknowledge
+
+  leftmotor = 0;
+  rightmotor = 0;
+  rleftmotor = 0;
+  rrightmotor = 0;
 }
 
 void handleArmup()
@@ -562,7 +569,7 @@ void loop()
         lastServoUpdate = ms;
     }
 
-    if (ms - lastI2CRec > I2CDelay && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK))
+    if (ms - lastI2CRec > I2CDelay && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK) && auto_state)
     {
         Serial.printf("Read: %s\n", data_rd);
         processSensors();
