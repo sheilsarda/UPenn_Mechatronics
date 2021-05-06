@@ -384,10 +384,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
     //double ki=0.01;
     //static int sumederror;
 
-    double error_front = desired_front - measured_front;
     double error_right = desired_right - measured_right;
-
-
     //summederror=summederror+error;
     //if(error==0)summederror=0;
 
@@ -395,13 +392,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
         follow_state = 0;
          return;
     }
-    int u_front = kp * error_front;
     int u_right = kp * error_right;
-
-    if (u_front > 0)
-        follow_state = 2; //back up
-    else if (u_front < 0)
-        follow_state = 1; //go straight
 
     if (u_right > 0)
         follow_state = 3; //turn slight left
@@ -409,6 +400,19 @@ void control(int desired_front, int measured_front, int desired_right, int measu
         follow_state = 4; //turn slight right
     else
         follow_state = 2; //go straight
+
+    double error_front = desired_front - measured_front;
+    if(abs(error_front) < TOLERANCE){
+        follow_state = 0;
+         return;
+    }
+
+    int u_front = kp * error_front;
+
+    if (u_front > 0)
+        follow_state = 2; //back up
+    else if (u_front < 0)
+        follow_state = 1; //go straight
 }
 
 void handleWallFollow(int front_target, int front, int right_target, int right)
@@ -466,10 +470,10 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
         
     }
 
-    if (follow_state == 4)
-    { //slight right
-        leftmotor = REVERSE * factor;
-        rightmotor = MAX * factor;
+        if (follow_state == 4)
+        { //slight right
+            leftmotor = REVERSE * factor;
+            rightmotor = MAX * factor;
         rleftmotor = REVERSE * factor;
         rrightmotor = MAX * factor;
     }
