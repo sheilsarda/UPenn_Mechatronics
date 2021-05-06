@@ -446,10 +446,11 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
 
     if ((follow_state == 3) && (ms2 - last_right <= delay_bounce))
     { //slight left
-        leftmotor = MAX;
-        rightmotor = REVERSE;
-        rleftmotor = REVERSE;
-        rrightmotor = MAX;
+        double factor = 0.7;
+        leftmotor = MAX * factor;
+        rightmotor = REVERSE * factor;
+        rleftmotor = REVERSE * factor;
+        rrightmotor = MAX * factor;
         
     }
 
