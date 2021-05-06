@@ -508,7 +508,8 @@ void processSensors(){
         } else p++;
         
     }
-    handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[1]);
+    if(i != 0) handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[1]);
+
 
 }
 
