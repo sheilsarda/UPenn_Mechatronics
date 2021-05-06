@@ -1,10 +1,3 @@
-
-/*
- * Lab 4.2.5 (modified - MEAM510 Lab 4 demo)
- * March 2021
- * Sahachar Reddy Tippana
- */
-
 #include <WiFi.h>
 #include "html510.h"
 #include "joyJS.h"
@@ -273,7 +266,6 @@ void handleArmup()
 
 void handleclockwise()
 {
-  // do something?
   Serial.println("Rotating Clockwise");
 
   float mag = 40;
@@ -283,37 +275,11 @@ void handleclockwise()
   rleftmotor = 100 * mag;
   rrightmotor = -100 * mag;
 
-  //  int lmotor = -100*mag;
-  //  int rmotor = 100*mag;
-  //  int rlmotor = -100*mag;
-  //  int rrmotor = 100*mag;
-  //  lmotor = map(abs(lmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-  //  rmotor = map(abs(rmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-  //  rlmotor = map(abs(rlmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-  //  rrmotor = map(abs(rrmotor), NEUTRAL, MAX, 0, LEDC_RESOLUTION);
-  ////  Serial.printf("LMduty = %d /n", lmotor);
-  ////  Serial.printf("RMduty = %d /n", rmotor);
-  ////  Serial.printf("rLMduty = %d /n", rlmotor);
-  ////  Serial.printf("rRMduty = %d /n", rrmotor);
-  //
-  //  ledcWrite(LEFT_CHANNEL1, lmotor);
-  //  ledcWrite(RIGHT_CHANNEL0, rmotor);
-  ////Rear Motors
-  //  ledcWrite(rLEFT_CHANNEL3, rlmotor);
-  //  ledcWrite(rRIGHT_CHANNEL2, rrmotor);
-  //  delay (2000/SERVOFREQ);
-  //  ledcWrite(LEFT_CHANNEL1, 0);
-  //  ledcWrite(RIGHT_CHANNEL0, 0);
-  ////Rear Motors
-  //  ledcWrite(rLEFT_CHANNEL3, 0);
-  //  ledcWrite(rRIGHT_CHANNEL2, 0);
-
   sendplain(""); //acknowledge
 }
 
 void handleanticlockwise()
 {
-  // do something?
   Serial.println("Rotating anticlockwise");
 
   float mag = 40;

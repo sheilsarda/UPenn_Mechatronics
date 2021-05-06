@@ -385,32 +385,32 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
     int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
     control(front_target, front, right_target, right); //controls and sets certain follow states
-    Serial.printf("right: %d, front: %d, follow_state: %d \n", right, front, follow_state);
-    /**
+    Serial.printf("Follow_state: %d \n", follow_state);
+    
     if (follow_state == 0)
     { // Do nothing
-        leftservo = SERVOOFF;
-        rightservo = SERVOOFF;
+        leftmotor = NEUTRAL;
+        rightmotor = NEUTRAL;
+        rleftmotor = NEUTRAL;
+        rrightmotor = NEUTRAL;
     }
 
     if (follow_state == 1)
     { //Drive straight
-
-        leftservo = FULLFRONT;
-        left_dir = HIGH;
-        rightservo = FULLFRONT;
-        right_dir = LOW;
+        leftmotor = MAX;
+        rightmotor = MAX;
+        rleftmotor = MAX;
+        rrightmotor = MAX;
     }
 
     if (follow_state == 2)
     { //Drive backwards
         if (ms2 - last_front <= delay_back)
         {
-
-            leftservo = FULLBACK;
-            left_dir = LOW;
-            rightservo = FULLBACK;
-            right_dir = HIGH;
+            leftmotor = REVERSE;
+            rightmotor = REVERSE;
+            rleftmotor = REVERSE;
+            rrightmotor = REVERSE;
         }
         else
             follow_state = 5;
