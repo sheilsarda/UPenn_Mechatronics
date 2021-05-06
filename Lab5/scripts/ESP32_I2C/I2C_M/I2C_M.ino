@@ -418,28 +418,28 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
 
     if ((follow_state == 3) && (ms2 - last_right <= delay_bounce))
     { //slight left
-        leftservo = 0.7 * FULLFRONT;
-        left_dir = HIGH;
-        rightservo = FULLFRONT;
-        right_dir = LOW;
+        leftmotor = MAX;
+        rightmotor = REVERSE;
+        rleftmotor = REVERSE;
+        rrightmotor = MAX;
+        
     }
 
     if (follow_state == 4)
     { //slight right
-        leftservo = FULLFRONT;
-        left_dir = HIGH;
-        rightservo = 0.7 * FULLFRONT;
-        right_dir = LOW;
+        leftmotor = REVERSE;
+        rightmotor = MAX;
+        rleftmotor = MAX;
+        rrightmotor = REVERSE;
     }
 
     if ((follow_state == 5) && (ms2 - since_turning_left > delay_left))
     { //slight left
-        leftservo = FULLBACK;
-        left_dir = LOW;
-        rightservo = FULLFRONT;
-        right_dir = LOW;
+        leftmotor = MAX;
+        rightmotor = REVERSE;
+        rleftmotor = REVERSE;
+        rrightmotor = MAX;
     }
-    */
 }
 
 uint8_t data_wr[] = "GO";

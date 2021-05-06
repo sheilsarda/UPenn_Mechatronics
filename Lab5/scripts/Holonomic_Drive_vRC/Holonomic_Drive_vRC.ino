@@ -135,9 +135,9 @@ void handleJoy()
 
     float mov = max(abs(y), abs(x)); // Max of y or x is the movement
 
-    // First and third quadrant
     if ((x >= 0 && y <= 0) || (x < 0 && y > 0))
     {
+    // Second and Fourth Quadrant
         Left = mov;
         Right = turn;
         rLeft = turn;
@@ -145,6 +145,7 @@ void handleJoy()
     }
     else
     {
+    // First and third quadrant
         Right = mov;
         Left = turn;
         rLeft = mov;
@@ -171,14 +172,12 @@ void handleJoy()
 
 void handleArmdown()
 {
-    // do something?
     Serial.println("armdown");
     sendplain(""); //acknowledge
 }
 
 void handleArmup()
 {
-    // do something?
     Serial.println("armup");
     sendplain(""); //acknowledge
 }
