@@ -197,15 +197,49 @@ void handleJoy()
 
 void handleArmdown()
 {
-    Serial.println("armdown");
-    sendplain(""); //acknowledge
+  // do something?
+  Serial.println("LEAVING WALL FOLLOW MODE");
+  auto_state = 0;
+  sendplain(""); //acknowledge
 }
 
 void handleArmup()
 {
-    Serial.println("armup");
-    sendplain(""); //acknowledge
+  // do something?
+  Serial.println("IN WALL FOLLOW MODE");
+  auto_state = 1;
+  sendplain(""); //acknowledge
 }
+
+void handleclockwise()
+{
+  // do something?
+  Serial.println("Rotating Clockwise");
+
+  float mag = 40;
+
+  leftmotor = -100 * mag;
+  rightmotor = 100 * mag;
+  rleftmotor = 100 * mag;
+  rrightmotor = -100 * mag;
+
+  sendplain(""); //acknowledge
+}
+
+void handleanticlockwise()
+{
+  // do something?
+  Serial.println("Rotating anticlockwise");
+
+  float mag = 40;
+  leftmotor = 100 * mag;
+  rightmotor = -100 * mag;
+  rleftmotor = -100 * mag;
+  rrightmotor = 100 * mag;
+
+  sendplain(""); //acknowledge
+}
+
 
 /*********************/
 /* tank mode  code  */
@@ -295,11 +329,9 @@ static esp_err_t i2c_master_read_slave(i2c_port_t i2c_num, uint8_t *data_rd, siz
  *        Master device write data to slave(both esp32),
  *        the data will be stored in slave buffer.
  *        We can read them out from slave buffer.
- *
  * ___________________________________________________________________
  * | start | slave_addr + wr_bit + ack | write n bytes + ack  | stop |
  * --------|---------------------------|----------------------|------|
- *
  */
 static esp_err_t i2c_master_write_slave(i2c_port_t i2c_num, uint8_t *data_wr, size_t nsize)
 {

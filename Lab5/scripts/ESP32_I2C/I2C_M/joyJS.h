@@ -1,6 +1,10 @@
 /*
  * Joystick HTML and javascript 
  * uses mouse input
+ * 
+ * code based on iamrachelle
+ * https://www.instructables.com/Making-a-Joystick-With-HTML-pure-JavaScript/
+ * added esp32 stuff and extra buttons and gradient graphics
  */
  
 const char joybody[] PROGMEM = R"===( 
@@ -22,9 +26,8 @@ const char joybody[] PROGMEM = R"===(
   Received X,Y: <span id="joystate"> joystate</span> <br>
 
   <span id="Rotate"> Rotate</span> <br>
-  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate Anti - Clockwise &nbsp;  </button> 
-  <...................................> 
-  <button type="button" onclick="clockwise()"> &nbsp; Rotate Clockwise &nbsp;  </button> 
+  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate Anti - Clockwise &nbsp;  </button> <...................................> <button type="button" onclick="clockwise()"> &nbsp; Rotate Clockwise &nbsp;  </button> 
+
       
 <script>
   var canvas, ctx;
@@ -190,6 +193,32 @@ const char joybody[] PROGMEM = R"===(
     xhttp.send();
   }
 
+  
+    function clockwise() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        Rotate = this.responseText;
+        document.getElementById("Rotate").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "clockwise", true);
+    xhttp.send();
+  }
+
+    function anticlockwise() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        Rotate = this.responseText;
+        document.getElementById("Rotate").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "anticlockwise", true);
+    xhttp.send();
+  }
+
+
   function switchmode() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -232,4 +261,3 @@ const char joybody[] PROGMEM = R"===(
 </body>
 </html>
 )===";
-
