@@ -45,6 +45,9 @@
 #define MAX 50 * 100      //Variable storing the full forward spin condition of motor
 #define REVERSE -50 * 100 //Variable storing the full backward spin condition of motor
 
+int follow_state = 0;
+int auto_state = 0;
+
 uint32_t LMduty;                                    //Duty Cycle variable for the left motor
 uint32_t RMduty;                                    //Duty Cycle variable for the right motor
 uint32_t rLMduty;                                   //Duty Cycle variable for the REAR left motor
@@ -366,13 +369,6 @@ static esp_err_t i2c_master_init()
 //****************************
 //********* Wall following:
 //****************************
-
-double leftservo, rightservo;
-int left_dir, right_dir;
-
-int oldleftservo, oldrightservo;
-int auto_state = 0;
-int follow_state = 0;
 
 void control(int desired_front, int measured_front, int desired_right, int measured_right)
 {
