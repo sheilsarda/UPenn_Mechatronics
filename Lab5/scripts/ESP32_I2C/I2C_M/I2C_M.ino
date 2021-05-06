@@ -206,7 +206,6 @@ void handleArmdown()
   Serial.println("LEAVING WALL FOLLOW MODE");
   auto_state = 0;
   sendplain(""); //acknowledge
-
   leftmotor = 0;
   rightmotor = 0;
   rleftmotor = 0;
@@ -377,6 +376,8 @@ static esp_err_t i2c_master_init()
 //********* Wall following:
 //****************************
 
+#define TOLERANCE 15
+
 void control(int desired_front, int measured_front, int desired_right, int measured_right)
 {
     double kp = 10;
@@ -385,9 +386,12 @@ void control(int desired_front, int measured_front, int desired_right, int measu
 
     double error_front = desired_front - measured_front;
     double error_right = desired_right - measured_right;
+
+
     //summederror=summederror+error;
     //if(error==0)summederror=0;
 
+    if(abs(error_right) < TOLERANCE) return;
     int u_front = kp * error_front;
     int u_right = kp * error_right;
 
@@ -440,24 +444,19 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
 
     if (follow_state == 2)
     { //Drive backwards
-        if (ms2 - last_front <= delay_back)
-        {
             leftmotor = REVERSE;
             rightmotor = REVERSE;
             rleftmotor = REVERSE;
             rrightmotor = REVERSE;
-        }
-        else
-            follow_state = 5;
     }
 
-    if ((follow_state == 3) && (ms2 - last_right <= delay_bounce))
+    if (follow_state == 3)
     { //slight left
         double factor = 0.7;
         leftmotor = MAX * factor;
         rightmotor = REVERSE * factor;
-        rleftmotor = REVERSE * factor;
-        rrightmotor = MAX * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = REVERSE * factor;
         
     }
 
@@ -465,16 +464,17 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
     { //slight right
         leftmotor = REVERSE;
         rightmotor = MAX;
-        rleftmotor = MAX;
-        rrightmotor = REVERSE;
-    }
-
-    if ((follow_state == 5) && (ms2 - since_turning_left > delay_left))
-    { //slight left
-        leftmotor = MAX;
-        rightmotor = REVERSE;
         rleftmotor = REVERSE;
         rrightmotor = MAX;
+    }
+
+    if (follow_state == 5)
+    { //full  left
+        double factor = 1;
+        leftmotor = MAX * factor;
+        rightmotor = REVERSE * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = REVERSE * factor;
     }
 }
 
@@ -517,6 +517,8 @@ void setup()
 
     // HTML510 initialization
     attachHandler("/joy?val=", handleJoy);
+    attachHandler("/clockwise", handleclockwise);
+    attachHandler("/anticlockwise", handleanticlockwise);
     attachHandler("/armup", handleArmup);
     attachHandler("/armdown", handleArmdown);
     attachHandler("/switchmode", handleSwitch);
@@ -529,7 +531,7 @@ void setup()
 
 #define I2CDelay 200 // ms
 #define FRONT_TARGET 40
-#define RIGHT_TARGET 40
+#define RIGHT_TARGET 350
 
 void processSensors(){
     int sensorData[4];
