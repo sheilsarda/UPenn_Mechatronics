@@ -376,7 +376,7 @@ static esp_err_t i2c_master_init()
 //********* Wall following:
 //****************************
 
-#define TOLERANCE 15
+#define TOLERANCE 20
 
 void control(int desired_front, int measured_front, int desired_right, int measured_right)
 {
@@ -391,7 +391,10 @@ void control(int desired_front, int measured_front, int desired_right, int measu
     //summederror=summederror+error;
     //if(error==0)summederror=0;
 
-    if(abs(error_right) < TOLERANCE) return;
+    if(abs(error_right) < TOLERANCE){
+        follow_state = 0;
+         return;
+    }
     int u_front = kp * error_front;
     int u_right = kp * error_right;
 
@@ -410,7 +413,11 @@ void control(int desired_front, int measured_front, int desired_right, int measu
 
 void handleWallFollow(int front_target, int front, int right_target, int right)
 {
-    static long last_right = millis();
+        
+    double factor = 0.7;
+ 
+
+   static long last_right = millis();
     static long last_front = millis();
     static long since_turning_left = millis();
     static long since_turning_slight_left = millis();
@@ -428,31 +435,30 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
     
     if (follow_state == 0)
     { // Do nothing
-        leftmotor = NEUTRAL;
-        rightmotor = NEUTRAL;
-        rleftmotor = NEUTRAL;
-        rrightmotor = NEUTRAL;
+        leftmotor = NEUTRAL * factor;
+        rightmotor = NEUTRAL * factor;
+        rleftmotor = NEUTRAL * factor;
+        rrightmotor = NEUTRAL * factor;
     }
 
     if (follow_state == 1)
     { //Drive straight
-        leftmotor = MAX;
-        rightmotor = MAX;
-        rleftmotor = MAX;
-        rrightmotor = MAX;
+        leftmotor = MAX * factor;
+        rightmotor = MAX * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = MAX * factor;
     }
 
     if (follow_state == 2)
     { //Drive backwards
-            leftmotor = REVERSE;
-            rightmotor = REVERSE;
-            rleftmotor = REVERSE;
-            rrightmotor = REVERSE;
+            leftmotor = REVERSE * factor;
+            rightmotor = REVERSE * factor;
+            rleftmotor = REVERSE * factor;
+            rrightmotor = REVERSE * factor;
     }
 
     if (follow_state == 3)
     { //slight left
-        double factor = 0.7;
         leftmotor = MAX * factor;
         rightmotor = REVERSE * factor;
         rleftmotor = MAX * factor;
@@ -462,10 +468,10 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
 
     if (follow_state == 4)
     { //slight right
-        leftmotor = REVERSE;
-        rightmotor = MAX;
-        rleftmotor = REVERSE;
-        rrightmotor = MAX;
+        leftmotor = REVERSE * factor;
+        rightmotor = MAX * factor;
+        rleftmotor = REVERSE * factor;
+        rrightmotor = MAX * factor;
     }
 
     if (follow_state == 5)
@@ -529,9 +535,9 @@ void setup()
     attachHandler("/ ", handleRoot);
 }
 
-#define I2CDelay 200 // ms
+#define I2CDelay 30 // ms
 #define FRONT_TARGET 40
-#define RIGHT_TARGET 350
+#define RIGHT_TARGET 300
 
 void processSensors(){
     int sensorData[4];
