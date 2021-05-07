@@ -31,6 +31,17 @@
 
 #define RIGHT_ARM 3                                  // use first channel of 16
 #define LEFT_ARM 2                                   // use 2nd channel of 16
+int leftarm, rightarm;
+uint32_t LArmduty, RArmduty;
+
+void updateGripper()
+{
+    LArmduty = map(abs(leftarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
+    ledcWrite(LEFT_ARM, RArmduty);
+
+//    RArmduty = map(abs(rightarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
+//    ledcWrite(RIGHT_ARM, LArmduty);
+}
 
 #define SG90FREQ 50                                      // Frequency of the PWM
 
@@ -141,7 +152,6 @@ void handleSwitch()
 /************************/
 /* joystick mode  code  */
 
-int leftarm, rightarm;
 int x, y;
 
 void handleJoy()
@@ -237,65 +247,74 @@ void handleArmup()
   sendplain(""); //acknowledge
 }
 
-void handleclockwise()
-{
-  Serial.println("Rotating Clockwise");
+void handleopen()
+  leftarm = ARM_MIN;
+  rightarm = ARM_MIN;
+    handleGripper();
+  sendplain(""); //acknowledge
+}
 
+void handleclose()
+{
+  leftarm = ARM_MAX;
+  rightarm = ARM_MAX;
+    handleGripper();
+  sendplain(""); //acknowledge
+}
+
+int ccw, cw;
+
+void handleclockwise()
+{ 
+  switch(cw) {
+    case 0:
+    if(ccw) handleanticlockwise();
+    Serial.println("Rotating Clockwise");
   float mag = 40;
 
   leftmotor = -100 * mag;
   rightmotor = 100 * mag;
   rleftmotor = 100 * mag;
   rrightmotor = -100 * mag;
-
+    break;
+   default: 
+    leftmotor = 0;
+    rightmotor = 0;
+    rleftmotor = 0;
+    rrightmotor = 0;
+    cw = 0;
+}
   sendplain(""); //acknowledge
 }
 
 void handleanticlockwise()
 {
-  Serial.println("Rotating anticlockwise");
+  switch(ccw) {
+    case 0:
+    if(cw) handleclockwise();
 
+  Serial.println("Rotating anticlockwise");
   float mag = 40;
   leftmotor = 100 * mag;
   rightmotor = -100 * mag;
   rleftmotor = -100 * mag;
   rrightmotor = 100 * mag;
-
+    break;
+   default: 
+    leftmotor = 0;
+    rightmotor = 0;
+    rleftmotor = 0;
+    rrightmotor = 0;
+    ccw = 0;
+}
   sendplain(""); //acknowledge
 }
 
 
 /*********************/
 /* tank mode  code  */
-int leftstate, rightstate;
-long lastLeverMs;
-
 void handleLever()
 {
-    leftarm = getVal();
-    rightarm = getVal();
-    leftstate = getVal();
-    rightstate = getVal();
-    String s = String(leftarm) + "," + String(rightarm) + "," +
-               String(leftstate) + "," + String(rightstate);
-
-    if (leftstate > 0)
-        leftmotor = REVERSE;
-    else if (leftstate < 0)
-        leftmotor = MAX;
-    else
-        leftmotor = NEUTRAL;
-
-    if (rightstate > 0)
-        rightmotor = REVERSE;
-    else if (rightstate < 0)
-        rightmotor = MAX;
-    else
-        rightmotor = NEUTRAL;
-
-    lastLeverMs = millis(); //timestamp command
-    sendplain(s);
-    Serial.printf("received %d %d %d %d \n", leftarm, rightarm, leftstate, rightstate); // move bot  or something
 }
 
 //****************************
