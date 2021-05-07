@@ -26,7 +26,16 @@ const char joybody[] PROGMEM = R"===(
   Received X,Y: <span id="joystate"> joystate</span> <br>
 
   <span id="Rotate"> Rotate</span> <br>
-  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate Anti - Clockwise &nbsp;  </button> <...................................> <button type="button" onclick="clockwise()"> &nbsp; Rotate Clockwise &nbsp;  </button> 
+  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate Anti - Clockwise &nbsp;  </button> 
+<----------------> 
+<button type="button" onclick="clockwise()"> &nbsp; Rotate Clockwise &nbsp;  </button> <br>
+
+  <span id="Arm"> Control the Gripper </span> <br>
+  <button type="button" onclick="openArm()"> &nbsp; Open Arm nbsp;  </button> 
+<----------------> 
+<button type="button" onclick="closeArm()"> &nbsp; Close Arm &nbsp;  </button> <br>
+
+ 
 
       
 <script>
@@ -218,6 +227,28 @@ const char joybody[] PROGMEM = R"===(
     xhttp.send();
   }
 
+    function closeArm() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        Rotate = this.responseText;
+        document.getElementById("Arm").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "closeArm", true);
+    xhttp.send();
+  }
+    function openArm() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        Rotate = this.responseText;
+        document.getElementById("Arm").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "openArm", true);
+    xhttp.send();
+  }
 
   function switchmode() {
     var xhttp = new XMLHttpRequest();

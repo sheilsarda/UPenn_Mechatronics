@@ -29,8 +29,10 @@
 #define ARM_MIN 50 * 5.5
 #define ARM_MAX 50 * 5.5 * 2
 
-#define SG90FREQ 50                                      // Frequency of the PWM
+#define RIGHT_ARM 3                                  // use first channel of 16
+#define LEFT_ARM 2                                   // use 2nd channel of 16
 
+#define SG90FREQ 50                                      // Frequency of the PWM
 
 //****************************
 //********* Drivetrain stuff:
