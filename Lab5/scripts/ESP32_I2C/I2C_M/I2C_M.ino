@@ -406,6 +406,7 @@ void control(int measured_front, int measured_right, int measured_left)
         spin_state = 1;
         return;
     } else {
+        Serial.println("DONE SPINNING");
         // go forward
         desired_right = IR_T;
         desired_left = measured_left;
@@ -414,8 +415,9 @@ void control(int measured_front, int measured_right, int measured_left)
 
     int error_right = desired_right - measured_right;
     if(abs(error_right) < TOLERANCE*desired_right){
+        Serial.println("DONE RIGHT");
         turn_state = 0;
-        last_right = millis(); 
+        last_right = ms2; 
         // start going forward
         desired_front = US_T;
         desired_right = IR_T;
@@ -429,6 +431,7 @@ void control(int measured_front, int measured_right, int measured_left)
     int error_front = desired_front - measured_front;
 
     if(abs(error_front) < TOLERANCE*desired_front){
+        Serial.println("DONE FORWARD");
         dir_state = 0;
         last_front = millis();
         // turn left
@@ -445,6 +448,7 @@ void control(int measured_front, int measured_right, int measured_left)
     int error_left = desired_left - measured_left;
     
     if(abs(error_left) < TOLERANCE*desired_left) {
+        Serial.println("DONE LEFT");
         dir_state = 0;
         last_left = millis();
         // turn 180deg
@@ -586,7 +590,7 @@ void setup()
     attachHandler("/ ", handleRoot);
 }
 
-#define I2CDelay 30 // ms
+#define I2CDelay 100 // ms
 
 void processSensors(){
     int sensorData[6];
@@ -602,7 +606,11 @@ void processSensors(){
         
     }
     // front, right, left
-    if(i != 0) handleWallFollow(sensorData[3], sensorData[5], sensorData[1]);
+    if(i == 6) {
+        Serial.printf("Read: %s\n", data_rd);
+        handleWallFollow(sensorData[3], sensorData[5], sensorData[1]);
+    }
+    memset(data_rd, 0, sizeof(data_rd));
 
 
 }
@@ -627,9 +635,8 @@ void loop()
         lastServoUpdate = ms;
     }
 
-    if (ms - lastI2CRec > I2CDelay && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK) && auto_state)
+    if (ms - lastI2CRec > 1000 / SERVOFREQ && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK) && auto_state)
     {
-        Serial.printf("Read: %s\n", data_rd);
         processSensors();
         lastI2CRec = ms;
     }
