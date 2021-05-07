@@ -378,7 +378,7 @@ static esp_err_t i2c_master_init()
 //********* Wall following:
 //****************************
 
-#define TOLERANCE 10 // percentage
+#define TOLERANCE 0.10 // percentage
 
 void control(int desired_front, int measured_front, int desired_right, int measured_right, int desired_left, int measured_left)
 {
@@ -387,7 +387,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
     double error_front = desired_front - measured_front;
     Serial.printf("Front err: %f  || Right err: %f\n", error_front, error_right);
 
-    if(abs(error_right) < TOLERANCE*desired_right/100){
+    if(abs(error_right) < TOLERANCE*desired_right){
         turn_state = 0;
          return;
     }
@@ -395,7 +395,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
     else turn_state = 4; //turn slight right
 
 
-    if(abs(error_front) < TOLERANCE*desired_front/100 || turn_state){
+    if((abs(error_front) < TOLERANCE*desired_front) || turn_state){
         dir_state = 0;
         return;
     }
@@ -434,24 +434,31 @@ void handleTurn()
 
 void handleDir()
 {
-    if (dir_state == 1)
-    { //Drive straight
+    switch(dir_state){
+    case 1: 
+     //Drive straight
         leftmotor = MAX * factor;
         rightmotor = MAX * factor;
         rleftmotor = MAX * factor;
         rrightmotor = MAX * factor;
-    }
+        break;
 
-    if (dir_state == 2)
-    { //Drive backwards
+    case 2:
+     //Drive backwards
             leftmotor = REVERSE * factor;
             rightmotor = REVERSE * factor;
             rleftmotor = REVERSE * factor;
             rrightmotor = REVERSE * factor;
-    }
+        break;
+    default: 
+        leftmotor = NEUTRAL * factor;
+        rightmotor = NEUTRAL * factor;
+        rleftmotor = NEUTRAL * factor;
+        rrightmotor = NEUTRAL * factor;
+}
 
 }
-void handleWallFollow(int front_target, int front, int right_target, int right)
+void handleWallFollow(int front_target, int front, int right_target, int right, int left_target, int left)
 {
         
    static long last_right = millis();
@@ -467,7 +474,7 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
     int delay_left = 500;        //how long to turn left (ms) after backing up
     int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
-    control(front_target, front, right_target, right); //controls and sets certain follow states
+    control(front_target, front, right_target, right, left_target, left); //controls and sets certain follow states
     Serial.printf("Turn State: %d  || Dir State: %d\n", turn_state, dir_state);
 
     if (turn_state) handleTurn();
