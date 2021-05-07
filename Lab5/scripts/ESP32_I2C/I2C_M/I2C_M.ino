@@ -253,8 +253,7 @@ void handleopen(){
   Serial.println("Opening Arm");
   leftarm = ARM_MIN;
   rightarm = ARM_MIN;
-    updateGripper();
-  sendplain(""); //acknowledge
+  sendplain("OPEN"); //acknowledge
 }
 
 void handleclose()
@@ -262,8 +261,7 @@ void handleclose()
   Serial.println("Closing Arm");
   leftarm = ARM_MAX;
   rightarm = ARM_MAX;
-    updateGripper();
-  sendplain(""); //acknowledge
+  sendplain("CLOSED"); //acknowledge
 }
 
 int ccw, cw;
@@ -608,8 +606,8 @@ void setup()
 
     // HTML510 initialization
     attachHandler("/joy?val=", handleJoy);
-    attachHandler("/closeArm", handleopen);
-    attachHandler("/openArm", handleclose);
+    attachHandler("/closeArm", handleclose);
+    attachHandler("/openArm", handleopen);
     attachHandler("/clockwise", handleclockwise);
     attachHandler("/anticlockwise", handleanticlockwise);
     attachHandler("/armup", handleArmup);
@@ -657,6 +655,7 @@ void processSensors(){
 void loop()
 {
     static long lastWebCheck = millis();
+    static long lastSG90Update = millis();
     static long lastServoUpdate = millis();
     static long lastI2CSent = millis();
     static long lastI2CRec = millis();
@@ -667,6 +666,11 @@ void loop()
     {
         serve(server, body);
         lastWebCheck = ms;
+    }
+    if (ms - lastSG90Update > 1000 / SG90FREQ)
+    {
+        updateGripper();
+        lastSG90Update = ms;
     }
     if (ms - lastServoUpdate > 1000 / SERVOFREQ)
     {
