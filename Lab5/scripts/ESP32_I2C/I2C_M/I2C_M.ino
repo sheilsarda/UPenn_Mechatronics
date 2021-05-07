@@ -250,6 +250,7 @@ void handleArmup()
 }
 
 void handleopen(){
+  Serial.println("Opening Arm");
   leftarm = ARM_MIN;
   rightarm = ARM_MIN;
     updateGripper();
@@ -258,6 +259,7 @@ void handleopen(){
 
 void handleclose()
 {
+  Serial.println("Closing Arm");
   leftarm = ARM_MAX;
   rightarm = ARM_MAX;
     updateGripper();
@@ -273,7 +275,7 @@ void handleclockwise()
     case 0:
       if(ccw) handleanticlockwise();
       Serial.println("Rotating Clockwise");
-
+        cw = 1;
       leftmotor = -100 * mag;
       rightmotor = 100 * mag;
       rleftmotor = 100 * mag;
@@ -295,7 +297,7 @@ void handleanticlockwise()
   switch(ccw) {
     case 0:
         if(cw) handleclockwise();
-
+        ccw = 1;
       Serial.println("Rotating anticlockwise");
       leftmotor = 100 * mag;
       rightmotor = -100 * mag;
@@ -606,6 +608,8 @@ void setup()
 
     // HTML510 initialization
     attachHandler("/joy?val=", handleJoy);
+    attachHandler("/closeArm", handleopen);
+    attachHandler("/openArm", handleclose);
     attachHandler("/clockwise", handleclockwise);
     attachHandler("/anticlockwise", handleanticlockwise);
     attachHandler("/armup", handleArmup);
