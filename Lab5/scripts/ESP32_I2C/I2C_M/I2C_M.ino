@@ -49,6 +49,7 @@ int dir_state = 0;
 int spin_state = 0;
 
 int auto_state = 0;
+int segment, prev_seg;
 
 uint32_t LMduty;                                    //Duty Cycle variable for the left motor
 uint32_t RMduty;                                    //Duty Cycle variable for the right motor
@@ -204,7 +205,6 @@ void handleJoy()
 
 void handleArmdown()
 {
-  // do something?
   Serial.println("LEAVING WALL FOLLOW MODE");
   auto_state = 0;
   sendplain(""); //acknowledge
@@ -216,9 +216,10 @@ void handleArmdown()
 
 void handleArmup()
 {
-  // do something?
   Serial.println("IN WALL FOLLOW MODE");
   auto_state = 1;
+    segment = 0;
+    prev_seg = 0;
   sendplain(""); //acknowledge
 }
 
@@ -383,8 +384,6 @@ static esp_err_t i2c_master_init()
 #define RIGHT 30 // sharp ir
 
 #define SPIN_DELAY 2500 //how long to turn
-int segment = 0;
-int prev_seg = 0;
 
 void control(int front, int right, int left)
 {
@@ -468,18 +467,18 @@ void handleTurn()
 { 
     case 3:
      //slight left
-        leftmotor = MAX * factor;
-        rightmotor = REVERSE * factor;
-        rleftmotor = MAX * factor;
-        rrightmotor = REVERSE * factor;
+        leftmotor = REVERSE * factor;
+        rightmotor = MAX * factor;
+        rleftmotor = REVERSE * factor;
+        rrightmotor = MAX * factor;
         break;
 
     case 4:
     //slight right
-    leftmotor = REVERSE * factor;
-    rightmotor = MAX * factor;
-    rleftmotor = REVERSE * factor;
-    rrightmotor = MAX * factor;
+        leftmotor = MAX * factor;
+        rightmotor = REVERSE * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = REVERSE * factor;
     break;
     default:  // Do nothing
         leftmotor = NEUTRAL * factor;
@@ -494,18 +493,18 @@ void handleDir()
     switch(dir_state){
     case 1: 
      //Drive straight
-        leftmotor = REVERSE * factor;
-        rightmotor = REVERSE * factor;
-        rleftmotor = MAX * factor;
-        rrightmotor = MAX * factor;
+        leftmotor = MAX * factor;
+        rightmotor = MAX * factor;
+        rleftmotor = REVERSE * factor;
+        rrightmotor = REVERSE * factor;
         break;
 
     case 2:
      //Drive backwards
-            leftmotor = MAX * factor;
-            rightmotor = MAX * factor;
-            rleftmotor = REVERSE * factor;
-            rrightmotor = REVERSE * factor;
+        leftmotor = REVERSE * factor;
+        rightmotor = REVERSE * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = MAX * factor;
         break;
     default: 
         leftmotor = NEUTRAL * factor;
