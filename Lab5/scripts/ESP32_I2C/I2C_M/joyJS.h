@@ -18,22 +18,22 @@ const char joybody[] PROGMEM = R"===(
 </head>
 <body style="text-align: center;" >
   <canvas id="canvas" name="game"></canvas>
-  <button type="button" onclick="armup()"> &nbsp; Wall Follow &nbsp;  </button> <br> <br>
+  <button type="button" onclick="armup()"> &nbsp; Wall Follow &nbsp;  </button> 
   <button type="button" onclick="armdown()"> &nbsp; Stop Wall Follow &nbsp;  </button> <br> <br>
+  <span id="Arm"> Control the Gripper </span> <br>
+  <button type="button" onclick="openArm()"> &nbsp; Open Arm &nbsp;  </button> 
+<button type="button" onclick="closeArm()"> &nbsp; Close Arm &nbsp;  </button> <br> <br>
+  <span id="Rotate"> Rotate</span> <br>
+
+  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate CCW &nbsp;  </button> 
+<----------------> 
+
+<button type="button" onclick="clockwise()"> &nbsp; Rotate CW &nbsp;  </button> <br>
+
   <button type="button" onclick="switchmode()"> &nbsp; switch to tankmode &nbsp;  </button> <br>
   <span id="armstate"> armstate </span> <br>
    Sent: X: <span id="x_coord"> </span> Y: <span id="y_coord"> </span> <br>
   Received X,Y: <span id="joystate"> joystate</span> <br>
-
-  <span id="Rotate"> Rotate</span> <br>
-  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate Anti - Clockwise &nbsp;  </button> 
-<----------------> 
-<button type="button" onclick="clockwise()"> &nbsp; Rotate Clockwise &nbsp;  </button> <br>
-
-  <span id="Arm"> Control the Gripper </span> <br>
-  <button type="button" onclick="openArm()"> &nbsp; Open Arm nbsp;  </button> 
-<----------------> 
-<button type="button" onclick="closeArm()"> &nbsp; Close Arm &nbsp;  </button> <br>
 
  
 
