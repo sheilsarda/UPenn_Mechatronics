@@ -107,7 +107,7 @@ Servo leftServo, rightServo;
 
 void updateGripper()
 {
-    rightServo.write(arm);
+    rightServo.write(180-arm);
     leftServo.write(arm);
     delay(10);
 }
@@ -568,9 +568,9 @@ void setup()
 
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
-    WiFi.config(IPAddress(192, 168, 1, 133), // change the last number to your assigned number
-                IPAddress(192, 168, 1, 1),
-                IPAddress(255, 255, 255, 0));
+    WiFi.config(IPAddress(192, 168, 43, 128),
+              IPAddress(192, 168, 43, 1),
+              IPAddress(255, 255, 255, 0));
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
@@ -611,9 +611,9 @@ void setup()
     attachHandler("/ ", handleRoot);
     
     // Servo initialization
-    rightServo.attach(21);
+    leftServo.attach(21);
+    rightServo.attach(12);
     rightServo.setPeriodHertz(50);
-    leftServo.attach(12);
     leftServo.setPeriodHertz(50);
 }
 
