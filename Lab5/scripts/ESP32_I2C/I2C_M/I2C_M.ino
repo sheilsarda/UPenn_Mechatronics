@@ -265,27 +265,28 @@ void handleclose()
 }
 
 int ccw, cw;
+  float mag = 40;
 
 void handleclockwise()
 { 
   switch(cw) {
     case 0:
-    if(ccw) handleanticlockwise();
-    Serial.println("Rotating Clockwise");
-  float mag = 40;
+      if(ccw) handleanticlockwise();
+      Serial.println("Rotating Clockwise");
 
-  leftmotor = -100 * mag;
-  rightmotor = 100 * mag;
-  rleftmotor = 100 * mag;
-  rrightmotor = -100 * mag;
-    break;
+      leftmotor = -100 * mag;
+      rightmotor = 100 * mag;
+      rleftmotor = 100 * mag;
+      rrightmotor = -100 * mag;
+      break;
+
    default: 
-    leftmotor = 0;
-    rightmotor = 0;
-    rleftmotor = 0;
-    rrightmotor = 0;
-    cw = 0;
-}
+        leftmotor = 0;
+        rightmotor = 0;
+        rleftmotor = 0;
+        rrightmotor = 0;
+        cw = 0;
+    }
   sendplain(""); //acknowledge
 }
 
@@ -293,22 +294,21 @@ void handleanticlockwise()
 {
   switch(ccw) {
     case 0:
-    if(cw) handleclockwise();
+        if(cw) handleclockwise();
 
-  Serial.println("Rotating anticlockwise");
-  float mag = 40;
-  leftmotor = 100 * mag;
-  rightmotor = -100 * mag;
-  rleftmotor = -100 * mag;
-  rrightmotor = 100 * mag;
-    break;
+      Serial.println("Rotating anticlockwise");
+      leftmotor = 100 * mag;
+      rightmotor = -100 * mag;
+      rleftmotor = -100 * mag;
+      rrightmotor = 100 * mag;
+        break;
    default: 
-    leftmotor = 0;
-    rightmotor = 0;
-    rleftmotor = 0;
-    rrightmotor = 0;
-    ccw = 0;
-}
+        leftmotor = 0;
+        rightmotor = 0;
+        rleftmotor = 0;
+        rrightmotor = 0;
+        ccw = 0;
+    }
   sendplain(""); //acknowledge
 }
 
