@@ -45,7 +45,9 @@
 #define MAX 50 * 100      //Variable storing the full forward spin condition of motor
 #define REVERSE -50 * 100 //Variable storing the full backward spin condition of motor
 
-int follow_state = 0;
+int turn_state = 0;
+int dir_state = 0;
+
 int auto_state = 0;
 
 uint32_t LMduty;                                    //Duty Cycle variable for the left motor
@@ -376,51 +378,82 @@ static esp_err_t i2c_master_init()
 //********* Wall following:
 //****************************
 
-#define TOLERANCE 20
+#define TOLERANCE 10 // percentage
 
-void control(int desired_front, int measured_front, int desired_right, int measured_right)
+void control(int desired_front, int measured_front, int desired_right, int measured_right, int desired_left, int measured_left)
 {
-    double kp = 10;
-    //double ki=0.01;
-    //static int sumederror;
 
     double error_right = desired_right - measured_right;
-    //summederror=summederror+error;
-    //if(error==0)summederror=0;
-
-    if(abs(error_right) < TOLERANCE){
-        follow_state = 0;
-         return;
-    }
-    int u_right = kp * error_right;
-
-    if (u_right > 0)
-        follow_state = 3; //turn slight left
-    else if (u_right < 0)
-        follow_state = 4; //turn slight right
-    else
-        follow_state = 2; //go straight
-
     double error_front = desired_front - measured_front;
-    if(abs(error_front) < TOLERANCE){
-        follow_state = 0;
+    Serial.printf("Front err: %f  || Right err: %f\n", error_front, error_right);
+
+    if(abs(error_right) < TOLERANCE*desired_right/100){
+        turn_state = 0;
          return;
     }
+    if (error_right > 0) turn_state = 3; //turn slight left
+    else turn_state = 4; //turn slight right
 
-    int u_front = kp * error_front;
 
-    if (u_front > 0)
-        follow_state = 2; //back up
-    else if (u_front < 0)
-        follow_state = 1; //go straight
+    if(abs(error_front) < TOLERANCE*desired_front/100 || turn_state){
+        dir_state = 0;
+        return;
+    }
+    if (error_front > 0) dir_state = 2; //back up
+    else  dir_state = 1; //go straight
 }
 
+double factor = 0.7;
+void handleTurn()
+{
+    if (turn_state == 0)
+    { // Do nothing
+        leftmotor = NEUTRAL * factor;
+        rightmotor = NEUTRAL * factor;
+        rleftmotor = NEUTRAL * factor;
+        rrightmotor = NEUTRAL * factor;
+    }
+
+    if (turn_state == 3)
+    { //slight left
+        leftmotor = MAX * factor;
+        rightmotor = REVERSE * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = REVERSE * factor;
+        
+    }
+
+        if (turn_state == 4)
+        { //slight right
+            leftmotor = REVERSE * factor;
+            rightmotor = MAX * factor;
+        rleftmotor = REVERSE * factor;
+        rrightmotor = MAX * factor;
+    }
+}
+
+void handleDir()
+{
+    if (dir_state == 1)
+    { //Drive straight
+        leftmotor = MAX * factor;
+        rightmotor = MAX * factor;
+        rleftmotor = MAX * factor;
+        rrightmotor = MAX * factor;
+    }
+
+    if (dir_state == 2)
+    { //Drive backwards
+            leftmotor = REVERSE * factor;
+            rightmotor = REVERSE * factor;
+            rleftmotor = REVERSE * factor;
+            rrightmotor = REVERSE * factor;
+    }
+
+}
 void handleWallFollow(int front_target, int front, int right_target, int right)
 {
         
-    double factor = 0.7;
- 
-
    static long last_right = millis();
     static long last_front = millis();
     static long since_turning_left = millis();
@@ -435,57 +468,10 @@ void handleWallFollow(int front_target, int front, int right_target, int right)
     int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
     control(front_target, front, right_target, right); //controls and sets certain follow states
-    Serial.printf("Follow_state: %d \n", follow_state);
-    
-    if (follow_state == 0)
-    { // Do nothing
-        leftmotor = NEUTRAL * factor;
-        rightmotor = NEUTRAL * factor;
-        rleftmotor = NEUTRAL * factor;
-        rrightmotor = NEUTRAL * factor;
-    }
+    Serial.printf("Turn State: %d  || Dir State: %d\n", turn_state, dir_state);
 
-    if (follow_state == 1)
-    { //Drive straight
-        leftmotor = MAX * factor;
-        rightmotor = MAX * factor;
-        rleftmotor = MAX * factor;
-        rrightmotor = MAX * factor;
-    }
-
-    if (follow_state == 2)
-    { //Drive backwards
-            leftmotor = REVERSE * factor;
-            rightmotor = REVERSE * factor;
-            rleftmotor = REVERSE * factor;
-            rrightmotor = REVERSE * factor;
-    }
-
-    if (follow_state == 3)
-    { //slight left
-        leftmotor = MAX * factor;
-        rightmotor = REVERSE * factor;
-        rleftmotor = MAX * factor;
-        rrightmotor = REVERSE * factor;
-        
-    }
-
-        if (follow_state == 4)
-        { //slight right
-            leftmotor = REVERSE * factor;
-            rightmotor = MAX * factor;
-        rleftmotor = REVERSE * factor;
-        rrightmotor = MAX * factor;
-    }
-
-    if (follow_state == 5)
-    { //full  left
-        double factor = 1;
-        leftmotor = MAX * factor;
-        rightmotor = REVERSE * factor;
-        rleftmotor = MAX * factor;
-        rrightmotor = REVERSE * factor;
-    }
+    if (turn_state) handleTurn();
+    else handleDir();
 }
 
 uint8_t data_wr[] = "GO";
@@ -540,11 +526,12 @@ void setup()
 }
 
 #define I2CDelay 30 // ms
-#define FRONT_TARGET 40
-#define RIGHT_TARGET 300
+#define FRONT_TARGET 300 // ultrasonic
+#define RIGHT_TARGET 30 // sharp ir
+#define LEFT_TARGET 300  // ultrasonic
 
 void processSensors(){
-    int sensorData[4];
+    int sensorData[6];
     char *p = (char *) data_rd;
     int i = 0;
 
@@ -556,7 +543,7 @@ void processSensors(){
         } else p++;
         
     }
-    if(i != 0) handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[1]);
+    if(i != 0) handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[5], LEFT_TARGET, sensorData[1]);
 
 
 }

@@ -15,7 +15,7 @@
 #include "driver/i2c.h"
 #include "sdkconfig.h"
 
-#define DATA_LENGTH 100 /*!< Data buffer length of test buffer */
+#define DATA_LENGTH 128 /*!< Data buffer length of test buffer */
 // #define RW_TEST_LENGTH 20               /*!< Data length for r/w test, [0,DATA_LENGTH] */
 
 #define I2C_SLAVE_SCL_IO (gpio_num_t)26        /*!< gpio number for i2c slave clock */
@@ -34,11 +34,20 @@
 #define trigPin2 23 // 23
 #define echoPin2 22 // 22
 
+#define ir 33
+
 #define SAMPLEFREQ 15 // TOF can use 30, Ultrasonic maybe 15
 
-long duration; // variable for the duration of sound wave travel
-int distance;  // variable for the distance measurement
+double duration; // variable for the duration of sound wave travel
+double distance;  // variable for the distance measurement
 int trigPin, echoPin;
+
+int rangePSD(){
+  int dis = analogRead(ir);
+  double distanceCM = 27.728 * pow(map(dis, 0, 1023, 0, 5000)/1000.0, -1.2045);
+    return (int) (distanceCM * 10);
+
+}
 
 int rangeSonar(char select)
 { // return range distance in mm
@@ -65,7 +74,7 @@ int rangeSonar(char select)
   // Calculating the distance
   distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
   // Displays the distance on the Serial Monitor
-  return distance * 10;
+  return (int)(distance * 10);
 }
 
 void printScan(int range)
@@ -117,23 +126,25 @@ void setup()
   pinMode(trigPin1, OUTPUT);
   pinMode(echoPin1, INPUT);
   memset(data_wr, 0, sizeof(data_wr));
+  
+    pinMode (ir, INPUT);
 }
 
-// #define DEBUG
+#define DEBUG 1
 void loop()
 {
 
   static uint32_t lastUpdate = micros();
   static uint32_t lastmicros = micros();
   static uint32_t us = micros();
-  static int range1, range2;
+  static int range1, range2, range3;
 
   if (i2c_slave_read_buffer(I2C_NUM_0, data_rd, DATA_LENGTH, 0) > 0)
   { // last term is timeout period, 0 means don't wait
     // if (data_rd[0] == 'G' && data_rd[1] == 'O')
     //    Serial.println("GO!");
     // Serial.printf("READ: %s\n",data_rd);
-    snprintf((char *)data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d", range1, range2);
+    snprintf((char *)data_wr, DATA_LENGTH, "RANGE1, %d, RANGE2, %d, RANGE3, %d", range1, range2, range3);
 
     if (i2c_slave_write_buffer(I2C_NUM_0, data_wr, DATA_LENGTH, 10 / portTICK_RATE_MS))
     {
@@ -146,11 +157,15 @@ void loop()
   {                           // update the servo position
     range1 = rangeSonar('1'); // uncomment if using Sonar
     range2 = rangeSonar('2'); // uncomment if using Sonar
+    range3 = rangePSD();
+
 #ifdef DEBUG
     Serial.printf("SIDE SENSOR\n");
     printScan(range1);
     Serial.printf("FRONT SENSOR\n");
     printScan(range2);
+    Serial.printf("PSD SENSOR\n");
+    printScan(range3);
 #endif
     lastUpdate = us;
   }
