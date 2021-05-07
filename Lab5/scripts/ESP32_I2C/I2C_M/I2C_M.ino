@@ -384,7 +384,7 @@ static esp_err_t i2c_master_init()
 
 #define SPIN_DELAY 500 //how long to turn
 
-void control(int measured_front, int measured_right, int measured_left)
+void control(int front, int right, int left)
 {
     static long last_right = millis();
     static long last_front = millis();
@@ -398,9 +398,10 @@ void control(int measured_front, int measured_right, int measured_left)
     uint32_t ms2 = millis();
     
     static int segment = 0;
-    int error_right = desired_right - RIGHT;
-    int error_front = desired_front - FRONT;
-    int error_left = desired_left - LEFT;
+    static int prev_seg = 0;
+    int error_right = right - RIGHT;
+    int error_front = front - FRONT;
+    int error_left = left - LEFT;
 
     switch(segment) {
 
@@ -444,6 +445,7 @@ void control(int measured_front, int measured_right, int measured_left)
         case 3:
             // spin in 2nd quadrant
             if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
+                spin_state = 1;
                 // spinning
             } else {
                 Serial.println("DONE SPINNING");
