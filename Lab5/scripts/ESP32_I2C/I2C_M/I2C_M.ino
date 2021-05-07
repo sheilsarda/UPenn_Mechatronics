@@ -532,7 +532,7 @@ void handleSpin()
 void handleWallFollow(int front, int right, int left)
 {
     control(front, right, left); //controls and sets certain follow states
-    Serial.printf("Turn State: %d  || Dir State: %d\n", turn_state, dir_state);
+    Serial.printf("Turn: %d  || Dir: %d || Spin: %d\n", turn_state, dir_state, spin_state);
 
     if (spin_state) handleSpin();
     else if (turn_state) handleTurn();
@@ -605,7 +605,8 @@ void processSensors(){
         } else p++;
         
     }
-    if(i != 0) handleWallFollow(FRONT_TARGET, sensorData[3], RIGHT_TARGET, sensorData[5], LEFT_TARGET, sensorData[1]);
+    // front, right, left
+    if(i != 0) handleWallFollow(sensorData[3], sensorData[5], sensorData[1]);
 
 
 }
