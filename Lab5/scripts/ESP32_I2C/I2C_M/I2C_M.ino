@@ -11,6 +11,8 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 #include <stdio.h>
+#include <ESP32Servo.h>
+
 #include "esp_log.h"
 #include "driver/i2c.h"
 #include "sdkconfig.h"
@@ -101,22 +103,13 @@ void updateServos()
 
 #define ARMPIN1 25
 #define ARMPIN2 26
-#define ARM_MIN 50 * 5.5
-#define ARM_MAX 50 * 5.5 * 2
-
-#define RIGHT_ARM 3                                  // use first channel of 16
-#define LEFT_ARM 2                                   // use 2nd channel of 16
 
 int leftarm, rightarm;
-uint32_t LArmduty, RArmduty;
+Servo leftServo, rightServo;
 
 void updateGripper()
 {
-    LArmduty = map(abs(leftarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
-    ledcWrite(LEFT_ARM, RArmduty);
-
-//    RArmduty = map(abs(rightarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
-//    ledcWrite(RIGHT_ARM, LArmduty);
+    leftServo.write(leftarm);
 }
 
 
@@ -251,16 +244,16 @@ void handleArmup()
 
 void handleopen(){
   Serial.println("Opening Arm");
-  leftarm = ARM_MIN;
-  rightarm = ARM_MIN;
+  leftarm = 180;
+  rightarm = 180;
   sendplain("OPEN"); //acknowledge
 }
 
 void handleclose()
 {
   Serial.println("Closing Arm");
-  leftarm = ARM_MAX;
-  rightarm = ARM_MAX;
+  leftarm = 30;
+  rightarm = 30;
   sendplain("CLOSED"); //acknowledge
 }
 
@@ -620,12 +613,8 @@ void setup()
     attachHandler("/ ", handleRoot);
     
     // Servo initialization
-    ledcSetup(RIGHT_ARM, SG90FREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
-    ledcAttachPin(ARMPIN1, RIGHT_ARM);
-    ledcSetup(LEFT_ARM, SG90FREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
-    ledcAttachPin(ARMPIN2, LEFT_ARM);
-    pinMode(RIGHT_ARM, OUTPUT);
-    pinMode(LEFT_ARM, OUTPUT);
+    leftServo.attach(ARMPIN1);
+    rightServo.attach(ARMPIN2);
 }
 
 void processSensors(){
