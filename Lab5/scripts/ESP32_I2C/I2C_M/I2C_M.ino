@@ -378,7 +378,8 @@ static esp_err_t i2c_master_init()
 
 #define TOLERANCE 0.10 // percentage
 
-#define US_T 300 // ultrasonic
+#define US_T_5 150 // ultrasonic
+#define US_T_3v3 200 // ultrasonic
 #define IR_T 30 // sharp ir
 
 #define SPIN_DELAY 500 //how long to turn
@@ -410,7 +411,7 @@ void control(int measured_front, int measured_right, int measured_left)
         // go forward
         desired_right = IR_T;
         desired_left = measured_left;
-        desired_front = US_T;
+        desired_front = US_T_5;
     }
 
     int error_right = desired_right - measured_right;
@@ -419,7 +420,7 @@ void control(int measured_front, int measured_right, int measured_left)
         turn_state = 0;
         last_right = ms2; 
         // start going forward
-        desired_front = US_T;
+        desired_front = US_T_5;
         desired_right = IR_T;
         desired_left = measured_left;
     } else {
@@ -435,8 +436,8 @@ void control(int measured_front, int measured_right, int measured_left)
         dir_state = 0;
         last_front = millis();
         // turn left
-        desired_left = US_T;
-        desired_front = US_T;
+        desired_left = US_T_3v3;
+        desired_front = US_T_5;
         desired_right = measured_right;
     } else {
         // determine whether to go forward or back
@@ -590,8 +591,6 @@ void setup()
     attachHandler("/ ", handleRoot);
 }
 
-#define I2CDelay 100 // ms
-
 void processSensors(){
     int sensorData[6];
     char *p = (char *) data_rd;
@@ -641,7 +640,7 @@ void loop()
         lastI2CRec = ms;
     }
 
-    if (ms - lastI2CSent > I2CDelay && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK))
+    if (ms - lastI2CSent > 1000 / SERVOFREQ && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK))
     {
         lastI2CSent = ms;
     }
