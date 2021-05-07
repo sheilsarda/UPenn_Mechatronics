@@ -101,15 +101,20 @@ void updateServos()
 //****************************
 #define SG90FREQ 50                                      // Frequency of the PWM
 
-#define ARMPIN1 25
-#define ARMPIN2 26
-
 int leftarm, rightarm;
-Servo leftServo, rightServo;
+int last_left, last_right;
+
+Servo leftServo;
+int incr = 5;
 
 void updateGripper()
 {
-    leftServo.write(leftarm);
+    int error_l = leftarm - last_left;
+    if(error_l < incr){ // no change 
+    }
+    else if(error_l > 0) last_left += incr;
+    else last_left -= incr;
+    leftServo.write(last_left);
 }
 
 
@@ -244,16 +249,16 @@ void handleArmup()
 
 void handleopen(){
   Serial.println("Opening Arm");
-  leftarm = 180;
-  rightarm = 180;
+  leftarm = 160;
+  rightarm = 160;
   sendplain("OPEN"); //acknowledge
 }
 
 void handleclose()
 {
   Serial.println("Closing Arm");
-  leftarm = 30;
-  rightarm = 30;
+  leftarm = 0;
+  rightarm = 0;
   sendplain("CLOSED"); //acknowledge
 }
 
@@ -613,8 +618,8 @@ void setup()
     attachHandler("/ ", handleRoot);
     
     // Servo initialization
-    leftServo.attach(ARMPIN1);
-    rightServo.attach(ARMPIN2);
+    leftServo.attach(12);
+    leftServo.setPeriodHertz(50);
 }
 
 void processSensors(){
@@ -640,7 +645,6 @@ void processSensors(){
 
 }
 #define I2C_FREQ 15
-
 void loop()
 {
     static long lastWebCheck = millis();
@@ -656,7 +660,7 @@ void loop()
         serve(server, body);
         lastWebCheck = ms;
     }
-    if (ms - lastSG90Update > 1000 / SG90FREQ)
+    if (ms - lastSG90Update > 1000/SG90FREQ)
     {
         updateGripper();
         lastSG90Update = ms;
