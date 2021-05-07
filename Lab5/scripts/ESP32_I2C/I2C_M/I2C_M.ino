@@ -20,7 +20,6 @@
 #include "joyJS.h"
 #include "tankJS.h"
 
-#include <CSV_Parser.h>
 //****************************
 //********* Drivetrain stuff:
 //****************************
@@ -395,16 +394,15 @@ void control(int measured_front, int measured_right, int measured_left)
     dir_state = 0;
     spin_state = 0;
 
-    static int desired_front = measured_front; // no target
-    static int desired_right = IR_T;
-    static int desired_left = measured_left; // no target
+    int desired_front = measured_front; // no target
+    int desired_right = IR_T;
+    int desired_left = measured_left; // no target
     uint32_t ms2;
 
     ms2 = millis();
 
-    static int error_right = desired_right - measured_right;
 
-    if(since_spin > ms2 - SPIN_DELAY){
+    if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
         spin_state = 1;
         return;
     } else {
@@ -414,9 +412,10 @@ void control(int measured_front, int measured_right, int measured_left)
         desired_front = US_T;
     }
 
+    int error_right = desired_right - measured_right;
     if(abs(error_right) < TOLERANCE*desired_right){
         turn_state = 0;
-        last_right = ms2; 
+        last_right = millis(); 
         // start going forward
         desired_front = US_T;
         desired_right = IR_T;
@@ -427,11 +426,11 @@ void control(int measured_front, int measured_right, int measured_left)
         return;
     }
     
-    static int error_front = desired_front - measured_front;
+    int error_front = desired_front - measured_front;
 
     if(abs(error_front) < TOLERANCE*desired_front){
         dir_state = 0;
-        last_front = ms2;
+        last_front = millis();
         // turn left
         desired_left = US_T;
         desired_front = US_T;
@@ -443,22 +442,21 @@ void control(int measured_front, int measured_right, int measured_left)
         return;
     }
     
-    static int error_left = desired_left - measured_left;
+    int error_left = desired_left - measured_left;
     
     if(abs(error_left) < TOLERANCE*desired_left) {
         dir_state = 0;
-        last_left = ms2;
+        last_left = millis();
         // turn 180deg
         spin_state = 1;
-        since_spin = ms2;
+        since_spin = millis();
 
         desired_left = measured_left;
         desired_front = measured_front;
         desired_right = measured_right;
     } else {
-        // determine whether to go forward or back
-        if (error_front > 0) dir_state = 2; //back up
-        else  dir_state = 1; //go straight
+        if (error_left > 0) turn_state = 4; //turn slight right
+        else turn_state = 3; //turn slight left
         return;
     }
 }
@@ -466,32 +464,33 @@ void control(int measured_front, int measured_right, int measured_left)
 double factor = 0.7;
 void handleTurn()
 {
-    if (turn_state == 0)
-    { // Do nothing
+
+    switch(turn_state)
+{ 
+    case 0:  // Do nothing
         leftmotor = NEUTRAL * factor;
         rightmotor = NEUTRAL * factor;
         rleftmotor = NEUTRAL * factor;
         rrightmotor = NEUTRAL * factor;
-    }
+        break;
 
-    if (turn_state == 3)
-    { //slight left
+    case 3:
+     //slight left
         leftmotor = MAX * factor;
         rightmotor = REVERSE * factor;
         rleftmotor = MAX * factor;
         rrightmotor = REVERSE * factor;
-        
-    }
+        break;
 
-        if (turn_state == 4)
-        { //slight right
-            leftmotor = REVERSE * factor;
-            rightmotor = MAX * factor;
-        rleftmotor = REVERSE * factor;
-        rrightmotor = MAX * factor;
-    }
+    case 4:
+    //slight right
+    leftmotor = REVERSE * factor;
+    rightmotor = MAX * factor;
+    rleftmotor = REVERSE * factor;
+    rrightmotor = MAX * factor;
+    break;
 }
-
+}
 void handleDir()
 {
     switch(dir_state){
