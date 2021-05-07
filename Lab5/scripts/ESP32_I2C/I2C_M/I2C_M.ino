@@ -402,9 +402,7 @@ void control(int measured_front, int measured_right, int measured_left)
 
     ms2 = millis();
 
-    double error_right = desired_right - measured_right;
-    double error_left = desired_left - measured_left;
-    double error_front = desired_front - measured_front;
+    static int error_right = desired_right - measured_right;
 
     if(since_spin > ms2 - SPIN_DELAY){
         spin_state = 1;
@@ -423,13 +421,13 @@ void control(int measured_front, int measured_right, int measured_left)
         desired_front = US_T;
         desired_right = IR_T;
         desired_left = measured_left;
-         return;
     } else {
         if (error_right > 0) turn_state = 3; //turn slight left
         else turn_state = 4; //turn slight right
         return;
     }
     
+    static int error_front = desired_front - measured_front;
 
     if(abs(error_front) < TOLERANCE*desired_front){
         dir_state = 0;
@@ -438,7 +436,6 @@ void control(int measured_front, int measured_right, int measured_left)
         desired_left = US_T;
         desired_front = US_T;
         desired_right = measured_right;
-        return;
     } else {
         // determine whether to go forward or back
         if (error_front > 0) dir_state = 2; //back up
@@ -446,6 +443,7 @@ void control(int measured_front, int measured_right, int measured_left)
         return;
     }
     
+    static int error_left = desired_left - measured_left;
     
     if(abs(error_left) < TOLERANCE*desired_left) {
         dir_state = 0;
@@ -457,7 +455,6 @@ void control(int measured_front, int measured_right, int measured_left)
         desired_left = measured_left;
         desired_front = measured_front;
         desired_right = measured_right;
-        return;
     } else {
         // determine whether to go forward or back
         if (error_front > 0) dir_state = 2; //back up
