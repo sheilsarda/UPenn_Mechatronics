@@ -383,7 +383,7 @@ static esp_err_t i2c_master_init()
 #define LEFT 170 // ultrasonic
 #define RIGHT 30 // sharp ir
 
-#define SPIN_DELAY 2500 //how long to turn
+#define SPIN_DELAY 2100 //how long to turn
 
 void control(int front, int right, int left)
 {
