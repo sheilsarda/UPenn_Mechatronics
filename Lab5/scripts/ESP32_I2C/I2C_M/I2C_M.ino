@@ -376,10 +376,10 @@ static esp_err_t i2c_master_init()
 //********* Wall following:
 //****************************
 
-#define TOLERANCE 0.10 // percentage
+#define TOLERANCE 0.30 // percentage
 
 #define US_T_5 150 // ultrasonic
-#define US_T_3v3 200 // ultrasonic
+#define US_T_3v3 170 // ultrasonic
 #define IR_T 30 // sharp ir
 
 #define SPIN_DELAY 500 //how long to turn
@@ -396,12 +396,12 @@ void control(int measured_front, int measured_right, int measured_left)
     spin_state = 0;
 
     int desired_front = measured_front; // no target
-    int desired_right = IR_T;
+    int desired_right = measured_right;
     int desired_left = measured_left; // no target
     uint32_t ms2;
 
     ms2 = millis();
-
+    
 
     if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
         spin_state = 1;
@@ -426,6 +426,8 @@ void control(int measured_front, int measured_right, int measured_left)
     } else {
         if (error_right > 0) turn_state = 3; //turn slight left
         else turn_state = 4; //turn slight right
+        desired_front = measured_front;
+        desired_left = measured_left;
         return;
     }
     
@@ -443,6 +445,8 @@ void control(int measured_front, int measured_right, int measured_left)
         // determine whether to go forward or back
         if (error_front > 0) dir_state = 2; //back up
         else  dir_state = 1; //go straight
+        desired_right = measured_right;
+        desired_left = measured_left;
         return;
     }
     
@@ -462,6 +466,8 @@ void control(int measured_front, int measured_right, int measured_left)
     } else {
         if (error_left > 0) turn_state = 4; //turn slight right
         else turn_state = 3; //turn slight left
+        desired_front = measured_front;
+        desired_right = measured_right;
         return;
     }
 }
@@ -613,6 +619,7 @@ void processSensors(){
 
 
 }
+#define I2C_FREQ 15
 
 void loop()
 {
@@ -640,7 +647,7 @@ void loop()
         lastI2CRec = ms;
     }
 
-    if (ms - lastI2CSent > 1000 / SERVOFREQ && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK))
+    if (ms - lastI2CSent > 1000 / I2C_FREQ && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK) && auto_state)
     {
         lastI2CSent = ms;
     }
