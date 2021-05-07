@@ -378,9 +378,9 @@ static esp_err_t i2c_master_init()
 
 #define TOLERANCE 0.30 // percentage
 
-#define US_T_5 150 // ultrasonic
-#define US_T_3v3 170 // ultrasonic
-#define IR_T 30 // sharp ir
+#define FRONT 150 // ultrasonic
+#define LEFT 170 // ultrasonic
+#define RIGHT 30 // sharp ir
 
 #define SPIN_DELAY 500 //how long to turn
 
@@ -395,81 +395,66 @@ void control(int measured_front, int measured_right, int measured_left)
     dir_state = 0;
     spin_state = 0;
 
-    int desired_front = measured_front; // no target
-    int desired_right = measured_right;
-    int desired_left = measured_left; // no target
-    uint32_t ms2;
-
-    ms2 = millis();
+    uint32_t ms2 = millis();
     
+    static int segment = 0;
+    int error_right = desired_right - RIGHT;
+    int error_front = desired_front - FRONT;
+    int error_left = desired_left - LEFT;
 
-    if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
-        spin_state = 1;
-        return;
-    } else {
-        Serial.println("DONE SPINNING");
-        // go forward
-        desired_right = IR_T;
-        desired_left = measured_left;
-        desired_front = US_T_5;
+    switch(segment) {
+
+        case 0: 
+            // align to right wall
+            if(abs(error_right) < TOLERANCE*RIGHT){
+                Serial.println("DONE RIGHT");
+                prev_seg = segment++;
+            } else {
+                if (error_right > 0) turn_state = 3; //turn slight left
+                else turn_state = 4; //turn slight right
+            }
+            break;
+        case 1:
+            // 4th to 1st quadrant
+            if(abs(error_right) > TOLERANCE*RIGHT && prev_seg < 1) 
+                prev_seg = segment--;
+            if(abs(error_front) < TOLERANCE*FRONT){
+                Serial.println("DONE FORWARD");
+                prev_seg = segment++;
+            } else {
+                // determine whether to go forward or back
+                if (error_front > 0) dir_state = 2; //back up
+                else  dir_state = 1; //go straight
+            }
+            break;
+        case 2: 
+            // 1st to 2nd quadrant
+        
+            if(abs(error_front) < TOLERANCE*FRONT) 
+                prev_seg = segment--;
+            if(abs(error_left) < TOLERANCE*LEFT) {
+                Serial.println("DONE LEFT");
+                prev_seg = segment++;
+                since_spin = ms2;
+            } else {
+                if (error_left > 0) turn_state = 4; //turn slight right
+                else turn_state = 3; //turn slight left
+            }
+            break;
+        case 3:
+            // spin in 2nd quadrant
+            if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
+                // spinning
+            } else {
+                Serial.println("DONE SPINNING");
+                prev_seg = segment;
+                segment = 1;
+            }
+            break;
     }
 
-    int error_right = desired_right - measured_right;
-    if(abs(error_right) < TOLERANCE*desired_right){
-        Serial.println("DONE RIGHT");
-        turn_state = 0;
-        last_right = ms2; 
-        // start going forward
-        desired_front = US_T_5;
-        desired_right = IR_T;
-        desired_left = measured_left;
-    } else {
-        if (error_right > 0) turn_state = 3; //turn slight left
-        else turn_state = 4; //turn slight right
-        desired_front = measured_front;
-        desired_left = measured_left;
-        return;
-    }
-    
-    int error_front = desired_front - measured_front;
 
-    if(abs(error_front) < TOLERANCE*desired_front){
-        Serial.println("DONE FORWARD");
-        dir_state = 0;
-        last_front = millis();
-        // turn left
-        desired_left = US_T_3v3;
-        desired_front = US_T_5;
-        desired_right = measured_right;
-    } else {
-        // determine whether to go forward or back
-        if (error_front > 0) dir_state = 2; //back up
-        else  dir_state = 1; //go straight
-        desired_right = measured_right;
-        desired_left = measured_left;
-        return;
-    }
     
-    int error_left = desired_left - measured_left;
-    
-    if(abs(error_left) < TOLERANCE*desired_left) {
-        Serial.println("DONE LEFT");
-        dir_state = 0;
-        last_left = millis();
-        // turn 180deg
-        spin_state = 1;
-        since_spin = millis();
-
-        desired_left = measured_left;
-        desired_front = measured_front;
-        desired_right = measured_right;
-    } else {
-        if (error_left > 0) turn_state = 4; //turn slight right
-        else turn_state = 3; //turn slight left
-        desired_front = measured_front;
-        desired_right = measured_right;
-        return;
-    }
 }
 
 double factor = 0.7;
