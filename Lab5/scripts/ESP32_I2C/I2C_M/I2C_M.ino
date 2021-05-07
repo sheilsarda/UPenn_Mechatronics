@@ -21,31 +21,6 @@
 #include "tankJS.h"
 
 //****************************
-//********* Can gripping servo
-//****************************
-
-#define ARMPIN1 25
-#define ARMPIN2 26
-#define ARM_MIN 50 * 5.5
-#define ARM_MAX 50 * 5.5 * 2
-
-#define RIGHT_ARM 3                                  // use first channel of 16
-#define LEFT_ARM 2                                   // use 2nd channel of 16
-int leftarm, rightarm;
-uint32_t LArmduty, RArmduty;
-
-void updateGripper()
-{
-    LArmduty = map(abs(leftarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
-    ledcWrite(LEFT_ARM, RArmduty);
-
-//    RArmduty = map(abs(rightarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
-//    ledcWrite(RIGHT_ARM, LArmduty);
-}
-
-#define SG90FREQ 50                                      // Frequency of the PWM
-
-//****************************
 //********* Drivetrain stuff:
 //****************************
 
@@ -117,6 +92,33 @@ void updateServos()
     ledcWrite(rLEFT_CHANNEL7, rLMduty);
     ledcWrite(rRIGHT_CHANNEL6, rRMduty);
 }
+
+
+//****************************
+//********* Can gripping servo
+//****************************
+#define SG90FREQ 50                                      // Frequency of the PWM
+
+#define ARMPIN1 25
+#define ARMPIN2 26
+#define ARM_MIN 50 * 5.5
+#define ARM_MAX 50 * 5.5 * 2
+
+#define RIGHT_ARM 3                                  // use first channel of 16
+#define LEFT_ARM 2                                   // use 2nd channel of 16
+
+int leftarm, rightarm;
+uint32_t LArmduty, RArmduty;
+
+void updateGripper()
+{
+    LArmduty = map(abs(leftarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
+    ledcWrite(LEFT_ARM, RArmduty);
+
+//    RArmduty = map(abs(rightarm), ARM_MIN, ARM_MAX, 0, LEDC_RESOLUTION);
+//    ledcWrite(RIGHT_ARM, LArmduty);
+}
+
 
 //****************************
 //********* Web interface stuff:
@@ -247,10 +249,10 @@ void handleArmup()
   sendplain(""); //acknowledge
 }
 
-void handleopen()
+void handleopen(){
   leftarm = ARM_MIN;
   rightarm = ARM_MIN;
-    handleGripper();
+    updateGripper();
   sendplain(""); //acknowledge
 }
 
@@ -258,7 +260,7 @@ void handleclose()
 {
   leftarm = ARM_MAX;
   rightarm = ARM_MAX;
-    handleGripper();
+    updateGripper();
   sendplain(""); //acknowledge
 }
 
