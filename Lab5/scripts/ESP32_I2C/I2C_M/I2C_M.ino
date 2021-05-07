@@ -431,7 +431,7 @@ void control(int front, int right, int left)
         case 2: 
             // 1st to 2nd quadrant
         
-            if(abs(error_front) < TOLERANCE*FRONT) 
+            if(abs(error_front) > TOLERANCE*FRONT) 
                 prev_seg = segment--;
             if(abs(error_left) < TOLERANCE*LEFT) {
                 Serial.println("DONE LEFT");
@@ -450,7 +450,7 @@ void control(int front, int right, int left)
             } else {
                 Serial.println("DONE SPINNING");
                 prev_seg = segment;
-                segment = 1;
+                segment = 0;
             }
             break;
     }
