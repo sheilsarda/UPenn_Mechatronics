@@ -104,17 +104,16 @@ void updateServos()
 int leftarm, rightarm;
 int last_left, last_right;
 
-Servo leftServo;
+Servo leftServo, rightServo;
 int incr = 5;
 
 void updateGripper()
 {
-    int error_l = leftarm - last_left;
-    if(error_l < incr){ // no change 
-    }
-    else if(error_l > 0) last_left += incr;
-    else last_left -= incr;
-    leftServo.write(last_left);
+    leftarm += 5;
+    leftarm = leftarm % 180; 
+    rightServo.write(leftarm);
+    leftServo.write(leftarm);
+    delay(10);
 }
 
 
@@ -249,16 +248,16 @@ void handleArmup()
 
 void handleopen(){
   Serial.println("Opening Arm");
-  leftarm = 160;
-  rightarm = 160;
+  leftarm = 90;
+  rightarm = 90;
   sendplain("OPEN"); //acknowledge
 }
 
 void handleclose()
 {
   Serial.println("Closing Arm");
-  leftarm = 0;
-  rightarm = 0;
+  leftarm = 50;
+  rightarm = 50;
   sendplain("CLOSED"); //acknowledge
 }
 
@@ -618,6 +617,8 @@ void setup()
     attachHandler("/ ", handleRoot);
     
     // Servo initialization
+    rightServo.attach(21);
+    rightServo.setPeriodHertz(50);
     leftServo.attach(12);
     leftServo.setPeriodHertz(50);
 }
