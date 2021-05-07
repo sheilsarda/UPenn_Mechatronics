@@ -101,18 +101,14 @@ void updateServos()
 //****************************
 #define SG90FREQ 50                                      // Frequency of the PWM
 
-int leftarm, rightarm;
-int last_left, last_right;
+int arm;
 
 Servo leftServo, rightServo;
-int incr = 5;
 
 void updateGripper()
 {
-    leftarm += 5;
-    leftarm = leftarm % 180; 
-    rightServo.write(leftarm);
-    leftServo.write(leftarm);
+    rightServo.write(arm);
+    leftServo.write(arm);
     delay(10);
 }
 
@@ -248,16 +244,14 @@ void handleArmup()
 
 void handleopen(){
   Serial.println("Opening Arm");
-  leftarm = 90;
-  rightarm = 90;
+  arm = 0;
   sendplain("OPEN"); //acknowledge
 }
 
 void handleclose()
 {
   Serial.println("Closing Arm");
-  leftarm = 50;
-  rightarm = 50;
+  arm = 180;
   sendplain("CLOSED"); //acknowledge
 }
 
