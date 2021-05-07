@@ -380,12 +380,27 @@ static esp_err_t i2c_master_init()
 
 #define TOLERANCE 0.10 // percentage
 
-void control(int desired_front, int measured_front, int desired_right, int measured_right, int desired_left, int measured_left)
+#define FRONT_TARGET 300 // ultrasonic
+#define RIGHT_TARGET 30 // sharp ir
+#define LEFT_TARGET 300  // ultrasonic
+
+
+void control(int measured_front, int measured_right, int measured_left)
 {
+    static long last_right = millis();
+    static long last_front = millis();
+    static long last_left = millis();
+    static long since_spin = millis();
+
+    static int desired_front;
+    static int desired_right;
+    static int desired_left;
+    uint32_t ms2;
+
+    ms2 = millis();
 
     double error_right = desired_right - measured_right;
     double error_front = desired_front - measured_front;
-    Serial.printf("Front err: %f  || Right err: %f\n", error_front, error_right);
 
     if(abs(error_right) < TOLERANCE*desired_right){
         turn_state = 0;
@@ -399,6 +414,7 @@ void control(int desired_front, int measured_front, int desired_right, int measu
         dir_state = 0;
         return;
     }
+    // determine whether to go forward or back
     if (error_front > 0) dir_state = 2; //back up
     else  dir_state = 1; //go straight
 }
@@ -458,23 +474,16 @@ void handleDir()
 }
 
 }
-void handleWallFollow(int front_target, int front, int right_target, int right, int left_target, int left)
+void handleWallFollow(int front, int right, int left)
 {
         
-   static long last_right = millis();
-    static long last_front = millis();
-    static long since_turning_left = millis();
-    static long since_turning_slight_left = millis();
-    uint32_t ms2;
-
-    ms2 = millis();
 
     int delay_bounce = 500;      //how long (ms) to turn left after the right button is pressed
     int delay_back = 500;        //how long to back up (ms) after the front button is pressed
     int delay_left = 500;        //how long to turn left (ms) after backing up
     int delay_slight_left = 500; //how long to turn slight left (ms) after turning hard left - this returns the robot to close to the wall
 
-    control(front_target, front, right_target, right, left_target, left); //controls and sets certain follow states
+    control(front, right, left); //controls and sets certain follow states
     Serial.printf("Turn State: %d  || Dir State: %d\n", turn_state, dir_state);
 
     if (turn_state) handleTurn();
@@ -533,9 +542,6 @@ void setup()
 }
 
 #define I2CDelay 30 // ms
-#define FRONT_TARGET 300 // ultrasonic
-#define RIGHT_TARGET 30 // sharp ir
-#define LEFT_TARGET 300  // ultrasonic
 
 void processSensors(){
     int sensorData[6];
