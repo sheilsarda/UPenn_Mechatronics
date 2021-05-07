@@ -382,23 +382,23 @@ static esp_err_t i2c_master_init()
 #define LEFT 170 // ultrasonic
 #define RIGHT 30 // sharp ir
 
-#define SPIN_DELAY 500 //how long to turn
+#define SPIN_DELAY 2500 //how long to turn
+int segment = 0;
+int prev_seg = 0;
 
 void control(int front, int right, int left)
 {
+    
     static long last_right = millis();
     static long last_front = millis();
     static long last_left = millis();
-    static long since_spin = millis();
+    static long since_spin = -1;
 
     turn_state = 0;
     dir_state = 0;
     spin_state = 0;
-
     uint32_t ms2 = millis();
     
-    static int segment = 0;
-    static int prev_seg = 0;
     int error_right = right - RIGHT;
     int error_front = front - FRONT;
     int error_left = left - LEFT;
@@ -444,9 +444,8 @@ void control(int front, int right, int left)
             break;
         case 3:
             // spin in 2nd quadrant
-            if(since_spin != ms2 && since_spin > ms2 - SPIN_DELAY){
+            if(since_spin > ms2 - SPIN_DELAY){
                 spin_state = 1;
-                // spinning
             } else {
                 Serial.println("DONE SPINNING");
                 prev_seg = segment;
@@ -526,7 +525,7 @@ void handleSpin()
 void handleWallFollow(int front, int right, int left)
 {
     control(front, right, left); //controls and sets certain follow states
-    Serial.printf("Turn: %d  || Dir: %d || Spin: %d\n", turn_state, dir_state, spin_state);
+    Serial.printf("[%d] Turn: %d  || Dir: %d || Spin: %d\n", segment, turn_state, dir_state, spin_state);
 
     if (spin_state) handleSpin();
     else if (turn_state) handleTurn();
