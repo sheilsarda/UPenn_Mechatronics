@@ -21,6 +21,18 @@
 #include "tankJS.h"
 
 //****************************
+//********* Can gripping servo
+//****************************
+
+#define ARMPIN1 25
+#define ARMPIN2 26
+#define ARM_MIN 50 * 5.5
+#define ARM_MAX 50 * 5.5 * 2
+
+#define SG90FREQ 50                                      // Frequency of the PWM
+
+
+//****************************
 //********* Drivetrain stuff:
 //****************************
 
@@ -581,6 +593,14 @@ void setup()
 
     attachHandler("/favicon.ico", handleFavicon);
     attachHandler("/ ", handleRoot);
+    
+    // Servo initialization
+    ledcSetup(RIGHT_ARM, SG90FREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+    ledcAttachPin(ARMPIN1, RIGHT_ARM);
+    ledcSetup(LEFT_ARM, SG90FREQ, LEDC_RESOLUTION_BITS); // channel, freq, bits
+    ledcAttachPin(ARMPIN2, LEFT_ARM);
+    pinMode(RIGHT_ARM, OUTPUT);
+    pinMode(LEFT_ARM, OUTPUT);
 }
 
 void processSensors(){
