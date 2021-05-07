@@ -452,6 +452,8 @@ void control(int front, int right, int left)
                 segment = 0;
             }
             break;
+    
+        default: segment = 0; // start over
     }
 
 
@@ -464,13 +466,6 @@ void handleTurn()
 
     switch(turn_state)
 { 
-    case 0:  // Do nothing
-        leftmotor = NEUTRAL * factor;
-        rightmotor = NEUTRAL * factor;
-        rleftmotor = NEUTRAL * factor;
-        rrightmotor = NEUTRAL * factor;
-        break;
-
     case 3:
      //slight left
         leftmotor = MAX * factor;
@@ -486,6 +481,12 @@ void handleTurn()
     rleftmotor = REVERSE * factor;
     rrightmotor = MAX * factor;
     break;
+    default:  // Do nothing
+        leftmotor = NEUTRAL * factor;
+        rightmotor = NEUTRAL * factor;
+        rleftmotor = NEUTRAL * factor;
+        rrightmotor = NEUTRAL * factor;
+
 }
 }
 void handleDir()
@@ -493,16 +494,16 @@ void handleDir()
     switch(dir_state){
     case 1: 
      //Drive straight
-        leftmotor = MAX * factor;
-        rightmotor = MAX * factor;
+        leftmotor = REVERSE * factor;
+        rightmotor = REVERSE * factor;
         rleftmotor = MAX * factor;
         rrightmotor = MAX * factor;
         break;
 
     case 2:
      //Drive backwards
-            leftmotor = REVERSE * factor;
-            rightmotor = REVERSE * factor;
+            leftmotor = MAX * factor;
+            rightmotor = MAX * factor;
             rleftmotor = REVERSE * factor;
             rrightmotor = REVERSE * factor;
         break;
