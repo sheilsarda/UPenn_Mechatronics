@@ -1,9 +1,10 @@
 /*
  * header for MEAM510 hacks for web interface
  */
-//#define ssid     "Fios-rTWv7"
-//#define password "Govinda1!"
-
+/**
+#define ssid     "Fios-rTWv7"
+#define password "Govinda1!"
+*/
 #define ssid      "#Skyroam_1t9"
 #define password  "55687127"
 
