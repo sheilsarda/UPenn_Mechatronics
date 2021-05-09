@@ -314,7 +314,7 @@ var vctx = c.getContext("2d");
 vctx.font="14px Arial";
 
 var ch = [];
-var scansize=45;
+var scansize=3;
 var zoom = 8;
 
 setInterval(getData, 1000);
@@ -358,7 +358,11 @@ function getData() {
   xhttp.send();
 }
 
-function get_radius(i){return ch[i+2]; }
+function get_radius(i){
+    console.log(ch[i + 2] + " is rad");
+    return ch[i+2]; 
+    
+}
 function get_theta(i){ return ch[i+1]*Math.PI/180; }
 
 function get_x(i){     
@@ -370,17 +374,14 @@ function get_y(i){
 }
 
 function drawDataCircles() {
-  ctx.setLineDash([]);
+  vctx.setLineDash([]);
   for (let i=0; i < scansize; i++) {
-    ctx.beginPath();
+    vctx.beginPath();
     
     // document.getElementById("dataView").innerHTML += get_y(i) + ", " + get_x(i); 
         
-    // ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
-    //         get_radius(i)/80, 0, 2*Math.PI);
-    ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
-            4, 0, 2*Math.PI);
-    ctx.stroke();
+    vctx.arc(c.width/2 +  get_y(i), c.height - get_x(i), get_radius(i)/80, 0, 2*Math.PI);
+    vctx.stroke();
   }
 }
 
@@ -392,12 +393,12 @@ function updateGraph(xhttp) {
       drawScreen(); 
       
       // draw old data in light green
-      // ctx.strokeStyle = "#88FF88"; 
-      // drawDataCircles();
+      vctx.strokeStyle = "#88FF88"; 
+      drawDataCircles();
       
       // draw new data in dark green
       ch = xhttp.responseText.split(","); // get ranging data
-      ctx.strokeStyle = "#008800";
+      vctx.strokeStyle = "#008800";
       drawDataCircles();
       
       document.getElementById("dataView").innerHTML = ""; 
