@@ -265,10 +265,10 @@ void handleclockwise()
       if(ccw) handleanticlockwise();
       Serial.println("Rotating Clockwise");
         cw = 1;
-      leftmotor = -100 * mag;
-      rightmotor = 100 * mag;
-      rleftmotor = 100 * mag;
-      rrightmotor = -100 * mag;
+      leftmotor = 100 * mag;
+      rightmotor = -100 * mag;
+      rleftmotor = -100 * mag;
+      rrightmotor = 100 * mag;
       break;
 
    default: 
@@ -288,10 +288,10 @@ void handleanticlockwise()
         if(cw) handleclockwise();
         ccw = 1;
       Serial.println("Rotating anticlockwise");
-      leftmotor = 100 * mag;
-      rightmotor = -100 * mag;
-      rleftmotor = -100 * mag;
-      rrightmotor = 100 * mag;
+      leftmotor = -100 * mag;
+      rightmotor = 100 * mag;
+      rleftmotor = 100 * mag;
+      rrightmotor = -100 * mag;
         break;
    default: 
         leftmotor = 0;
@@ -568,14 +568,14 @@ void setup()
 
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
+    /**
     WiFi.config(IPAddress(192, 168, 43, 128),
               IPAddress(192, 168, 43, 1),
               IPAddress(255, 255, 255, 0));
-    /**
+    */
     WiFi.config(IPAddress(192, 168, 1, 133), // change the last number to your assigned number
                 IPAddress(192, 168, 1, 1),
                 IPAddress(255, 255, 255, 0));
-    */
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
