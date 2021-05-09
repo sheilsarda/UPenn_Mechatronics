@@ -378,7 +378,11 @@ function drawDataCircles() {
   for (let i=0; i < scansize; i++) {
     vctx.beginPath();
     
-    // document.getElementById("dataView").innerHTML += get_y(i) + ", " + get_x(i); 
+    console.log(get_y(i) + ", " + get_x(i)); 
+    
+    if(i == 0) vctx.strokeStyle = 'blue';
+    else if(i == 1) vctx.strokeStyle = 'green';
+    else vctx.strokeStyle = 'red';
         
     vctx.arc(c.width/2 +  get_y(i), c.height - get_x(i), get_radius(i)/80, 0, 2*Math.PI);
     vctx.stroke();
@@ -393,12 +397,10 @@ function updateGraph(xhttp) {
       drawScreen(); 
       
       // draw old data in light green
-      vctx.strokeStyle = "#88FF88"; 
       drawDataCircles();
       
       // draw new data in dark green
       ch = xhttp.responseText.split(","); // get ranging data
-      vctx.strokeStyle = "#008800";
       drawDataCircles();
       
       document.getElementById("dataView").innerHTML = ""; 
