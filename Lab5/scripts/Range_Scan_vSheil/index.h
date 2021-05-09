@@ -96,7 +96,8 @@ function drawDataCircles() {
 var range_sum;
 
 function updateGraph(xhttp) {
-      scansize = parseInt(xhttp.responseText); // get 1st value
+      document.getElementByID("dataView").innerHTML = xhttp.responseText;
+        scansize = parseInt(xhttp.responseText); // get 1st value
       drawScreen(); 
       
       // draw old data in light green
