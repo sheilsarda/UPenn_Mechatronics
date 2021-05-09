@@ -373,18 +373,32 @@ function get_y(i){
     return get_radius(i)*Math.sin(get_theta(i))/zoom; 
 }
 
+
+
 function drawDataCircles() {
   vctx.setLineDash([]);
   for (let i=0; i < scansize; i++) {
     vctx.beginPath();
     
-    console.log(get_y(i) + ", " + get_x(i)); 
     
-    if(i == 0) vctx.strokeStyle = 'blue';
-    else if(i == 1) vctx.strokeStyle = 'green';
-    else vctx.strokeStyle = 'red';
+    if(i == 0){ 
+        vctx.strokeStyle = 'blue';
+        y = ch[2]/zoom;
+        x = 0;
+    }
+    else if(i == 1){ 
+        vctx.strokeStyle = 'green';
+        y = 0;
+        x = -ch[4]/zoom;
+    }
+    else{
+        vctx.strokeStyle = 'red';
+        y = 0;
+        x = ch[6]/zoom;
+    }
+    console.log(y + ", " + x, ", ", get_radius(i)/80); 
         
-    vctx.arc(c.width/2 +  get_y(i), c.height - get_x(i), get_radius(i)/80, 0, 2*Math.PI);
+    vctx.arc(c.width/2 + x, c.height - y + zoom, 10, 0, 2*Math.PI);
     vctx.stroke();
   }
 }
