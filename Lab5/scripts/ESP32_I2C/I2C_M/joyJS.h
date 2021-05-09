@@ -16,10 +16,10 @@ const char joybody[] PROGMEM = R"===(
 
 <canvas id="canvas" name="game"></canvas> 
 <br>
-<button type="button" onclick="backward(3)"> &nbsp; &#8681; &#8681; &nbsp;  </button>
-<button type="button" onclick="backward(1.5)"> &nbsp; &#8681; &nbsp;  </button>
-<button type="button" onclick="forward(1.5)"> &nbsp; &#8679; &nbsp;  </button> 
-<button type="button" onclick="forward(3)"> &nbsp; &#8679; &#8679; &nbsp;  </button> 
+<button type="button" onclick="backward(5)"> &nbsp; &#8681; &#8681; &nbsp;  </button>
+<button type="button" onclick="backward(2)"> &nbsp; &#8681; &nbsp;  </button>
+<button type="button" onclick="forward(2)"> &nbsp; &#8679; &nbsp;  </button> 
+<button type="button" onclick="forward(5)"> &nbsp; &#8679; &#8679; &nbsp;  </button> 
 <br>
 <br>
 
@@ -229,6 +229,29 @@ Your browser does not support the HTML5 canvas tag.
     xhttp.send();
   }
 
+function forward(dist) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      }
+    };
+  var str = "forward?val=";
+  var res = str.concat(dist);
+    xhttp.open("GET", res, true);
+    xhttp.send();
+}
+
+function backward(dist) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      }
+    };
+  var str = "backward?val=";
+  var res = str.concat(dist);
+    xhttp.open("GET", res, true);
+    xhttp.send();
+}
   
     function clockwise(deg) {
     var xhttp = new XMLHttpRequest();

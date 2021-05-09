@@ -270,6 +270,48 @@ void stoprotation(){
     ccw = 0;
 }
 
+int move_dist;
+long start_move_time = millis();
+long move_duration = -1;
+
+void handleforward()
+{ 
+    move_dist = getVal(); // from -50 to +50
+    start_move_time = millis();
+
+    switch(move_dist){
+        case 2: move_duration = 175; break;
+        case 5: move_duration = 525; break;
+        default: move_duration = -1;
+    }
+        leftmotor = MAX * mag;
+        rightmotor = MAX * mag;
+        rleftmotor = REVERSE * mag;
+        rrightmotor = REVERSE * mag;
+
+  Serial.printf("Moving forward: %d\n", dist);
+  sendplain(""); //acknowledge
+}
+void handlebackward()
+{ 
+    move_dist = getVal(); // from -50 to +50
+    start_move_time = millis();
+
+    switch(move_dist){
+        case 2: move_duration = 175; break;
+        case 5: move_duration = 525; break;
+        default: move_duration = -1;
+    }
+        leftmotor = REVERSE * mag;
+        rightmotor = REVERSE * mag;
+        rleftmotor = MAX * mag;
+        rrightmotor = MAX * mag;
+
+  Serial.printf("Moving forward: %d\n", dist);
+  sendplain(""); //acknowledge
+}
+
+
 void handleclockwise()
 { 
   rot_degrees = getVal(); // from -50 to +50
@@ -643,6 +685,8 @@ void setup()
     attachHandler("/joy?val=", handleJoy);
     attachHandler("/closeArm", handleclose);
     attachHandler("/openArm", handleopen);
+    attachHandler("/forward?val=", handleforward);
+    attachHandler("/backward?val=", handlebackward);
     attachHandler("/clockwise?val=", handleclockwise);
     attachHandler("/anticlockwise?val=", handleanticlockwise);
     attachHandler("/armup", handleArmup);
@@ -701,6 +745,11 @@ void loop()
     uint32_t ms;
 
     ms = millis();
+    if((move_duration != -1) && ms - start_move_time > move_duration)
+    {
+        stoprotation();
+        move_duration = -1;
+    }
     if((rot_duration != -1) && ms - start_rot_time > rot_duration)
     {
         stoprotation();
