@@ -59,6 +59,7 @@ Received X,Y: <span id="joystate"> joystate</span> <br>
 Your browser does not support the HTML5 canvas tag.
 </canvas> <br>
 <span style="font-size: 25px;"> Ranging </span>  &nbsp;
+<span id="sensordata" style="font-size: 15px;"> DATA HERE </span>  &nbsp;
 <span id="dataView" style="font-size: 15px;"> DATA HERE </span>  &nbsp;
 
 <button type="button" onclick="zoomf()"> &nbsp; toggle zoom &nbsp; </button> <br>
@@ -349,6 +350,7 @@ function getData() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200 ) { 
+      document.getElementById("sensordata").innerHTML = this.responseText;
       updateGraph(this);
     }
   };
@@ -356,19 +358,23 @@ function getData() {
   xhttp.send();
 }
 
-function radius(i){return ch[i+1]; }
-function theta(i){ return ch[i]; }
+function get_radius(i){return ch[i+1]; }
+function get_theta(i){ return ch[i]; }
 
-function x(i){     return radius(i)*Math.cos(theta(i))/zoom; }
+function get_x(i){     
+    return radius(i)*Math.cos(get_theta(i))/zoom; 
+}
 
-function y(i){     return radius(i)*Math.sin(theta(i))/zoom; }
+function get_y(i){     
+    return radius(i)*Math.sin(get_theta(i))/zoom; 
+}
 
 function drawDataCircles() {
   ctx.setLineDash([]);
   for (let i=0; i < scansize; i++) {
     ctx.beginPath();
-    ctx.arc(c.width/2 + y(i), c.height - x(i),
-            radius(i)/80, 0, 2*Math.PI);
+    ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
+            get_radius(i)/80, 0, 2*Math.PI);
     ctx.stroke();
   }
 }
@@ -377,6 +383,7 @@ var range_sum;
 
 function updateGraph(xhttp) {
       scansize = parseInt(xhttp.responseText); // get 1st value
+
       drawScreen(); 
       
       // draw old data in light green

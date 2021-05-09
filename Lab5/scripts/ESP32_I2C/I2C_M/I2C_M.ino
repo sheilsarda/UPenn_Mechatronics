@@ -306,6 +306,7 @@ void handleanticlockwise()
 #define NUM_SENSORS 3
 int scanA[NUM_SENSORS];
 int scanR[NUM_SENSORS];
+
 void handleUpdate()
 {
   String s = "";
@@ -317,6 +318,7 @@ void handleUpdate()
     s = s + "," + scanR[i]; 
   }
   sendplain(s);
+  Serial.println("handle wall follow was called");
 }
 
 /*********************/
