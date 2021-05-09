@@ -359,7 +359,7 @@ function getData() {
 }
 
 function get_radius(i){return ch[i+2]; }
-function get_theta(i){ return ch[i+1]; }
+function get_theta(i){ return ch[i+1]*Math.PI/180; }
 
 function get_x(i){     
     return get_radius(i)*Math.cos(get_theta(i))/zoom; 
@@ -374,10 +374,12 @@ function drawDataCircles() {
   for (let i=0; i < scansize; i++) {
     ctx.beginPath();
     
-    document.getElementById("dataView").innerHTML += get_y(i) + ", " + get_x(i); 
+    // document.getElementById("dataView").innerHTML += get_y(i) + ", " + get_x(i); 
         
+    // ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
+    //         get_radius(i)/80, 0, 2*Math.PI);
     ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
-            get_radius(i)/80, 0, 2*Math.PI);
+            4, 0, 2*Math.PI);
     ctx.stroke();
   }
 }
@@ -390,10 +392,8 @@ function updateGraph(xhttp) {
       drawScreen(); 
       
       // draw old data in light green
-      ctx.strokeStyle = "#88FF88"; 
-      drawDataCircles();
-      
-      range_sum = ch.reduce((a, b) => a + b, 0);
+      // ctx.strokeStyle = "#88FF88"; 
+      // drawDataCircles();
       
       // draw new data in dark green
       ch = xhttp.responseText.split(","); // get ranging data

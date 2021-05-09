@@ -568,9 +568,9 @@ void handleSpin()
 void handleWallFollow(int front, int right, int left)
 {
     // for web
-    scanA[0] = 0; scanR[0] = front / 10;
-    scanA[1] = -90; scanR[1] = left / 10;
-    scanA[2] = 90; scanR[2] = right;
+    scanA[0] = 90; scanR[0] = front / 10;
+    scanA[1] = 180; scanR[1] = left / 10;
+    scanA[2] = 0; scanR[2] = right;
 
 
     control(front, right, left); //controls and sets certain follow states
