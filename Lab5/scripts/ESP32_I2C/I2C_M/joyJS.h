@@ -55,6 +55,17 @@ const char joybody[] PROGMEM = R"===(
 Sent: X: <span id="x_coord"> </span> Y: <span id="y_coord"> </span> <br>
 Received X,Y: <span id="joystate"> joystate</span> <br>
 
+<br>
+<br>
+<canvas id="rangeView" width="500" height="400" style="border:3px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas> <br>
+<span style="font-size: 25px;"> Ranging </span>  &nbsp;
+<span id="dataView" style="font-size: 15px;"> DATA HERE </span>  &nbsp;
+
+<button type="button" onclick="zoomf()"> &nbsp; toggle zoom &nbsp; </button> <br>
+
+
 <script>
   var canvas, ctx;
   var armstate ="up";
