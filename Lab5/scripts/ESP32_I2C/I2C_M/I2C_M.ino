@@ -567,10 +567,6 @@ void handleSpin()
 }
 void handleWallFollow(int front, int right, int left)
 {
-    // for web
-    scanA[0] = 90; scanR[0] = front;
-    scanA[1] = 180; scanR[1] = left;
-    scanA[2] = 0; scanR[2] = right * 10;
 
 
     control(front, right, left); //controls and sets certain follow states
@@ -661,8 +657,14 @@ void processSensors(){
     }
     // front, right, left
     if(i == 6) {
-        Serial.printf("Read: %s\n", data_rd);
-        handleWallFollow(sensorData[3], sensorData[5], sensorData[1]);
+        // for web
+        scanA[0] = 90; scanR[0] = sensorData[3];
+        scanA[1] = 180; scanR[1] = sensorData[1];
+        scanA[2] = 0; scanR[2] = sensorData[5] * 10;
+        if(auto_state){
+            Serial.printf("Read: %s\n", data_rd);
+            handleWallFollow(sensorData[3], sensorData[5], sensorData[1]);
+        }
     }
     memset(data_rd, 0, sizeof(data_rd));
 
@@ -695,13 +697,13 @@ void loop()
         lastServoUpdate = ms;
     }
 
-    if (ms - lastI2CRec > 1000 / SERVOFREQ && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK) && auto_state)
+    if (ms - lastI2CRec > 1000 / SERVOFREQ && (i2c_master_read_slave(I2C_NUM_1, data_rd, DATA_LENGTH) == ESP_OK))
     {
         processSensors();
         lastI2CRec = ms;
     }
 
-    if (ms - lastI2CSent > 1000 / I2C_FREQ && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK) && auto_state)
+    if (ms - lastI2CSent > 1000 / I2C_FREQ && (i2c_master_write_slave(I2C_NUM_1, data_wr, RW_TEST_LENGTH) == ESP_OK))
     {
         lastI2CSent = ms;
     }
