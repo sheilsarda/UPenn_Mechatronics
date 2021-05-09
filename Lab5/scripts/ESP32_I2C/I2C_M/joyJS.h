@@ -122,15 +122,15 @@ Your browser does not support the HTML5 canvas tag.
       y_orig = height / 2;
       ctx.beginPath();
       ctx.arc(x_orig, y_orig, radius + 20, 0, Math.PI * 2, true);
-      ctx.fillStyle = '#c5c5c5';
+      ctx.fillStyle = '#000000';
       ctx.fill();
   }
 
   function joystick() { 
       var grd = ctx.createRadialGradient(x+10,y-10,3,x+10,y-10,50);
       ctx.beginPath();
-      grd.addColorStop(0,"white");
-      grd.addColorStop(1,"red");
+      grd.addColorStop(0,"yellow");
+      grd.addColorStop(1,"green");
       ctx.fillStyle = grd;
       ctx.arc(x, y, radius, 0, Math.PI * 2, true);
       ctx.fillStyle = grd;
@@ -310,6 +310,97 @@ Your browser does not support the HTML5 canvas tag.
       cts = 0;
     }
   }
+
+// Display Elements
+var c = document.getElementById("rangeView");
+var vctx = c.getContext("2d");
+vctx.font="14px Arial";
+
+var ch = [];
+var scansize=45;
+var zoom = 8;
+
+setInterval(getData, 1000);
+
+function zoomf() {
+  if (zoom == 8) zoom = 2;
+  else zoom = 8;
+  getData();
+}
+
+function drawScreen() {
+  vctx.clearRect(0, 0, c.width, c.height);
+  vctx.strokeStyle = "#008800";
+  vctx.beginPath();
+  vctx.setLineDash([1, 5]);
+
+  // draw distance lines
+  for (let i=1; i < 8; i++) {
+    vctx.moveTo(0, i * 50);
+    vctx.lineTo(c.width, i * 50);  
+    vctx.fillText(String((8-i)*50*zoom)+" mm",20,i*50);
+  }
+  vctx.stroke();
+  
+  // draw origin (robot as circle)
+  vctx.beginPath();
+  vctx.arc(c.width/2, c.height-2, 30/zoom, 0, 2 * Math.PI, false);
+  vctx.fill();
+  vctx.stroke();
+}
+
+function getData() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200 ) { 
+      updateGraph(this);
+    }
+  };
+  xhttp.open("GET", "update", true);
+  xhttp.send();
+}
+
+function radius(i){return ch[i+1]; }
+function theta(i){ return ch[i]; }
+
+function x(i){     return radius(i)*Math.cos(theta(i))/zoom; }
+
+function y(i){     return radius(i)*Math.sin(theta(i))/zoom; }
+
+function drawDataCircles() {
+  ctx.setLineDash([]);
+  for (let i=0; i < scansize; i++) {
+    ctx.beginPath();
+    ctx.arc(c.width/2 + y(i), c.height - x(i),
+            radius(i)/80, 0, 2*Math.PI);
+    ctx.stroke();
+  }
+}
+
+var range_sum;
+
+function updateGraph(xhttp) {
+      scansize = parseInt(xhttp.responseText); // get 1st value
+      drawScreen(); 
+      
+      // draw old data in light green
+      ctx.strokeStyle = "#88FF88"; 
+      drawDataCircles();
+      
+      range_sum = ch.reduce((a, b) => a + b, 0);
+      
+      // draw new data in dark green
+      ch = xhttp.responseText.split(","); // get ranging data
+      ctx.strokeStyle = "#008800";
+      drawDataCircles();
+      
+      //  debug.innerHTML = ch; // debugging print
+      if(ch.reduce((a, b) => a + b, 0)  > range_sum + 100)
+          document.getElementById("dataView").innerHTML = "Obstacle distance INCREASED";
+      else if(ch.reduce((a, b) => a + b, 0)  < range_sum + 100)   
+          document.getElementById("dataView").innerHTML = "Obstacle distance DECREASED";
+      else document.getElementById("dataView").innerHTML = "Obstacle distance UNCHANGED"; 
+}
 
 </script>
 </body>
