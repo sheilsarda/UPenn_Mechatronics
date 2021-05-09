@@ -229,7 +229,8 @@ Your browser does not support the HTML5 canvas tag.
     xhttp.send();
   }
 
-function forward(dist) {
+function forward(dist) 
+{
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -241,7 +242,8 @@ function forward(dist) {
     xhttp.send();
 }
 
-function backward(dist) {
+function backward(dist) 
+{
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {

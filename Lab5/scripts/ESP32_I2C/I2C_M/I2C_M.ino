@@ -289,7 +289,7 @@ void handleforward()
         rleftmotor = REVERSE * mag;
         rrightmotor = REVERSE * mag;
 
-  Serial.printf("Moving forward: %d\n", dist);
+  Serial.printf("Moving forward: %d\n", move_dist);
   sendplain(""); //acknowledge
 }
 void handlebackward()
@@ -307,7 +307,7 @@ void handlebackward()
         rleftmotor = MAX * mag;
         rrightmotor = MAX * mag;
 
-  Serial.printf("Moving forward: %d\n", dist);
+  Serial.printf("Moving forward: %d\n", move_dist);
   sendplain(""); //acknowledge
 }
 
@@ -649,14 +649,14 @@ void setup()
 
     WiFi.mode(WIFI_MODE_STA);
     WiFi.begin(ssid, password);
-    /**
     WiFi.config(IPAddress(192, 168, 43, 128),
               IPAddress(192, 168, 43, 1),
               IPAddress(255, 255, 255, 0));
-    */
+    /**
     WiFi.config(IPAddress(192, 168, 1, 133), // change the last number to your assigned number
                 IPAddress(192, 168, 1, 1),
                 IPAddress(255, 255, 255, 0));
+    */
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
