@@ -303,6 +303,21 @@ void handleanticlockwise()
   sendplain(""); //acknowledge
 }
 
+#define NUM_SENSORS 3
+int scanA[NUM_SENSORS];
+int scanR[NUM_SENSORS];
+void handleUpdate()
+{
+  String s = "";
+
+  s = s + NUM_SENSORS; // first number is number of data pairs
+  for (int i = 0; i < NUM_SENSORS; i++)
+  {                                                   // add range values
+    s = s + "," + scanA[i]; 
+    s = s + "," + scanR[i]; 
+  }
+  sendplain(s);
+}
 
 /*********************/
 /* tank mode  code  */
