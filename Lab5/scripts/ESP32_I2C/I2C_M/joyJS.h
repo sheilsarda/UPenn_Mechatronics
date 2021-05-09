@@ -17,27 +17,44 @@ const char joybody[] PROGMEM = R"===(
 
 </head>
 <body style="text-align: center;" >
-  <canvas id="canvas" name="game"></canvas>
-  <button type="button" onclick="armup()"> &nbsp; Wall Follow &nbsp;  </button> 
-  <button type="button" onclick="armdown()"> &nbsp; Stop Wall Follow &nbsp;  </button> <br> <br>
-  <span id="Arm"> Control the Gripper </span> <br>
-  <button type="button" onclick="openArm()"> &nbsp; Open Arm &nbsp;  </button> 
-<button type="button" onclick="closeArm()"> &nbsp; Close Arm &nbsp;  </button> <br> <br>
-  <span id="Rotate"> Rotate</span> <br>
 
-  <button type="button" onclick="anticlockwise()"> &nbsp; Rotate CCW &nbsp;  </button> 
-<----------------> 
+<canvas id="canvas" name="game"></canvas> 
+<br>
+<button type="button" onclick="backward()"> &nbsp; &#8681; &nbsp;  </button>
+<button type="button" onclick="forward()"> &nbsp; &#8679; &nbsp;  </button> 
+<br>
+<br>
 
-<button type="button" onclick="clockwise()"> &nbsp; Rotate CW &nbsp;  </button> <br>
+<button type="button" onclick="armup()"> &nbsp; Wall Follow &nbsp;  </button> 
+<button type="button" onclick="armdown()"> &nbsp; Stop Wall Follow &nbsp;  </button> 
+<br> 
+<br>
 
-  <button type="button" onclick="switchmode()"> &nbsp; switch to tankmode &nbsp;  </button> <br>
-  <span id="armstate"> armstate </span> <br>
-   Sent: X: <span id="x_coord"> </span> Y: <span id="y_coord"> </span> <br>
-  Received X,Y: <span id="joystate"> joystate</span> <br>
+<span id="Arm"> Control the Gripper </span> <br>
+<button type="button" onclick="openArm()"> &nbsp; Open Arm &nbsp;  </button> 
+<button type="button" onclick="closeArm()"> &nbsp; Close Arm &nbsp;  </button> 
+<br> 
+<br>
 
- 
+<span id="Rotate"> Rotate</span> <br>
 
-      
+<button type="button" onclick="anticlockwise(-1)"> &nbsp; rotate ccw &nbsp;  </button> 
+<button type="button" onclick="clockwise(-1)"> &nbsp; rotate cw &nbsp;  </button> <br>
+
+<button type="button" onclick="clockwise(90)">90 deg cw</button> 
+<button type="button" onclick="clockwise(45)">45</button> 
+<button type="button" onclick="clockwise(15)">15</button> 
+---
+<button type="button" onclick="anticlockwise(15)">15</button> 
+<button type="button" onclick="anticlockwise(45)">45</button> 
+<button type="button" onclick="anticlockwise(90)">90 deg ccw</button>
+
+<br>
+<br>
+<span id="armstate"> armstate </span> <br>
+Sent: X: <span id="x_coord"> </span> Y: <span id="y_coord"> </span> <br>
+Received X,Y: <span id="joystate"> joystate</span> <br>
+
 <script>
   var canvas, ctx;
   var armstate ="up";
@@ -203,7 +220,7 @@ const char joybody[] PROGMEM = R"===(
   }
 
   
-    function clockwise() {
+    function clockwise(deg) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -211,11 +228,13 @@ const char joybody[] PROGMEM = R"===(
         document.getElementById("Rotate").innerHTML = this.responseText;
       }
     };
-    xhttp.open("GET", "clockwise", true);
+  var str = "clockwise?val=";
+  var res = str.concat(deg);
+    xhttp.open("GET", res, true);
     xhttp.send();
   }
 
-    function anticlockwise() {
+    function anticlockwise(deg) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
@@ -223,21 +242,12 @@ const char joybody[] PROGMEM = R"===(
         document.getElementById("Rotate").innerHTML = this.responseText;
       }
     };
-    xhttp.open("GET", "anticlockwise", true);
+  var str = "anticlockwise?val=";
+  var res = str.concat(deg);
+    xhttp.open("GET", res, true);
     xhttp.send();
   }
 
-    function closeArm() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        Rotate = this.responseText;
-        document.getElementById("Arm").innerHTML = this.responseText;
-      }
-    };
-    xhttp.open("GET", "closeArm", true);
-    xhttp.send();
-  }
     function openArm() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
