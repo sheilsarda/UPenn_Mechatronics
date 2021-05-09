@@ -256,14 +256,36 @@ void handleclose()
 }
 
 int ccw, cw;
-  float mag = 40;
+float mag = 40;
+int rot_degrees;
+long start_rot_time = millis();
+long rot_duration = -1;
+
+void stoprotation(){
+    leftmotor = 0;
+    rightmotor = 0;
+    rleftmotor = 0;
+    rrightmotor = 0;
+    cw = 0;
+    ccw = 0;
+}
 
 void handleclockwise()
 { 
+  rot_degrees = getVal(); // from -50 to +50
+    start_rot_time = millis();
+
+    switch(rot_degrees){
+        case 15: rot_duration = 175; break;
+        case 45: rot_duration = 525; break;
+        case 90: rot_duration = 1050; break;
+        default: rot_duration = -1;
+    }
+
   switch(cw) {
     case 0:
-      if(ccw) handleanticlockwise();
-      Serial.println("Rotating Clockwise");
+      if(ccw) stoprotation();
+      Serial.printf("Rotating Clockwise: %d\n", rot_degrees);
         cw = 1;
       leftmotor = 100 * mag;
       rightmotor = -100 * mag;
@@ -271,34 +293,33 @@ void handleclockwise()
       rrightmotor = 100 * mag;
       break;
 
-   default: 
-        leftmotor = 0;
-        rightmotor = 0;
-        rleftmotor = 0;
-        rrightmotor = 0;
-        cw = 0;
+   default:  stoprotation();
     }
   sendplain(""); //acknowledge
 }
 
 void handleanticlockwise()
 {
+  rot_degrees = getVal(); // from -50 to +50
+    start_rot_time = millis();
+    switch(rot_degrees){
+        case 15: rot_duration = 175; break;
+        case 45: rot_duration = 525; break;
+        case 90: rot_duration = 1050; break;
+        default: rot_duration = -1;
+    }
+
   switch(ccw) {
     case 0:
-        if(cw) handleclockwise();
+        if(cw) stoprotation();
         ccw = 1;
-      Serial.println("Rotating anticlockwise");
+      Serial.printf("Rotating anticlockwise: %d\n", rot_degrees);
       leftmotor = -100 * mag;
       rightmotor = 100 * mag;
       rleftmotor = 100 * mag;
       rrightmotor = -100 * mag;
         break;
-   default: 
-        leftmotor = 0;
-        rightmotor = 0;
-        rleftmotor = 0;
-        rrightmotor = 0;
-        ccw = 0;
+   default: stoprotation();
     }
   sendplain(""); //acknowledge
 }
@@ -318,7 +339,6 @@ void handleUpdate()
     s = s + "," + scanR[i]; 
   }
   sendplain(s);
-  Serial.println("handle wall follow was called");
 }
 
 /*********************/
@@ -623,8 +643,8 @@ void setup()
     attachHandler("/joy?val=", handleJoy);
     attachHandler("/closeArm", handleclose);
     attachHandler("/openArm", handleopen);
-    attachHandler("/clockwise", handleclockwise);
-    attachHandler("/anticlockwise", handleanticlockwise);
+    attachHandler("/clockwise?val=", handleclockwise);
+    attachHandler("/anticlockwise?val=", handleanticlockwise);
     attachHandler("/armup", handleArmup);
     attachHandler("/armdown", handleArmdown);
     attachHandler("/switchmode", handleSwitch);
@@ -681,6 +701,11 @@ void loop()
     uint32_t ms;
 
     ms = millis();
+    if((rot_duration != -1) && ms - start_rot_time > rot_duration)
+    {
+        stoprotation();
+        rot_duration = -1;
+    }
     if (ms - lastWebCheck > 2)
     {
         serve(server, body);

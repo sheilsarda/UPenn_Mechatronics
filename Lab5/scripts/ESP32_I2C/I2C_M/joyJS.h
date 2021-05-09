@@ -397,7 +397,7 @@ function drawDataCircles() {
         x_temp = ch[6]/zoom;
     }
         
-    vctx.arc(c.width/2 + x_temp, c.height - y_temp + zoom + 10, 10, 0, 2*Math.PI);
+    vctx.arc(c.width/2 + x_temp, c.height - y_temp + zoom - 10, 10, 0, 2*Math.PI);
     vctx.stroke();
   }
 }
