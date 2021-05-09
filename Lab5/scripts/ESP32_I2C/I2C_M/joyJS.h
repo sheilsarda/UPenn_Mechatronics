@@ -358,21 +358,24 @@ function getData() {
   xhttp.send();
 }
 
-function get_radius(i){return ch[i+1]; }
-function get_theta(i){ return ch[i]; }
+function get_radius(i){return ch[i+2]; }
+function get_theta(i){ return ch[i+1]; }
 
 function get_x(i){     
-    return radius(i)*Math.cos(get_theta(i))/zoom; 
+    return get_radius(i)*Math.cos(get_theta(i))/zoom; 
 }
 
 function get_y(i){     
-    return radius(i)*Math.sin(get_theta(i))/zoom; 
+    return get_radius(i)*Math.sin(get_theta(i))/zoom; 
 }
 
 function drawDataCircles() {
   ctx.setLineDash([]);
   for (let i=0; i < scansize; i++) {
     ctx.beginPath();
+    
+    document.getElementById("dataView").innerHTML += get_y(i) + ", " + get_x(i); 
+        
     ctx.arc(c.width/2 +  get_y(i), c.height - get_x(i),
             get_radius(i)/80, 0, 2*Math.PI);
     ctx.stroke();
@@ -397,12 +400,7 @@ function updateGraph(xhttp) {
       ctx.strokeStyle = "#008800";
       drawDataCircles();
       
-      //  debug.innerHTML = ch; // debugging print
-      if(ch.reduce((a, b) => a + b, 0)  > range_sum + 100)
-          document.getElementById("dataView").innerHTML = "Obstacle distance INCREASED";
-      else if(ch.reduce((a, b) => a + b, 0)  < range_sum + 100)   
-          document.getElementById("dataView").innerHTML = "Obstacle distance DECREASED";
-      else document.getElementById("dataView").innerHTML = "Obstacle distance UNCHANGED"; 
+      document.getElementById("dataView").innerHTML = ""; 
 }
 
 </script>
