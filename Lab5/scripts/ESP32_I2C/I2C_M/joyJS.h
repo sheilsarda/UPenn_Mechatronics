@@ -20,8 +20,10 @@ const char joybody[] PROGMEM = R"===(
 
 <canvas id="canvas" name="game"></canvas> 
 <br>
-<button type="button" onclick="backward()"> &nbsp; &#8681; &nbsp;  </button>
-<button type="button" onclick="forward()"> &nbsp; &#8679; &nbsp;  </button> 
+<button type="button" onclick="backward(3)"> &nbsp; &#8681; &#8681; &nbsp;  </button>
+<button type="button" onclick="backward(1.5)"> &nbsp; &#8681; &nbsp;  </button>
+<button type="button" onclick="forward(1.5)"> &nbsp; &#8679; &nbsp;  </button> 
+<button type="button" onclick="forward(3)"> &nbsp; &#8679; &#8679; &nbsp;  </button> 
 <br>
 <br>
 
@@ -41,13 +43,13 @@ const char joybody[] PROGMEM = R"===(
 <button type="button" onclick="anticlockwise(-1)"> &nbsp; rotate ccw &nbsp;  </button> 
 <button type="button" onclick="clockwise(-1)"> &nbsp; rotate cw &nbsp;  </button> <br>
 
-<button type="button" onclick="clockwise(90)">90 deg cw</button> 
-<button type="button" onclick="clockwise(45)">45</button> 
-<button type="button" onclick="clockwise(15)">15</button> 
----
-<button type="button" onclick="anticlockwise(15)">15</button> 
+<button type="button" onclick="anticlockwise(90)">90</button>
 <button type="button" onclick="anticlockwise(45)">45</button> 
-<button type="button" onclick="anticlockwise(90)">90 deg ccw</button>
+<button type="button" onclick="anticlockwise(15)">15</button> 
+---
+<button type="button" onclick="clockwise(15)">15</button> 
+<button type="button" onclick="clockwise(45)">45</button> 
+<button type="button" onclick="clockwise(90)">90</button> 
 
 <br>
 <br>
@@ -57,7 +59,7 @@ Received X,Y: <span id="joystate"> joystate</span> <br>
 
 <br>
 <br>
-<canvas id="rangeView" width="500" height="400" style="border:3px solid #d3d3d3;">
+<canvas id="rangeView" width="360" height="300" style="border:3px solid #d3d3d3;">
 Your browser does not support the HTML5 canvas tag.
 </canvas> <br>
 <span style="font-size: 25px;"> Ranging </span>  &nbsp;
