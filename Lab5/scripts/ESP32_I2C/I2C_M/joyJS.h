@@ -383,22 +383,21 @@ function drawDataCircles() {
     
     if(i == 0){ 
         vctx.strokeStyle = 'blue';
-        y = ch[2]/zoom;
-        x = 0;
+        y_temp = ch[2]/zoom;
+        x_temp = 0;
     }
     else if(i == 1){ 
         vctx.strokeStyle = 'green';
-        y = 0;
-        x = -ch[4]/zoom;
+        y_temp = 0;
+        x_temp = -ch[4]/zoom;
     }
     else{
         vctx.strokeStyle = 'red';
-        y = 0;
-        x = ch[6]/zoom;
+        y_temp = 0;
+        x_temp = ch[6]/zoom;
     }
-    console.log(y + ", " + x, ", ", get_radius(i)/80); 
         
-    vctx.arc(c.width/2 + x, c.height - y + zoom, 10, 0, 2*Math.PI);
+    vctx.arc(c.width/2 + x_temp, c.height - y_temp + zoom, 10, 0, 2*Math.PI);
     vctx.stroke();
   }
 }
