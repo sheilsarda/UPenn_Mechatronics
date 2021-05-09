@@ -565,6 +565,12 @@ void handleSpin()
 }
 void handleWallFollow(int front, int right, int left)
 {
+    // for web
+    scanA[0] = 0; scanR[0] = front / 10;
+    scanA[1] = -90; scanR[1] = left / 10;
+    scanA[2] = 90; scanR[2] = right;
+
+
     control(front, right, left); //controls and sets certain follow states
     Serial.printf("[%d] Turn: %d  || Dir: %d || Spin: %d\n", segment, turn_state, dir_state, spin_state);
 
@@ -625,6 +631,7 @@ void setup()
     attachHandler("/armdown", handleArmdown);
     attachHandler("/switchmode", handleSwitch);
     attachHandler("/lever?val=", handleLever);
+    attachHandler("/update", handleUpdate);
     body = joybody;
 
     attachHandler("/favicon.ico", handleFavicon);
