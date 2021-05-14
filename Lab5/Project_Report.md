@@ -57,19 +57,33 @@ Approach 2: **Can Pushing**:
 
 Besides the evolving can grabbing approach described in the previsous ection, another difference between simulated vs actual performance was that over time, motors started to wiggle left and right making it harder to strafe with the holonomic drive since the geometry of the wheels was changing
 
-*Measured drawings (e.g. CAD) in Appendix*
+*CAD drawings in Appendix*
 
 ## Electrical Design
 
-- Describe intended approach and actual performance
-- Include things that you tried but failed (and thus learned from)
-- Include schematics in appendix.
+### Actual vs Intended performance
+
+- Actual vs Intended performance was as expected for all the motor driving parts since I was reusing most of the same components from the racecar lab
+- Reliably reading sensor data was a new expereince for me, and all went to plan since I was able to use the I2C setup code to relay values from the secondary ESP32 to the primary one
+
+### Lessons for Improvement
+
+- Plan out the pin-out diagram for wiring all the sensors before purchasing them, since this would have highlighted the fact that I would not be able to use my I2C-based ToF sensor before it was too late
+	- I2C pins on my secondary ESP32 were occupied with its connection to the primary ESP32
+	- As an alternative, could have used a Teensy as a 3rd microcontroller in my circuit, utilizing its master I2C pins, and also connected it to the I2C bus from the secondary to the the primary ESP32
+
+*Schematics in Appendix*
 
 ## Processor architecture and code architecture
 
-- Include a block diagram of how MCU's are logically connected
-- Describe software approach
-- Include things that you tried but failed (and thus learned from)
+### Block diagram of MCU
+
+![Block](imgs/mcu_block_diag.png)
+
+### Software approach
+
+### Lessons for Improvement
+
 
 ## Retrospective (non-graded)
 - What you feel was most important that you learned
