@@ -134,15 +134,27 @@ One of the best courses I have taken in my 4 years at Penn. Huge thank you to al
 
 ### BOM (Bill of Materials)
 
-which list the items and quantities used to construct your robot and controller
+![GM](imgs/GM_ministore_BOM.png)
+
+![Online](imgs/Parts_BOM.png)
 
 ### Schematics of all electronic circuits
 
+1. [VL6180X](https://www.st.com/resource/en/datasheet/vl6180x.pdf): https://www.st.com/resource/en/datasheet/vl6180x.pdf
+1. [Sharp GP2Y0A02YK0F](https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf): https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf
+1. [HC - SR04](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf): https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
+
 ### Nice photo or rendering of full robot
+
+
 
 ### CAD drawings (or mechanical drawings) highlighting anything special
 
+
+
 ### All data sheets for all components that are not parts supplied by the ministore (either links or copies of data sheets)
+
+
 
 ### Videos of functionality
 
