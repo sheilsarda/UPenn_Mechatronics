@@ -140,21 +140,27 @@ One of the best courses I have taken in my 4 years at Penn. Huge thank you to al
 
 ### Schematics of all electronic circuits
 
-1. [VL6180X](https://www.st.com/resource/en/datasheet/vl6180x.pdf): https://www.st.com/resource/en/datasheet/vl6180x.pdf
-1. [Sharp GP2Y0A02YK0F](https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf): https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf
-1. [HC - SR04](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf): https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
+![MCU](imgs/mcu_block_diag.png)
 
-### Nice photo or rendering of full robot
+![Sensors](imgs/sensor_circuit.png)
 
+![Motor](imgs/motor_circuit.png)
 
+### Photo / Rendering of full robot
 
-### CAD drawings (or mechanical drawings) highlighting anything special
+![Robot](imgs/robot_top.jpg)
 
+### CAD drawings
 
+![Solidworks](imgs/rendering1.png)
+
+![Solidworks](imgs/rendering2.png)
 
 ### All data sheets for all components that are not parts supplied by the ministore (either links or copies of data sheets)
 
-
+1. [VL6180X](https://www.st.com/resource/en/datasheet/vl6180x.pdf): https://www.st.com/resource/en/datasheet/vl6180x.pdf
+1. [Sharp GP2Y0A02YK0F](https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf): https://www.sparkfun.com/datasheets/Sensors/Infrared/gp2y0a02yk_e.pdf
+1. [HC - SR04](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf): https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf
 
 ### Videos of functionality
 
