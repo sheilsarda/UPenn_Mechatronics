@@ -82,23 +82,70 @@ Besides the evolving can grabbing approach described in the previsous ection, an
 
 ### Software approach
 
+Used I2C distributed computing approach
+- **Master ESP32** was responsible for:
+	- Web Server Hosting
+	- Motor Control for drivetrain
+	- Requesting Sensor data from Secondary ESP32 and doing wall-following + displaying it on webserver via Ranging view
+	- Controlling grippers for grabbing cans 
+- **Secondary ESP32** was responsible for:
+	- Using Analog reads to read in data from Front and Left ultrasonic sensors
+	- Using I2C to read in data from the Sharp IR sensor
+	- Communicating range information to the primary ESP32 via I2C
+- **Web Interface** for control:
+	- Started with joystick control and customized it for holonomic drivetrain
+	- Integrated ranging code on the joystick view
+	- Added Gripper open / close buttons
+	- Added discrete movement buttons for N / S / E / W movements which propel the robot in precise distances, previously impossible with just the joystick 
+
 ### Lessons for Improvement
 
+Do not underestimate the value of adding more buttons for automating movement patterns that are commonly used in races
 
-## Retrospective (non-graded)
-- What you feel was most important that you learned
-- What was the best parts of the class
-- What you had the most trouble with
-- What you wish was improved
-- Anything else about class.
+- Follow Left / Right wall
+- Rotate around the control tower in the center of the map to sweep away cans located there
+- Use control law to wall-follow a specific distance away from the wall using text box on web interface
+
+## Retrospective
+
+### Most important thing learned
+
+- Importance of good design choices
+- How to make a strong yet nimble robot
+- How to design a good UI for controlling robots
+
+### What was the best parts of the class
+
+How willing to help all the TAs were in troubleshooting my robot and helping debug potential issues over Zoom once I had dropped off the robot for the final competition
+
+### What you had the most trouble with
+
+Using the final competition guidelines to design a purpose-built robot which would be great at doing the main objectives well. E.g. how Rafael's nimble robot was able to quickly pick up cans and beacons 
+
+### What you wish was improved
+
+Helping students visualize what the final match was going to look like, either by staging a TA robot fight or simulating it virtually
+
+### Anything else about class
+
+One of the best courses I have taken in my 4 years at Penn. Huge thank you to all the TAs and Prof. Mark Yim for making the experience so engaging and entertaining
 
 ## Appendix
 
-- BOM (Bill of Materials), which list the items and quantities used to construct your robot and controller.
-- Schematics of all electronic circuits
-- Nice photo or rendering of full robot
-- CAD drawings (or mechanical drawings) highlighting anything special
-- All data sheets for all components that are not parts supplied by the ministore (either links or copies of data sheets)
-- Upload all code to canvas (separately)
-- Include links to videos of functionality
-- Optional if you have fun competition video links please add.
+### BOM (Bill of Materials)
+
+which list the items and quantities used to construct your robot and controller
+
+### Schematics of all electronic circuits
+
+### Nice photo or rendering of full robot
+
+### CAD drawings (or mechanical drawings) highlighting anything special
+
+### All data sheets for all components that are not parts supplied by the ministore (either links or copies of data sheets)
+
+### Videos of functionality
+
+Final Project Day 3 (Finals): https://youtu.be/rbyzACLpvsc?t=13435
+
+### Upload all code to canvas (separately)
