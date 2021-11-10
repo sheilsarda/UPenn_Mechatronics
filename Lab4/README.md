@@ -8,7 +8,7 @@ MEAM510 Spring 2021, Taught by Prof. Mark Yim
 
 ### 4.1.1 Driving Motors
 
-#### Setup the H-Bridge motor driver SN754420 to drive one of the supplied yellow motors
+#### Setup the H-Bridge motor driver SN754410 to drive one of the supplied yellow motors
 
 *Refer to Slide 51 of Lecture 14*
 
