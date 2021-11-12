@@ -224,6 +224,11 @@ Waldo Output robot.
 | BestOn Power Supply (Source) |  2100mA |
 | [SG90 Servo  (Load)](https://uc18cb49961d9f77f45f7cebf5c2.dl.dropboxusercontent.com/cd/0/inline2/BKZRxTjTvypxBrcIc-Bc7b9uYd8iAoMEf6NoLhIHY-y74kQL4_WI61Hdltj095YQOTABkssT9Pr7AsIxupaZ6kbYDN21gOg560FfxXQWhwfjiiB9deJJBtocc5ZnOI56G8BOwwVKPrLhO3OBTUTo4DTiQSP68gejUl5tdvCBSJk9N2pnTVzF_w0ja2Z7qrgvIYiiXmQT0PCOuVHXR3rGk450vOtwW6wfzl9Hi_oohn_rVxJPUJjROQpc413eP9ZNWIMpAu3zf43x4dQ0Wvo5nDNCFs__xBdkXDI_GS4E1XeGeDpSqpVaDZrHxnNInfMtCfUPaGlNgs3S4LcV_74Kov08XyDDXSne85SFW_M-yIEt_Q/file#) | 700mA |
 
+Datasheets for SG90 Servo and Additional References):
+- [Servo Internal Circuitry](https://www.princeton.edu/~mae412/TEXT/NTRAK2002/292-302.pdf)
+- [Using SG90 with an Arduino](https://www.auselectronicsdirect.com.au/assets/brochures/TA0132.pdf)
+- [SG90 Datasheet and wiring diagram](http://www.handsontec.com/dataspecs/SG90-Servo.pdf)
+
 **Current ratings: Input**
 
 | Current source / draw | Worst Case |
