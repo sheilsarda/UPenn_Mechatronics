@@ -5,8 +5,8 @@
 
 ## About MEAM510
 
-![](imgs/History_of_MEAM510.png)
-![](imgs/About_Mark_Yim.png)
+![](imgs/History_of_MEAM510.png?raw=true)
+![](imgs/About_Mark_Yim.png?raw=true)
 
 ## Syllabus
 
